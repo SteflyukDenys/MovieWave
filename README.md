@@ -139,5 +139,5 @@
 - Керівництво користувача
 - Документація для розробників
 
-## ([ERD])(https://dbdiagram.io/d/66e1befc6dde7f4149cb9386)
+## [ERD](https://dbdiagram.io/d/66e1befc6dde7f4149cb9386)
 ![ERD](assets/photo_1.png)
