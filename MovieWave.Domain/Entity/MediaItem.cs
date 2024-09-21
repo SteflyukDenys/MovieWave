@@ -36,6 +36,10 @@ public class MediaItem : NamedAuditableEntity<Guid>
 	public ICollection<Comment> Comments { get; set; }
 
 	// Many-to-Many
+	public ICollection<Country> Countries { get; set; }
+	public ICollection<Studio> Studios { get; set; }
+	public ICollection<Tag> Tags { get; set; }
+	public ICollection<Person> People { get; set; }
 	public ICollection<UserMediaItemList> UserMovieLists { get; set; }
-	public ICollection<MediaItemPerson> MoviePeople { get; set; }
+	public ICollection<MediaItemPeople> MoviePeople { get; set; }
 }

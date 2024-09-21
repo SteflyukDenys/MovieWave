@@ -14,5 +14,5 @@ public class Person : AuditableEntity<Guid>
 	public int? SeoAdditionId { get; set; }
 	public SeoAddition SeoAddition { get; set; }
 
-	public ICollection<MediaItemPerson> MoviePeople { get; set; }
+	public ICollection<MediaItem> MediaItems { get; set; }
 }

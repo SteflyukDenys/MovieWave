@@ -11,14 +11,14 @@ public class SeoAddition : BaseEntity<int>
 	public string? MetaImagePath { get; set; }
 
 	// One-to-one
-	public MediaItem MediaItems { get; set; }
+	public MediaItem MediaItem { get; set; }
 	public MediaItemType? MediaItemsType { get; set; }
-	public RestrictedRating? RestrictedRatings { get; set; }
-	public Episode? Episodes { get; set; }
-	public Country? Countries { get; set; }
-	public Studio? Studios { get; set; }
-	public Person? Peoples { get; set; }
-	public Notification? Notifications { get; set; }
-	public Tag? Tags { get; set; }
+	public RestrictedRating? RestrictedRating { get; set; }
+	public Episode? Episode { get; set; }
+	public Country? Country { get; set; }
+	public Studio? Studio { get; set; }
+	public Person? Person { get; set; }
+	public Notification? Notification { get; set; }
+	public Tag? Tag { get; set; }
 
 }
