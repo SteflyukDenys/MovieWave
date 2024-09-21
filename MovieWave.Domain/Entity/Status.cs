@@ -3,7 +3,7 @@
 namespace MovieWave.Domain.Entity;
 
 // TPH
-public abstract class Status : NamedEntity<int>
+public abstract class Status : NamedEntity<long>
 {
 	public string? Description { get; set; }
 

@@ -2,7 +2,7 @@
 
 namespace MovieWave.Domain.Entity;
 
-public class RestrictedRating : NamedEntity<int>
+public class RestrictedRating : NamedEntity<long>
 {
 	public string Slug { get; set; }
 	public int Value { get; set; }

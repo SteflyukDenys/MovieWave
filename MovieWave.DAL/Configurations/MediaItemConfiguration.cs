@@ -11,7 +11,8 @@ public class MediaItemConfiguration : IEntityTypeConfiguration<MediaItem>
 		builder.HasKey(m => m.Id);
 
 		builder.Property(m => m.Id)
-			.ValueGeneratedNever();
+			.ValueGeneratedNever()
+			.IsRequired();
 
 		builder.Property(m => m.Name)
 			.HasMaxLength(255)
