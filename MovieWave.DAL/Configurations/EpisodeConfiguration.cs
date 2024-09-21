@@ -19,8 +19,10 @@ public class EpisodeConfiguration : IEntityTypeConfiguration<Episode>
 			.WithMany(s => s.Episodes)
 			.HasForeignKey(e => e.SeasonId);
 
+		builder.Property(e => e.IsFiller).HasDefaultValue(false);
+
 		builder.HasOne(e => e.SeoAddition)
-			.WithOne(sa => sa.Episode)
+			.WithOne(s => s.Episode)
 			.HasForeignKey<Episode>(e => e.SeoAdditionId);
 	}
 }
