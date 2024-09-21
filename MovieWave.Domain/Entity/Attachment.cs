@@ -10,5 +10,5 @@ public class Attachment : AuditableEntity<Guid>
 
 	public AttachmentType AttachmentType { get; set; } // enum
 	public string AttachmentUrl { get; set; }
-	public string ThumbnailPath { get; set; }
+	public string? ThumbnailPath { get; set; }
 }
