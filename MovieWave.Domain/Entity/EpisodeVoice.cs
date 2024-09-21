@@ -10,5 +10,4 @@ public class EpisodeVoice
 	public Voice Voice { get; set; }
 
 	public string VideoUrl { get; set; }
-	public TimeSpan? LastWatchedTime { get; set; }
 }

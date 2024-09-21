@@ -15,6 +15,7 @@ public class SeoAddition : BaseEntity<long>
 	public MediaItemType? MediaItemType { get; set; }
 	public RestrictedRating? RestrictedRating { get; set; }
 	public Episode? Episode { get; set; }
+	public Voice? Voice { get; set; }
 	public Country? Country { get; set; }
 	public Studio? Studio { get; set; }
 	public Person? Person { get; set; }
