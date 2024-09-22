@@ -15,9 +15,5 @@ public class RestrictedRatingConfiguration : IEntityTypeConfiguration<Restricted
 		builder.Property(r => r.Slug).IsRequired();
 		builder.Property(r => r.Value).IsRequired();
 		builder.Property(r => r.Hint).IsRequired();
-
-		builder.HasOne(r => r.SeoAddition)
-			.WithOne(s => s.RestrictedRating)
-			.HasForeignKey<RestrictedRating>(r => r.SeoAdditionId);
 	}
 }

@@ -18,5 +18,5 @@ public class Notification : AuditableEntity<Guid>
 	public bool IsRead { get; set; } // default false
 
 	public int? SeoAdditionId { get; set; }
-	public SeoAddition SeoAddition { get; set; }
+	public SeoAddition? SeoAddition { get; set; }
 }

@@ -12,7 +12,7 @@ public class Person : AuditableEntity<Guid>
 	public string? Biography { get; set; }
 
 	public int? SeoAdditionId { get; set; }
-	public SeoAddition SeoAddition { get; set; }
+	public SeoAddition? SeoAddition { get; set; }
 
 	public ICollection<MediaItem> MediaItems { get; set; }
 }

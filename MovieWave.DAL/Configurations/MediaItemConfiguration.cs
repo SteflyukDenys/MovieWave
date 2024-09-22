@@ -39,10 +39,6 @@ public class MediaItemConfiguration : IEntityTypeConfiguration<MediaItem>
 		builder.Property(m => m.ImdbScore)
 			.HasColumnType("decimal(3, 1)");
 
-		builder.HasOne(m => m.SeoAddition)
-		   .WithOne(s => s.MediaItem)
-		   .HasForeignKey<MediaItem>(m => m.SeoAdditionId);
-
 		// Many-to-Many 
 		builder.HasMany(m => m.Countries)
 		.WithMany(c => c.MediaItems)

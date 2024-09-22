@@ -12,9 +12,5 @@ public class CountryConfiguration : IEntityTypeConfiguration<Country>
 		builder.Property(c => c.Id).ValueGeneratedNever();
 
 		builder.Property(c => c.Name).IsRequired();
-
-		builder.HasOne(c => c.SeoAddition)
-			.WithOne(s => s.Country)
-			.HasForeignKey<Country>(c => c.SeoAdditionId);
 	}
 }

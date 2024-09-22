@@ -12,9 +12,5 @@ public class StudioConfiguration : IEntityTypeConfiguration<Studio>
 		builder.Property(s => s.Id).ValueGeneratedNever();
 
 		builder.Property(s => s.Name).IsRequired();
-
-		builder.HasOne(s => s.SeoAddition)
-			.WithOne(sa => sa.Studio)
-			.HasForeignKey<Studio>(s => s.SeoAdditionId);
 	}
 }

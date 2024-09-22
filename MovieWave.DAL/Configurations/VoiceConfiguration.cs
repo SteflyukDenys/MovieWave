@@ -14,9 +14,5 @@ public class VoiceConfiguration : IEntityTypeConfiguration<Voice>
 		builder.Property(v => v.Name).IsRequired();
 
 		builder.Property(v => v.Locale).IsRequired();
-
-		builder.HasOne(v => v.SeoAddition)
-			.WithOne(s => s.Voice)
-			.HasForeignKey<Voice>(v => v.SeoAdditionId);
 	}
 }

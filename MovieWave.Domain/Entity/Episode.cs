@@ -18,7 +18,7 @@ public class Episode : NamedAuditableEntity<Guid>
 	public string? ImagePath { get; set; }
 
 	public int? SeoAdditionId { get; set; }
-	public SeoAddition SeoAddition { get; set; }
+	public SeoAddition? SeoAddition { get; set; }
 
 	public ICollection<EpisodeVoice> EpisodeVoices { get; set; }
 	public ICollection<Notification> Notifications { get; set; }

@@ -7,19 +7,10 @@ public class SeoAddition : BaseEntity<long>
 	public string Slug { get; set; }
 
 	public string? MetaTitle { get; set; }
+	public string? Description { get; set; }
 	public string? MetaDescription { get; set; }
 	public string? MetaImagePath { get; set; }
 
-	// One-to-one
-	public MediaItem MediaItem { get; set; }
-	public MediaItemType? MediaItemType { get; set; }
-	public RestrictedRating? RestrictedRating { get; set; }
-	public Episode? Episode { get; set; }
-	public Voice? Voice { get; set; }
-	public Country? Country { get; set; }
-	public Studio? Studio { get; set; }
-	public Person? Person { get; set; }
-	public Notification? Notification { get; set; }
-	public Tag? Tag { get; set; }
-
+	public Guid? SeoableId { get; set; } // Id of the entity to which SEO data is linked
+	public string? SeoableType { get; set; } // Entity type ("MediaItem", "Tag"...)
 }

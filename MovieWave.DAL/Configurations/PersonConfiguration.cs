@@ -13,9 +13,5 @@ public class PersonConfiguration : IEntityTypeConfiguration<Person>
 
 		builder.Property(p => p.FirstName).IsRequired();
 		builder.Property(p => p.LastName).IsRequired();
-
-		builder.HasOne(p => p.SeoAddition)
-			.WithOne(s => s.Person)
-			.HasForeignKey<Person>(p => p.SeoAdditionId);
 	}
 }

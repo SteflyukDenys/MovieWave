@@ -27,9 +27,5 @@ public class NotificationConfiguration : IEntityTypeConfiguration<Notification>
 
 		builder.Property(n => n.NotificationType).IsRequired();
 		builder.Property(n => n.IsRead).HasDefaultValue(false);
-
-		builder.HasOne(n => n.SeoAddition)
-			.WithOne(s => s.Notification)
-			.HasForeignKey<Notification>(n => n.SeoAdditionId);
 	}
 }

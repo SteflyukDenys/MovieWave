@@ -13,9 +13,5 @@ public class MediaItemTypeConfiguration : IEntityTypeConfiguration<MediaItemType
 		builder.Property(t => t.Id).ValueGeneratedOnAdd();
 
 		builder.Property(t => t.Name).IsRequired();
-
-		builder.HasOne(t => t.SeoAddition)
-			.WithOne(s => s.MediaItemType)
-			.HasForeignKey<MediaItemType>(t => t.SeoAdditionId);
 	}
 }
