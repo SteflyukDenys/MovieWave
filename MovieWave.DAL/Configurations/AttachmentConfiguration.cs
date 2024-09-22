@@ -13,7 +13,8 @@ public class AttachmentConfiguration : IEntityTypeConfiguration<Attachment>
 
 		builder.HasOne(a => a.MediaItem)
 			.WithMany(m => m.Attachments)
-			.HasForeignKey(a => a.MediaItemId);
+			.HasForeignKey(a => a.MediaItemId)
+			.OnDelete(DeleteBehavior.Cascade);
 
 		builder.Property(a => a.AttachmentType).IsRequired();
 		builder.Property(a => a.AttachmentUrl).IsRequired();

@@ -13,11 +13,13 @@ public class ReviewConfiguration : IEntityTypeConfiguration<Review>
 
 		builder.HasOne(r => r.MediaItem)
 			.WithMany(m => m.Reviews)
-			.HasForeignKey(r => r.MediaItemId);
+			.HasForeignKey(r => r.MediaItemId)
+			.OnDelete(DeleteBehavior.Cascade);
 
 		builder.HasOne(r => r.User)
 			.WithMany(u => u.Reviews)
-			.HasForeignKey(r => r.UserId);
+			.HasForeignKey(r => r.UserId)
+			.OnDelete(DeleteBehavior.Cascade);
 
 		builder.Property(r => r.Text).IsRequired();
 	}

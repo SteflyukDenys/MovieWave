@@ -13,7 +13,8 @@ public class EpisodeConfiguration : IEntityTypeConfiguration<Episode>
 
 		builder.HasOne(e => e.MediaItem)
 			.WithMany(m => m.Episodes)
-			.HasForeignKey(e => e.MediaItemId);
+			.HasForeignKey(e => e.MediaItemId)
+			.OnDelete(DeleteBehavior.Cascade);
 
 		builder.HasOne(e => e.Season)
 			.WithMany(s => s.Episodes)

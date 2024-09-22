@@ -13,7 +13,8 @@ public class PaymentConfiguration : IEntityTypeConfiguration<Payment>
 
 		builder.HasOne(p => p.UserSubscription)
 			.WithMany(u => u.Payments)
-			.HasForeignKey(p => p.UserSubscriptionId);
+			.HasForeignKey(p => p.UserSubscriptionId)
+			.OnDelete(DeleteBehavior.Cascade);
 
 		builder.Property(p => p.Amount)
 			.HasColumnType("money")

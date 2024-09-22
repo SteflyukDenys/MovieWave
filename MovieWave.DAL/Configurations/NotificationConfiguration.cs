@@ -15,15 +15,18 @@ public class NotificationConfiguration : IEntityTypeConfiguration<Notification>
 
 		builder.HasOne(n => n.User)
 			.WithMany(u => u.Notifications)
-			.HasForeignKey(n => n.UserId);
+			.HasForeignKey(n => n.UserId)
+			.OnDelete(DeleteBehavior.Cascade);
 
 		builder.HasOne(n => n.MediaItem)
 			.WithMany(m => m.Notifications)
-			.HasForeignKey(n => n.MediaItemId);
+			.HasForeignKey(n => n.MediaItemId)
+			.OnDelete(DeleteBehavior.Cascade);
 
 		builder.HasOne(n => n.Episode)
 			.WithMany(e => e.Notifications)
-			.HasForeignKey(n => n.EpisodeId);
+			.HasForeignKey(n => n.EpisodeId)
+			.OnDelete(DeleteBehavior.Cascade);
 
 		builder.Property(n => n.NotificationType).IsRequired();
 		builder.Property(n => n.IsRead).HasDefaultValue(false);

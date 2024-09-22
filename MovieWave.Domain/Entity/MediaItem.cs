@@ -34,6 +34,7 @@ public class MediaItem : NamedAuditableEntity<Guid>
 	public ICollection<Review> Reviews { get; set; }
 	public ICollection<Notification> Notifications { get; set; }
 	public ICollection<Comment> Comments { get; set; }
+	public ICollection<UserMediaItemList> UserMediaItemLists { get; set; }
 
 	// Many-to-Many
 	public ICollection<Country> Countries { get; set; }
