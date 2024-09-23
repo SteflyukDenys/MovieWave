@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MovieWave.DAL.Repositories;
+using MovieWave.Domain.Entity;
+using MovieWave.Domain.Interfaces.Repositories;
 
 namespace MovieWave.DAL.DependencyInjection;
 
@@ -14,5 +17,11 @@ public static class DependencyInjection
 		{
 			options.UseSqlServer(connectionString);
 		});
+		services.InitRepositories();
+	}
+
+	private static void InitRepositories(this IServiceCollection services)
+	{
+		//services.AddScoped<IBaseRepository<User>, BaseRepository<User>>();
 	}
 }
