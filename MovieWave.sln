@@ -9,13 +9,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{183156A2-D7DF-4C22-ACF5-222972C8CE54}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieWave.Application", "MovieWave.Application\MovieWave.Application.csproj", "{06020BD8-3ABA-4324-BE8A-22FAFD75A14A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieWave.Application", "MovieWave.Application\MovieWave.Application.csproj", "{06020BD8-3ABA-4324-BE8A-22FAFD75A14A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieWave.Domain", "MovieWave.Domain\MovieWave.Domain.csproj", "{06F4C1F3-CB63-4C09-B73C-9C2032B47EC7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieWave.Domain", "MovieWave.Domain\MovieWave.Domain.csproj", "{06F4C1F3-CB63-4C09-B73C-9C2032B47EC7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieWave.DAL", "MovieWave.DAL\MovieWave.DAL.csproj", "{1489D301-57AC-4646-A1A7-BE96F26E5CD2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieWave.DAL", "MovieWave.DAL\MovieWave.DAL.csproj", "{1489D301-57AC-4646-A1A7-BE96F26E5CD2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieWave.API", "MovieWave.API\MovieWave.API.csproj", "{7055B389-F5C6-444F-9BA5-7A2A49B92DD0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieWave.API", "MovieWave.API\MovieWave.API.csproj", "{7055B389-F5C6-444F-9BA5-7A2A49B92DD0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
