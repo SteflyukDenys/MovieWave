@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MovieWave.Application\MovieWave.Application.csproj" />
     <ProjectReference Include="..\MovieWave.DAL\MovieWave.DAL.csproj" />
   </ItemGroup>
 

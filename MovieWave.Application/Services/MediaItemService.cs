@@ -232,6 +232,5 @@ public class MediaItemService : IMediaItemService
 				ErrorCode = (int)ErrorCodes.InternalServerError
 			};
 		}
-		throw new NotImplementedException();
 	}
 }
