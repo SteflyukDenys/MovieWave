@@ -2,7 +2,7 @@
 
 namespace MovieWave.Domain.Entity;
 
-public class MediaItemPeople
+public class MediaItemPerson
 {
 	public Guid MediaItemId { get; set; }
 	public MediaItem MediaItem { get; set; }

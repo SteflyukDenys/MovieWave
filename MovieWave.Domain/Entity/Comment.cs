@@ -4,7 +4,7 @@ namespace MovieWave.Domain.Entity;
 
 public class Comment : AuditableEntity<Guid>
 {
-	public Guid? CommentableId { get; set; } // ID of the entity
+	public Guid? CommentableId { get; set; } // ID of the related entity (MediaItem or Episode)
 	public string? CommentableType { get; set; } // Entity Type ("MediaItem" or "Episode")
 
 	public Guid UserId { get; set; }

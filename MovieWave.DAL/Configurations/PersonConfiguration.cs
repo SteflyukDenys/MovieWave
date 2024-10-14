@@ -13,5 +13,15 @@ public class PersonConfiguration : IEntityTypeConfiguration<Person>
 
 		builder.Property(p => p.FirstName).IsRequired();
 		builder.Property(p => p.LastName).IsRequired();
+
+		// Composition
+		builder.OwnsOne(m => m.SeoAddition, seo =>
+		{
+			seo.Property(p => p.Slug)
+			.HasMaxLength(30)
+			.IsRequired();
+
+			seo.HasIndex(s => s.Slug).IsUnique();
+		});
 	}
 }

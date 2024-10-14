@@ -21,5 +21,15 @@ public class EpisodeConfiguration : IEntityTypeConfiguration<Episode>
 			.HasForeignKey(e => e.SeasonId);
 
 		builder.Property(e => e.IsFiller).HasDefaultValue(false);
+
+		// Composition
+		builder.OwnsOne(m => m.SeoAddition, seo =>
+		{
+			seo.Property(s => s.Slug)
+			.HasMaxLength(30)
+			.IsRequired();
+
+			seo.HasIndex(s => s.Slug).IsUnique();
+		});
 	}
 }

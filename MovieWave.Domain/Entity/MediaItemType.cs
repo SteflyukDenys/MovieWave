@@ -7,8 +7,7 @@ public class MediaItemType : BaseEntity<int>
 {
 	public MediaItemName Name { get; set; }
 
-	public int? SeoAdditionId { get; set; }
-	public SeoAddition? SeoAddition { get; set; }
+	public SeoAddition SeoAddition { get; set; } = new SeoAddition();
 
 	// Many-to-One
 	public ICollection<MediaItem> MediaItems { get; set; }

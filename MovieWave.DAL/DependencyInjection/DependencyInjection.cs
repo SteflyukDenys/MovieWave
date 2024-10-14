@@ -4,23 +4,25 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MovieWave.DAL.Interceptors;
 using MovieWave.DAL.Repositories;
+using MovieWave.DAL.Seeders;
 using MovieWave.Domain.Entity;
 using MovieWave.Domain.Interfaces.Repositories;
-
+using MovieWave.Domain.Interfaces.Services;
 namespace MovieWave.DAL.DependencyInjection;
 
 public static class DependencyInjection
 {
 	public static void AddDataAccessLayer(this IServiceCollection services, IConfiguration configuration)
 	{
-		var connectionString = configuration.GetConnectionString("SQLServer");
+		var connectionString = configuration.GetConnectionString("PostgreSQL");
 
 		services.AddSingleton<DateInterceptor>();
 		services.AddDbContext<AppDbContext>(options =>
 		{
-			options.UseSqlServer(connectionString);
+			options.UseNpgsql(connectionString);
 		});
 		services.InitRepositories();
+		services.AddScoped<DataSeederHelper>();
 	}
 
 	private static void InitRepositories(this IServiceCollection services)
@@ -36,7 +38,6 @@ public static class DependencyInjection
 		services.AddScoped<IBaseRepository<UserSubscription>, BaseRepository<UserSubscription>>();
 		services.AddScoped<IBaseRepository<Comment>, BaseRepository<Comment>>();
 		services.AddScoped<IBaseRepository<Status>, BaseRepository<Status>>();
-		services.AddScoped<IBaseRepository<SeoAddition>, BaseRepository<SeoAddition>>();
 		services.AddScoped<IBaseRepository<Country>, BaseRepository<Country>>();
 		services.AddScoped<IBaseRepository<Studio>, BaseRepository<Studio>>();
 		services.AddScoped<IBaseRepository<Person>, BaseRepository<Person>>();
@@ -49,8 +50,5 @@ public static class DependencyInjection
 
 		// For Identity
 		services.AddScoped<IBaseRepository<User>, BaseRepository<User>>();
-		services.AddScoped<IBaseRepository<IdentityRole<Guid>>, BaseRepository<IdentityRole<Guid>>>();
-		services.AddScoped<IBaseRepository<IdentityUserRole<Guid>>, BaseRepository<IdentityUserRole<Guid>>>();
-		services.AddScoped<IBaseRepository<IdentityUserToken<Guid>>, BaseRepository<IdentityUserToken<Guid>>>();
 	}
 }

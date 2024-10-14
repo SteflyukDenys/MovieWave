@@ -23,18 +23,18 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 		builder.Property(u => u.EmailConfirmed)
 			   .IsRequired();
 
-		builder.Property(u => u.PasswordHash)
-			   .HasMaxLength(255)
-			   .IsRequired();
-		builder.Property(u => u.SecurityStamp)
-			   .HasMaxLength(255)
-			   .IsRequired();
-		builder.Property(u => u.ConcurrencyStamp)
-			   .IsRequired()
-			   .IsConcurrencyToken();
+		//builder.Property(u => u.PasswordHash)
+		//	   .HasMaxLength(255)
+		//	   .IsRequired();
+		//builder.Property(u => u.SecurityStamp)
+		//	   .HasMaxLength(255)
+		//	   .IsRequired();
+		//builder.Property(u => u.ConcurrencyStamp)
+		//	   .IsRequired()
+		//	   .IsConcurrencyToken();
 
-		builder.Property(u => u.UserRole)
-			   .IsRequired();
+		//builder.Property(u => u.UserRole)
+		//	   .IsRequired();
 
 		builder.Property(u => u.Login)
 			   .HasMaxLength(32)

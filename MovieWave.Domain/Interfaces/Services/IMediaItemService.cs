@@ -15,3 +15,4 @@ public interface IMediaItemService
 
 	Task<BaseResult<MediaItemDto>> UpdateMediaItemAsync(UpdateMediaItemDto dto);
 }
+

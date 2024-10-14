@@ -1,43 +1,38 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using MovieWave.Domain.Entity;
 
-namespace MovieWave.DAL.Configurations;
-
-public class CommentConfiguration : IEntityTypeConfiguration<Comment>
+namespace MovieWave.DAL.Configurations
 {
-	public void Configure(EntityTypeBuilder<Comment> builder)
+	public class CommentConfiguration : IEntityTypeConfiguration<Comment>
 	{
-		builder.HasKey(c => c.Id);
-		builder.Property(c => c.Id).ValueGeneratedNever();
+		public void Configure(EntityTypeBuilder<Comment> builder)
+		{
+			builder.HasKey(c => c.Id);
+			builder.Property(c => c.Id).ValueGeneratedNever();
 
-		builder.HasOne(c => c.User)
-			.WithMany(u => u.Comments)
-			.HasForeignKey(c => c.UserId)
-			.OnDelete(DeleteBehavior.Cascade);
+			builder.HasOne(c => c.User)
+				.WithMany(u => u.Comments)
+				.HasForeignKey(c => c.UserId)
+				.OnDelete(DeleteBehavior.Cascade);
 
-		builder.HasOne(c => c.Parent)
-			.WithMany(pc => pc.Children)
-			.HasForeignKey(c => c.ParentId)
-			.OnDelete(DeleteBehavior.Restrict); // Prohibit parent comment deletion if child comments exist"
+			builder.HasOne(c => c.Parent)
+				.WithMany(pc => pc.Children)
+				.HasForeignKey(c => c.ParentId)
+				.OnDelete(DeleteBehavior.Restrict);
 
-		builder.Property(c => c.Text).IsRequired();
+			builder.Property(c => c.Text).IsRequired();
 
-		// Polymorphic Relationship
-		builder.HasDiscriminator<string>("CommentableType")
-		   .HasValue<MediaItem>("MediaItem")
-		   .HasValue<Episode>("Episode");
+			// Поля для зберігання ID і типу сутності, до якої прив'язаний коментар
+			builder.Property(c => c.CommentableId)
+				.IsRequired(false); // Поле може бути null, якщо коментар ще не прив'язано
 
-		builder.HasOne<MediaItem>()
-			.WithMany(m => m.Comments)
-			.HasForeignKey(c => c.CommentableId)
-			.HasPrincipalKey(m => m.Id)
-			.OnDelete(DeleteBehavior.Cascade);
+			builder.Property(c => c.CommentableType)
+				.HasMaxLength(50)
+				.IsRequired(false); // Поле може бути null
 
-		builder.HasOne<Episode>()
-			.WithMany(e => e.Comments)
-			.HasForeignKey(c => c.CommentableId)
-			.HasPrincipalKey(e => e.Id)
-			.OnDelete(DeleteBehavior.Cascade);
+			// Індексація полів для швидшого пошуку
+			builder.HasIndex(c => new { c.CommentableId, c.CommentableType });
+		}
 	}
 }

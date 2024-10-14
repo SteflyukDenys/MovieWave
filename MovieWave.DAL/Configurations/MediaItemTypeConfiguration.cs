@@ -13,5 +13,15 @@ public class MediaItemTypeConfiguration : IEntityTypeConfiguration<MediaItemType
 		builder.Property(t => t.Id).ValueGeneratedOnAdd();
 
 		builder.Property(t => t.Name).IsRequired();
+
+		// Composition
+		builder.OwnsOne(m => m.SeoAddition, seo =>
+		{
+			seo.Property(s => s.Slug)
+			.HasMaxLength(30)
+			.IsRequired();
+
+			seo.HasIndex(s => s.Slug).IsUnique();
+		});
 	}
 }

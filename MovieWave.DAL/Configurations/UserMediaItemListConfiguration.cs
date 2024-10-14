@@ -1,23 +1,27 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using MovieWave.Domain.Entity;
 
-namespace MovieWave.DAL.Configurations;
-
-public class UserMediaItemListConfiguration : IEntityTypeConfiguration<UserMediaItemList>
+namespace MovieWave.DAL.Configurations
 {
-	public void Configure(EntityTypeBuilder<UserMediaItemList> builder)
+	public class UserMediaItemListConfiguration : IEntityTypeConfiguration<UserMediaItemList>
 	{
-		builder.HasKey(i => new { i.UserId, i.MediaItemId });
+		public void Configure(EntityTypeBuilder<UserMediaItemList> builder)
+		{
+			builder.HasKey(umil => new { umil.UserId, umil.MediaItemId });
 
-		builder.HasOne(i => i.User)
-			   .WithMany(u => u.UserMediaItemLists)
-			   .HasForeignKey(i => i.UserId);
+			builder.HasOne(umil => umil.User)
+				.WithMany(u => u.UserMediaItemLists)
+				.HasForeignKey(umil => umil.UserId)
+				.OnDelete(DeleteBehavior.Cascade);
 
-		builder.HasOne(i => i.MediaItem)
-			   .WithMany(m => m.UserMediaItemLists)
-			   .HasForeignKey(i => i.MediaItemId);
+			builder.HasOne(umil => umil.MediaItem)
+				.WithMany(mi => mi.UserMediaItemLists)
+				.HasForeignKey(umil => umil.MediaItemId)
+				.OnDelete(DeleteBehavior.Cascade);
 
-		builder.Property(i => i.ListTypeId).IsRequired();
+			builder.Property(umil => umil.ListTypeId)
+				.IsRequired();
+		}
 	}
 }

@@ -1,8 +1,9 @@
-﻿using MovieWave.Domain.Enum;
+﻿using MovieWave.Domain.AbstractEntity;
+using MovieWave.Domain.Enum;
 
 namespace MovieWave.Domain.Entity;
 
-public class SubscriptionPlan
+public class SubscriptionPlan : BaseEntity<Guid>
 {
 	public SubscriptionLevel Name { get; set; } // enum
 	public string? Description { get; set; }

@@ -9,11 +9,10 @@ public class Tag : NamedEntity<Guid>
 
 	public Guid? ParentId { get; set; }
 	public Tag? Parent { get; set; }
-	public List<Tag> Children { get; set; }
+	public List<Tag>? Children { get; set; }
 
-	public int? SeoAdditionId { get; set; }
-	public SeoAddition? SeoAddition { get; set; }
+	public SeoAddition SeoAddition { get; set; } = new SeoAddition();
 
-	// Many-to-Many
-	public ICollection<MediaItem> MediaItems { get; set; }
+	// Many-to-Many relationship with MediaItem
+	public ICollection<MediaItem> MediaItems { get; set; } = new List<MediaItem>();
 }

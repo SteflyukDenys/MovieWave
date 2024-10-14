@@ -8,7 +8,7 @@ public class UserSubscription : BaseEntity<Guid>
 	public Guid UserId { get; set; }
 	public User User { get; set; }
 
-	public SubscriptionLevel SubscriptionPlanName { get; set; }
+	public Guid SubscriptionPlanId { get; set; }
 	public SubscriptionPlan SubscriptionPlan { get; set; }
 
 	public DateTime StartDate { get; set; }
@@ -19,4 +19,3 @@ public class UserSubscription : BaseEntity<Guid>
 	// One-to-Many
 	public ICollection<Payment> Payments { get; set; }
 }
-

@@ -12,5 +12,15 @@ public class CountryConfiguration : IEntityTypeConfiguration<Country>
 		builder.Property(c => c.Id).ValueGeneratedNever();
 
 		builder.Property(c => c.Name).IsRequired();
+
+		// Composition
+		builder.OwnsOne(c => c.SeoAddition, seo =>
+		{
+			seo.Property(s => s.Slug)
+			.HasMaxLength(30)
+			.IsRequired();
+
+			seo.HasIndex(s => s.Slug).IsUnique();
+		});
 	}
 }

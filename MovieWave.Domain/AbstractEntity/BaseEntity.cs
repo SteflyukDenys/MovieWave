@@ -5,7 +5,7 @@
 /// TKey represents the data type of the identifier.
 /// </summary>
 /// <typeparam name="TKey">The data type of the identifier (Guid or int or long)</typeparam>
-public abstract class BaseEntity<TKey> where TKey : struct
+public abstract class BaseEntity<TKey>
 {
 	public TKey Id { get; set; }
 }

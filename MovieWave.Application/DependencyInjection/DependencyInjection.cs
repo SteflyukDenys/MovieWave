@@ -2,9 +2,11 @@
 using Microsoft.Extensions.DependencyInjection;
 using MovieWave.Application.Mapping;
 using MovieWave.Application.Services;
+using MovieWave.Application.Validations;
 using MovieWave.Application.Validations.FluentValidations.MediaItem;
 using MovieWave.Domain.Dto.MediaItem;
 using MovieWave.Domain.Interfaces.Services;
+using MovieWave.Domain.Interfaces.Validations;
 
 namespace MovieWave.Application.DependencyInjection;
 
@@ -19,6 +21,7 @@ public static class DependencyInjection
 
 	private static void InitService(this IServiceCollection services)
 	{
+		services.AddScoped<IMediaItemValidator, MediaItemValidator>();
 		services.AddScoped<IValidator<CreateMediaItemDto>, CreateMediaItemValidator>();
 		services.AddScoped<IValidator<UpdateMediaItemDto>, UpdateMediaItemValidator>();
 

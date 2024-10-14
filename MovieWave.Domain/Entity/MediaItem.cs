@@ -10,10 +10,10 @@ public class MediaItem : NamedAuditableEntity<Guid>
 	public string OriginalName { get; set; }
 	public string Description { get; set; }
 
-	public int? StatusId { get; set; }
+	public long? StatusId { get; set; }
 	public Status Status { get; set; }
 
-	public int? RestrictedRatingId { get; set; }
+	public long? RestrictedRatingId { get; set; }
 	public RestrictedRating RestrictedRating { get; set; }
 
 	public string PosterPath { get; set; }
@@ -24,8 +24,8 @@ public class MediaItem : NamedAuditableEntity<Guid>
 	public decimal? ImdbScore { get; set; }
 	public DateTime? PublishedAt { get; set; }
 
-	public int SeoAdditionId { get; set; }
-	public SeoAddition SeoAddition { get; set; }
+	// Composition
+	public SeoAddition SeoAddition { get; set; } = new SeoAddition();
 
 	// One-to-Many
 	public ICollection<Season> Seasons { get; set; }
@@ -41,6 +41,5 @@ public class MediaItem : NamedAuditableEntity<Guid>
 	public ICollection<Studio> Studios { get; set; }
 	public ICollection<Tag> Tags { get; set; }
 	public ICollection<Person> People { get; set; }
-	public ICollection<UserMediaItemList> UserMovieLists { get; set; }
-	public ICollection<MediaItemPeople> MoviePeople { get; set; }
+	public ICollection<MediaItemPerson> MediaItemPeople { get; set; }
 }

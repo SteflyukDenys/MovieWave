@@ -11,8 +11,7 @@ public class Person : AuditableEntity<Guid>
 	public string? ImagePath { get; set; }
 	public string? Biography { get; set; }
 
-	public int? SeoAdditionId { get; set; }
-	public SeoAddition? SeoAddition { get; set; }
+	public SeoAddition SeoAddition { get; set; } = new SeoAddition();
 
-	public ICollection<MediaItem> MediaItems { get; set; }
+	public ICollection<MediaItemPerson> MediaItemPeople { get; set; } = new List<MediaItemPerson>();
 }

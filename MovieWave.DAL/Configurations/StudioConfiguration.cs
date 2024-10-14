@@ -12,5 +12,15 @@ public class StudioConfiguration : IEntityTypeConfiguration<Studio>
 		builder.Property(s => s.Id).ValueGeneratedNever();
 
 		builder.Property(s => s.Name).IsRequired();
+
+		// Composition
+		builder.OwnsOne(m => m.SeoAddition, seo =>
+		{
+			seo.Property(s => s.Slug)
+			.HasMaxLength(30)
+			.IsRequired();
+
+			seo.HasIndex(s => s.Slug).IsUnique();
+		});
 	}
 }
