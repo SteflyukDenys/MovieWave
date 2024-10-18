@@ -61,6 +61,15 @@ namespace MovieWave.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error occurred while seeding database.
+        /// </summary>
+        internal static string ErrorSeedingDB {
+            get {
+                return ResourceManager.GetString("ErrorSeedingDB", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Internal server error.
         /// </summary>
         internal static string InternalServerError {
@@ -93,6 +102,24 @@ namespace MovieWave.Application.Resources {
         internal static string MediaItemsNotFound {
             get {
                 return ResourceManager.GetString("MediaItemsNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MediaItemType not found.
+        /// </summary>
+        internal static string MediaItemTypeNotFound {
+            get {
+                return ResourceManager.GetString("MediaItemTypeNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MediaItemTypes not found.
+        /// </summary>
+        internal static string MediaItemTypesNotFound {
+            get {
+                return ResourceManager.GetString("MediaItemTypesNotFound", resourceCulture);
             }
         }
     }

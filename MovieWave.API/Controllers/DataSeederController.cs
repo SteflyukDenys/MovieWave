@@ -1,22 +1,30 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MovieWave.DAL.Seeders;
+using MovieWave.Domain.Interfaces.Services;
+using MovieWave.Domain.Result;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v1/[controller]")]
 public class DataSeederController : ControllerBase
 {
-	private readonly DataSeederHelper _dataSeederHelper;
+	private readonly IDataSeederService _dataSeederService;
 
-	public DataSeederController(DataSeederHelper dataSeederHelper)
+	public DataSeederController(IDataSeederService dataSeederService)
 	{
-		_dataSeederHelper = dataSeederHelper;
+		_dataSeederService = dataSeederService;
 	}
 
-	[HttpPost]
-	[Route("seed-database")]
+	[HttpPost("db-seed")]
+	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	public async Task<IActionResult> SeedDatabase()
 	{
-		await _dataSeederHelper.SeedAsync();
-		return Ok("Database seeded successfully");
+		var response = await _dataSeederService.SeedDatabaseAsync();
+
+		if (response.IsSuccess)
+		{
+			return Ok(response);
+		}
+
+		return BadRequest(response);
 	}
 }

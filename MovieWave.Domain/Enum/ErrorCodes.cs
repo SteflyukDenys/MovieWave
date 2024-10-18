@@ -6,5 +6,9 @@ public enum ErrorCodes
 	MediaItemNotFound = 1,
 	MediaItemAlreadyExists = 2,
 
-	InternalServerError = 10
+	MediaItemTypesNotFound = 6,
+	MediaItemTypeNotFound = 7,
+
+	InternalServerError = 90,
+	ErrorSeedingDb = 500
 }

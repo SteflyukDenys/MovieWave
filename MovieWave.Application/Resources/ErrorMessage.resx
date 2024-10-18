@@ -129,4 +129,13 @@
   <data name="MediaItemsNotFound" xml:space="preserve">
     <value>MediaItems not found</value>
   </data>
+  <data name="MediaItemTypesNotFound" xml:space="preserve">
+    <value>MediaItemTypes not found</value>
+  </data>
+  <data name="MediaItemTypeNotFound" xml:space="preserve">
+    <value>MediaItemType not found</value>
+  </data>
+  <data name="ErrorSeedingDB" xml:space="preserve">
+    <value>Error occurred while seeding database</value>
+  </data>
 </root>

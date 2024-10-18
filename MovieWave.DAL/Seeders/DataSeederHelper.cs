@@ -119,9 +119,10 @@ namespace MovieWave.DAL.Seeders
 
 		private async Task SeedMediaItemTypesAsync()
 		{
-			var existingTypes = _mediaItemTypeRepository.GetAll().Select(t => t.Name).ToList();
-			var mediaItemTypes = MediaItemTypeDataGenerator.GenerateMediaItemTypes(5)
-				.Where(t => !existingTypes.Contains(t.Name))
+			var existingTypes = _mediaItemTypeRepository.GetAll().Select(t => t.MediaItemName).ToList();
+
+			var mediaItemTypes = MediaItemTypeDataGenerator.GenerateMediaItemTypes()
+				.Where(t => !existingTypes.Contains(t.MediaItemName))
 				.ToList();
 
 			foreach (var type in mediaItemTypes)

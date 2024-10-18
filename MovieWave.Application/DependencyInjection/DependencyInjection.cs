@@ -5,6 +5,7 @@ using MovieWave.Application.Services;
 using MovieWave.Application.Validations;
 using MovieWave.Application.Validations.FluentValidations.MediaItem;
 using MovieWave.Domain.Dto.MediaItem;
+using MovieWave.Domain.Entity;
 using MovieWave.Domain.Interfaces.Services;
 using MovieWave.Domain.Interfaces.Validations;
 
@@ -14,7 +15,8 @@ public static class DependencyInjection
 {
 	public static void AddApplication(this IServiceCollection services)
 	{
-		services.AddAutoMapper(typeof(MediaItemMapping));
+		services.AddAutoMapper(typeof(MappingProfile));
+
 
 		InitService(services);
 	}
@@ -26,5 +28,9 @@ public static class DependencyInjection
 		services.AddScoped<IValidator<UpdateMediaItemDto>, UpdateMediaItemValidator>();
 
 		services.AddScoped<IMediaItemService, MediaItemService>();
+		services.AddScoped<IMediaItemTypeService, MediaItemTypeService>();
+		services.AddScoped<IDataSeederService, DataSeederService>();
+
+
 	}
 }

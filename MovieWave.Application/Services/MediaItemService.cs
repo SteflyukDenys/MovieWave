@@ -36,8 +36,19 @@ public class MediaItemService : IMediaItemService
 		try
 		{
 			mediaItems = await _mediaItemRepository.GetAll()
-				.Select(x => new MediaItemDto(x.Id, x.Name, x.OriginalName, x.Description,
-				x.PosterPath, x.Duration, x.EpisodesCount, x.ImdbScore, x.CreatedAt.ToLongDateString()))
+				.Include(x => x.MediaItemType)
+				.Include(x => x.Status)
+				.Include(x => x.RestrictedRating)
+				.Include(x => x.Episodes)
+				.Include(x => x.Attachments)
+				.Include(x => x.Reviews)
+				.Include(x => x.Notifications)
+				.Include(x => x.Comments)
+				.Include(x => x.Countries)
+				.Include(x => x.Studios)
+				.Include(x => x.Tags)
+				.Include(x => x.People)
+				.Select(x => _mapper.Map<MediaItemDto>(x))
 				.ToListAsync();
 		}
 		catch (Exception ex)
@@ -73,10 +84,32 @@ public class MediaItemService : IMediaItemService
 
 		try
 		{
-			mediaItem = await _mediaItemRepository.GetAll()
-				.Select(x => new MediaItemDto(x.Id, x.Name, x.OriginalName, x.Description,
-				x.PosterPath, x.Duration, x.EpisodesCount, x.ImdbScore, x.CreatedAt.ToLongDateString()))
+			var mediaItemEntity = await _mediaItemRepository.GetAll()
+				.Include(x => x.MediaItemType)
+				.Include(x => x.Status)
+				.Include(x => x.RestrictedRating)
+				.Include(x => x.Episodes)
+				.Include(x => x.Attachments)
+				.Include(x => x.Reviews)
+				.Include(x => x.Notifications)
+				.Include(x => x.Comments)
+				.Include(x => x.Countries)
+				.Include(x => x.Studios)
+				.Include(x => x.Tags)
+				.Include(x => x.People)
 				.FirstOrDefaultAsync(x => x.Id == id);
+
+			if (mediaItemEntity == null)
+			{
+				_logger.Warning($"MediaItem {id} not found", id);
+				return new BaseResult<MediaItemDto>()
+				{
+					ErrorMessage = ErrorMessage.MediaItemNotFound,
+					ErrorCode = (int)ErrorCodes.MediaItemNotFound
+				};
+			}
+
+			mediaItem = _mapper.Map<MediaItemDto>(mediaItemEntity);
 		}
 		catch (Exception ex)
 		{
@@ -89,58 +122,30 @@ public class MediaItemService : IMediaItemService
 			};
 		}
 
-		if (mediaItem == null)
-		{
-			_logger.Warning("MediaItem {Id} not found", id);
-			return new BaseResult<MediaItemDto>()
-			{
-				ErrorMessage = ErrorMessage.MediaItemNotFound,
-				ErrorCode = (int)ErrorCodes.MediaItemNotFound
-
-			};
-		}
-
-		return new BaseResult<MediaItemDto>()
-		{
-			Data = mediaItem
-		};
-
+		return new BaseResult<MediaItemDto>() { Data = mediaItem };
 	}
 
 	public async Task<BaseResult<MediaItemDto>> CreateMediaItemAsync(CreateMediaItemDto dto)
 	{
 		try
 		{
-			var mediaItem = await _mediaItemRepository.GetAll().FirstOrDefaultAsync(x => x.Name == dto.Name);
-			var result = _mediaItemValidator.CreateValidator(mediaItem);
+			var existingMediaItem = await _mediaItemRepository.GetAll().FirstOrDefaultAsync(x => x.Name == dto.Name);
+			var validationResult = _mediaItemValidator.CreateValidator(existingMediaItem);
 
-			if (!result.IsSuccess)
+			if (!validationResult.IsSuccess)
 			{
 				return new BaseResult<MediaItemDto>()
 				{
-					ErrorMessage = result.ErrorMessage,
-					ErrorCode = result.ErrorCode
+					ErrorMessage = validationResult.ErrorMessage,
+					ErrorCode = validationResult.ErrorCode
 				};
 			}
 
-			mediaItem = new MediaItem()
-			{
-				Id = Guid.NewGuid(),
-				Name = dto.Name,
-				OriginalName = dto.OriginalName,
-				Description = dto.Description,
-				PosterPath = dto.PosterPath,
-				Duration = dto.Duration,
-				EpisodesCount = dto.EpisodesCount,
-				ImdbScore = dto.ImdbScore
-			};
-			await _mediaItemRepository.CreateAsync(mediaItem);
+			var newMediaItem = _mapper.Map<MediaItem>(dto);
+			await _mediaItemRepository.CreateAsync(newMediaItem);
 			await _mediaItemRepository.SaveChangesAsync();
 
-			return new BaseResult<MediaItemDto>()
-			{
-				Data = _mapper.Map<MediaItemDto>(mediaItem)
-			};
+			return new BaseResult<MediaItemDto>() { Data = _mapper.Map<MediaItemDto>(newMediaItem) };
 		}
 		catch (Exception ex)
 		{
@@ -159,23 +164,21 @@ public class MediaItemService : IMediaItemService
 		try
 		{
 			var mediaItem = await _mediaItemRepository.GetAll().FirstOrDefaultAsync(x => x.Id == id);
-			var result = _mediaItemValidator.ValidateOnNull(mediaItem);
+			var validationResult = _mediaItemValidator.ValidateOnNull(mediaItem);
 
-			if (!result.IsSuccess)
+			if (!validationResult.IsSuccess)
 			{
 				return new BaseResult<MediaItemDto>()
 				{
-					ErrorMessage = result.ErrorMessage,
-					ErrorCode = result.ErrorCode
+					ErrorMessage = validationResult.ErrorMessage,
+					ErrorCode = validationResult.ErrorCode
 				};
 			}
 
 			_mediaItemRepository.Remove(mediaItem);
 			await _mediaItemRepository.SaveChangesAsync();
-			return new BaseResult<MediaItemDto>()
-			{
-				Data = _mapper.Map<MediaItemDto>(mediaItem)
-			};
+
+			return new BaseResult<MediaItemDto>() { Data = _mapper.Map<MediaItemDto>(mediaItem) };
 		}
 		catch (Exception ex)
 		{
@@ -194,33 +197,22 @@ public class MediaItemService : IMediaItemService
 		try
 		{
 			var mediaItem = await _mediaItemRepository.GetAll().FirstOrDefaultAsync(x => x.Id == dto.id);
-			var result = _mediaItemValidator.ValidateOnNull(mediaItem);
+			var validationResult = _mediaItemValidator.ValidateOnNull(mediaItem);
 
-			if (!result.IsSuccess)
+			if (!validationResult.IsSuccess)
 			{
 				return new BaseResult<MediaItemDto>()
 				{
-					ErrorMessage = result.ErrorMessage,
-					ErrorCode = result.ErrorCode
+					ErrorMessage = validationResult.ErrorMessage,
+					ErrorCode = validationResult.ErrorCode
 				};
 			}
 
-			mediaItem.Name = dto.Name;
-			mediaItem.OriginalName = dto.OriginalName;
-			mediaItem.Description = dto.Description;
-			mediaItem.PosterPath = dto.PosterPath;
-			mediaItem.Duration = dto.Duration;
-			mediaItem.EpisodesCount = dto.EpisodesCount;
-			mediaItem.ImdbScore = dto.ImdbScore;
-
+			_mapper.Map(dto, mediaItem);
 			var updatedMediaItem = _mediaItemRepository.Update(mediaItem);
 			await _mediaItemRepository.SaveChangesAsync();
 
-			return new BaseResult<MediaItemDto>()
-			{
-				Data = _mapper.Map<MediaItemDto>(updatedMediaItem)
-			};
-
+			return new BaseResult<MediaItemDto>() { Data = _mapper.Map<MediaItemDto>(updatedMediaItem) };
 		}
 		catch (Exception ex)
 		{

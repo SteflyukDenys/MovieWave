@@ -16,7 +16,7 @@ public class MediaItem : NamedAuditableEntity<Guid>
 	public long? RestrictedRatingId { get; set; }
 	public RestrictedRating RestrictedRating { get; set; }
 
-	public string PosterPath { get; set; }
+	public string? PosterPath { get; set; }
 	public int? Duration { get; set; } // In minutes
 	public DateTime? FirstAirDate { get; set; }
 	public DateTime? LastAirDate { get; set; }
@@ -25,7 +25,7 @@ public class MediaItem : NamedAuditableEntity<Guid>
 	public DateTime? PublishedAt { get; set; }
 
 	// Composition
-	public SeoAddition SeoAddition { get; set; } = new SeoAddition();
+	public SeoAddition? SeoAddition { get; set; } = new SeoAddition();
 
 	// One-to-Many
 	public ICollection<Season> Seasons { get; set; }

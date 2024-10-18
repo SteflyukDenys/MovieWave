@@ -12,7 +12,7 @@ public class MediaItemTypeConfiguration : IEntityTypeConfiguration<MediaItemType
 		builder.HasKey(t => t.Id);
 		builder.Property(t => t.Id).ValueGeneratedOnAdd();
 
-		builder.Property(t => t.Name).IsRequired();
+		builder.Property(t => t.MediaItemName).IsRequired();
 
 		// Composition
 		builder.OwnsOne(m => m.SeoAddition, seo =>
