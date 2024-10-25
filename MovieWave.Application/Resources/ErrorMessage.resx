@@ -138,4 +138,19 @@
   <data name="ErrorSeedingDB" xml:space="preserve">
     <value>Error occurred while seeding database</value>
   </data>
+  <data name="PasswordNotEqualsPasswordConfirm" xml:space="preserve">
+    <value>Password not equals password confirm</value>
+  </data>
+  <data name="UserAlreadyExists" xml:space="preserve">
+    <value>User already exists</value>
+  </data>
+  <data name="InvalidLogin" xml:space="preserve">
+    <value>Invalid login</value>
+  </data>
+  <data name="InvalidPassword" xml:space="preserve">
+    <value>Invalid password</value>
+  </data>
+  <data name="FailedToCreateUser" xml:space="preserve">
+    <value>Failed to create user</value>
+  </data>
 </root>

@@ -1,49 +1,51 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MovieWave.Domain.Dto.MediaItemType;
 using MovieWave.Domain.Interfaces.Services;
 using MovieWave.Domain.Result;
 
-namespace MovieWave.API.Controllers
+namespace MovieWave.API.Controllers;
+
+[ApiController]
+[ApiVersion("1.0")]
+[Route("api/v{version:apiVersion}/[controller]")]
+public class MediaItemTypeController : ControllerBase
 {
-	[ApiController]
-	[Route("api/v1/[controller]")]
-	public class MediaItemTypeController : ControllerBase
+	private readonly IMediaItemTypeService _mediaItemTypeService;
+
+	public MediaItemTypeController(IMediaItemTypeService mediaItemTypeService)
 	{
-		private readonly IMediaItemTypeService _mediaItemTypeService;
+		_mediaItemTypeService = mediaItemTypeService;
+	}
 
-		public MediaItemTypeController(IMediaItemTypeService mediaItemTypeService)
+	[HttpGet("all/")]
+	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status400BadRequest)]
+	public async Task<ActionResult<CollectionResult<MediaItemTypeDto>>> GetAll()
+	{
+		var response = await _mediaItemTypeService.GetAllAsync();
+
+		if (response.IsSuccess)
 		{
-			_mediaItemTypeService = mediaItemTypeService;
+			return Ok(response);
 		}
 
-		[HttpGet("all/")]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(StatusCodes.Status400BadRequest)]
-		public async Task<ActionResult<CollectionResult<MediaItemTypeDto>>> GetAll()
+		return BadRequest(response);
+	}
+
+	[HttpGet("{id}")]
+	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status400BadRequest)]
+	public async Task<ActionResult<BaseResult<MediaItemTypeDto>>> GetById(int id)
+	{
+		var response = await _mediaItemTypeService.GetByIdAsync(id);
+
+		if (response.IsSuccess)
 		{
-			var response = await _mediaItemTypeService.GetAllAsync();
-
-			if (response.IsSuccess)
-			{
-				return Ok(response);
-			}
-
-			return BadRequest(response);
+			return Ok(response);
 		}
 
-		[HttpGet("{id}")]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(StatusCodes.Status400BadRequest)]
-		public async Task<ActionResult<BaseResult<MediaItemTypeDto>>> GetById(int id)
-		{
-			var response = await _mediaItemTypeService.GetByIdAsync(id);
-
-			if (response.IsSuccess)
-			{
-				return Ok(response);
-			}
-
-			return BadRequest(response);
-		}
+		return BadRequest(response);
 	}
 }

@@ -14,6 +14,7 @@ using MovieWave.Domain.Dto.SeoAddition;
 using MovieWave.Domain.Dto.Status;
 using MovieWave.Domain.Dto.Studio;
 using MovieWave.Domain.Dto.Tag;
+using MovieWave.Domain.Dto.User;
 using MovieWave.Domain.Entity;
 
 namespace MovieWave.Application.Mapping
@@ -65,6 +66,10 @@ namespace MovieWave.Application.Mapping
 			CreateMap<Studio, StudioDto>().ReverseMap();
 
 			CreateMap<Tag, TagDto>().ReverseMap();
+
+			CreateMap<User, UserDto>()
+				.ForMember(dest => dest.UserRole, opt => opt.MapFrom(src => src.UserRole.ToString()))
+				.ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender.HasValue ? src.Gender.Value.ToString() : null));
 
 		}
 	}

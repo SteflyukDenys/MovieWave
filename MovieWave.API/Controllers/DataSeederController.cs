@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Mvc;
 using MovieWave.Domain.Interfaces.Services;
 using MovieWave.Domain.Result;
 
 [ApiController]
-[Route("api/v1/[controller]")]
+[ApiVersion("1.0")]
+[Route("api/v{version:apiVersion}/[controller]")]
 public class DataSeederController : ControllerBase
 {
 	private readonly IDataSeederService _dataSeederService;

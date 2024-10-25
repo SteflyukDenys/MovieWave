@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Mvc;
 using MovieWave.Domain.Dto.MediaItem;
 using MovieWave.Domain.Entity;
 using MovieWave.Domain.Interfaces.Services;
@@ -7,7 +8,8 @@ using MovieWave.Domain.Result;
 namespace MovieWave.API.Controllers;
 
 [ApiController]
-[Route("api/v1/[controller]")]
+[ApiVersion("1.0")]
+[Route("api/v{version:apiVersion}/[controller]")]
 
 public class MediaItemController : ControllerBase
 {
