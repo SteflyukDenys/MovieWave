@@ -9,5 +9,9 @@ public class NotificationMapping : Profile
 	public NotificationMapping()
 	{
 		CreateMap<Notification, NotificationDto>().ReverseMap();
+
+		//CreateMap<CreateNotificationDto, Notification>()
+		//	.AfterMap((src, dest) => dest.Id = Guid.NewGuid())
+		//	.ReverseMap();
 	}
 }

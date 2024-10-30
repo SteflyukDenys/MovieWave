@@ -15,6 +15,17 @@ public class DataSeederController : ControllerBase
 		_dataSeederService = dataSeederService;
 	}
 
+	/// <summary>
+	/// Запуск процесу заповнення бази даних початковими даними
+	/// </summary>
+	/// <remarks>
+	/// Приклад запиту:
+	/// <code>
+	/// POST /api/v1/dataseeder/db-seed
+	/// </code>
+	/// </remarks>
+	/// <response code="200">Якщо дані успішно додані в базу</response>
+	/// <response code="400">Якщо сталася помилка при додаванні даних</response>
 	[HttpPost("db-seed")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]

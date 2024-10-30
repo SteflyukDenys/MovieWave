@@ -9,5 +9,9 @@ public class AttachmentMapping : Profile
 	public AttachmentMapping()
 	{
 		CreateMap<Attachment, AttachmentDto>().ReverseMap();
+
+		//CreateMap<CreateAttachmentDto, AttachmentDto>()
+		//	.AfterMap((src, dest) => dest.Id = Guid.NewGuid()).ReverseMap();
+
 	}
 }

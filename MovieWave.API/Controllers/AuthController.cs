@@ -25,21 +25,67 @@ public class AuthController : ControllerBase
 		_signInManager = signInManager;
 	}
 
+	/// <summary>
+	/// Реєстрація нового користувача
+	/// </summary>
+	/// <remarks>
+	/// Sample request:
+	/// <code>
+	/// POST /api/v2.0/auth/register
+	/// {
+	///     "username": "user123",
+	///     "email": "user@example.com",
+	///     "password": "password123",
+	///     "passwordConfirm": "password123"
+	/// }
+	/// </code>
+	/// </remarks>
+	/// <response code="200">Якщо реєстрація пройшла успішно</response>
+	/// <response code="400">Якщо виникла помилка при реєстрації</response>
 	[HttpPost("register")]
+	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	public async Task<ActionResult<BaseResult<UserDto>>> Register([FromBody] RegisterUserDto dto)
 	{
 		var response = await _authService.RegisterAsync(dto);
 		return response.IsSuccess ? Ok(response) : BadRequest(response);
 	}
 
+	/// <summary>
+	/// Вхід користувача
+	/// </summary>
+	/// <remarks>
+	/// Sample request:
+	/// <code>
+	/// POST /api/v2.0/auth/login
+	/// {
+	///     "username": "user123",
+	///     "password": "password123"
+	/// }
+	/// </code>
+	/// </remarks>
+	/// <response code="200">Якщо вхід успішний</response>
+	/// <response code="400">Якщо логін або пароль некоректні</response>
 	[HttpPost("login")]
+	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	public async Task<ActionResult<BaseResult<TokenDto>>> Login([FromBody] LoginUserDto dto)
 	{
 		var response = await _authService.LoginAsync(dto);
 		return response.IsSuccess ? Ok(response) : BadRequest(response);
 	}
 
+	/// <summary>
+	/// Вхід через Google
+	/// </summary>
+	/// <remarks>
+	/// <code>
+	/// GET /api/v2.0/auth/google-login
+	/// </code>
+	/// </remarks>
+	/// <response code="302">Переадресація на сторінку входу Google</response>
 	[HttpGet("google-login")]
+	[ProducesResponseType(StatusCodes.Status302Found)]
 	public IActionResult GoogleLogin(string returnUrl = null)
 	{
 		var redirectUrl = Url.Action(nameof(GoogleResponse), "Auth", new { returnUrl });
@@ -48,7 +94,20 @@ public class AuthController : ControllerBase
 		return Challenge(properties, GoogleDefaults.AuthenticationScheme);
 	}
 
+	/// <summary>
+	/// Обробка відповіді від Google після авторизації
+	/// </summary>
+	/// <param name="returnUrl">URL для повернення після успішного входу</param>
+	/// <remarks>
+	/// <code>
+	/// GET /api/v2.0/auth/signin-google
+	/// </code>
+	/// </remarks>
+	/// <response code="200">Якщо вхід через Google успішний</response>
+	/// <response code="400">Якщо виникла помилка при обробці авторизації</response>
 	[HttpGet("signin-google")]
+	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	public async Task<IActionResult> GoogleResponse(string returnUrl = null)
 	{
 		var info = await _signInManager.GetExternalLoginInfoAsync();
@@ -74,5 +133,4 @@ public class AuthController : ControllerBase
 
 		return BadRequest(response);
 	}
-
 }

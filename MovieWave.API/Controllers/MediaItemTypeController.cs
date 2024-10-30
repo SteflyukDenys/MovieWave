@@ -1,5 +1,4 @@
 ﻿using Asp.Versioning;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieWave.Domain.Dto.MediaItemType;
 using MovieWave.Domain.Interfaces.Services;
@@ -19,6 +18,11 @@ public class MediaItemTypeController : ControllerBase
 		_mediaItemTypeService = mediaItemTypeService;
 	}
 
+	/// <summary>
+	/// Отримати всі типи медіаелементів
+	/// </summary>
+	/// <response code="200">Якщо список типів медіаелементів успішно отримано</response>
+	/// <response code="400">Якщо сталася помилка при запиті</response>
 	[HttpGet("all/")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -34,6 +38,12 @@ public class MediaItemTypeController : ControllerBase
 		return BadRequest(response);
 	}
 
+	/// <summary>
+	/// Отримати тип медіаелемента за ID
+	/// </summary>
+	/// <param name="id">Ідентифікатор типу медіаелемента</param>
+	/// <response code="200">Якщо тип медіаелемента був знайдений</response>
+	/// <response code="400">Якщо тип медіаелемента не знайдено або сталася помилка при запиті</response>
 	[HttpGet("{id}")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]

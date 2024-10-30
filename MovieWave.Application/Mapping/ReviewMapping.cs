@@ -9,5 +9,9 @@ public class ReviewMapping : Profile
 	public ReviewMapping()
 	{
 		CreateMap<Review, ReviewDto>().ReverseMap();
+
+		//CreateMap<CreateReviewDto, Review>()
+		//	.AfterMap((src, dest) => dest.Id = Guid.NewGuid())
+		//	.ReverseMap();
 	}
 }

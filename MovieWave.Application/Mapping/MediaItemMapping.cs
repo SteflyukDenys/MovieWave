@@ -15,6 +15,7 @@ public class MediaItemMapping : Profile
 			.ReverseMap();
 
 		CreateMap<CreateMediaItemDto, MediaItem>()
+			.AfterMap((src, dest) => dest.Id = Guid.NewGuid())
 			.ReverseMap();
 
 		CreateMap<UpdateMediaItemDto, MediaItem>()

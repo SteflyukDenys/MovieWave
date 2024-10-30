@@ -9,5 +9,9 @@ public class PersonMapping : Profile
 	public PersonMapping()
 	{
 		CreateMap<Person, PersonDto>().ReverseMap();
+
+		//CreateMap<CreatePersonDto, Person>()
+		//	.AfterMap((src, dest) => dest.Id = Guid.NewGuid())
+		//	.ReverseMap();
 	}
 }

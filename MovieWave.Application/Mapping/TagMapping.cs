@@ -9,5 +9,9 @@ public class TagMapping : Profile
 	public TagMapping()
 	{
 		CreateMap<Tag, TagDto>().ReverseMap();
+
+		//CreateMap<CreateTagDto, Tag>()
+		//	.AfterMap((src, dest) => dest.Id = Guid.NewGuid())
+		//	.ReverseMap();
 	}
 }

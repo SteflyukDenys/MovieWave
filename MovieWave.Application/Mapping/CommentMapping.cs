@@ -9,5 +9,9 @@ public class CommentMapping : Profile
 	public CommentMapping()
 	{
 		CreateMap<Comment, CommentDto>().ReverseMap();
+
+		//CreateMap<CreateCommentDto, Comment>()
+		//	.AfterMap((src, dest) => dest.Id = Guid.NewGuid())
+		//	.ReverseMap();
 	}
 }
