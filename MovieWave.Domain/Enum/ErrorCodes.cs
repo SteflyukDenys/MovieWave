@@ -28,6 +28,10 @@ public enum ErrorCodes
 	StatusesNotFound = 25,
 	StatusNotFound = 26,
 
+	// RestrictedRating
+	RestrictedRatingsNotFound = 30,
+	RestrictedRatingNotFound = 31,
+
 	// General Errors
 	InternalServerError = 90,
 	ErrorSeedingDb = 500

@@ -187,6 +187,24 @@ namespace MovieWave.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to RestrictedRating not found.
+        /// </summary>
+        internal static string RestrictedRatingNotFound {
+            get {
+                return ResourceManager.GetString("RestrictedRatingNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RestrictedRatings not found.
+        /// </summary>
+        internal static string RestrictedRatingsNotFound {
+            get {
+                return ResourceManager.GetString("RestrictedRatingsNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Statuses not found.
         /// </summary>
         internal static string StatusesNotFound {

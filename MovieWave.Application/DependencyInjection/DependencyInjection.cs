@@ -44,6 +44,7 @@ public static class DependencyInjection
 		services.AddScoped<IMediaItemTypeService, MediaItemTypeService>();
 		services.AddScoped<ICountryService, CountryService>();
 		services.AddScoped<IStatusService, StatusService>();
+		services.AddScoped<IRestrictedRatingService, RestrictedRatingService>();
 		services.AddScoped<IDataSeederService, DataSeederService>();
 		services.AddScoped<IJwtTokenGeneratorService, JwtTokenGeneratorService>();
 		services.AddScoped<IAuthService, AuthService>();

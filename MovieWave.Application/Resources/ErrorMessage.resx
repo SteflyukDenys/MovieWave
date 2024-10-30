@@ -168,4 +168,10 @@
   <data name="StatusNotFound" xml:space="preserve">
     <value>Status not found</value>
   </data>
+  <data name="RestrictedRatingsNotFound" xml:space="preserve">
+    <value>RestrictedRatings not found</value>
+  </data>
+  <data name="RestrictedRatingNotFound" xml:space="preserve">
+    <value>RestrictedRating not found</value>
+  </data>
 </root>

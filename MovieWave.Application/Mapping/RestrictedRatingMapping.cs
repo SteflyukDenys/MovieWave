@@ -9,5 +9,8 @@ public class RestrictedRatingMapping : Profile
 	public RestrictedRatingMapping()
 	{
 		CreateMap<RestrictedRating, RestrictedRatingDto>().ReverseMap();
+
+		CreateMap<UpdateRestrictedRatingDto, RestrictedRating>().ReverseMap();
+
 	}
 }
