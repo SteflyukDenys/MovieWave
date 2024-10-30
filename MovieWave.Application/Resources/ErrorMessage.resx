@@ -162,4 +162,10 @@
   <data name="CountryAlreadyExists" xml:space="preserve">
     <value>Country already exists</value>
   </data>
+  <data name="StatusesNotFound" xml:space="preserve">
+    <value>Statuses not found</value>
+  </data>
+  <data name="StatusNotFound" xml:space="preserve">
+    <value>Status not found</value>
+  </data>
 </root>

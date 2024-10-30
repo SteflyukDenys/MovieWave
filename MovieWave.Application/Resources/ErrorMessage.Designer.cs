@@ -187,6 +187,24 @@ namespace MovieWave.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Statuses not found.
+        /// </summary>
+        internal static string StatusesNotFound {
+            get {
+                return ResourceManager.GetString("StatusesNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status not found.
+        /// </summary>
+        internal static string StatusNotFound {
+            get {
+                return ResourceManager.GetString("StatusNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User already exists.
         /// </summary>
         internal static string UserAlreadyExists {

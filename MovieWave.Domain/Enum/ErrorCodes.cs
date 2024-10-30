@@ -24,6 +24,10 @@ public enum ErrorCodes
 	CountryNotFound = 21,
 	CountryAlreadyExists = 22,
 
+	// Status Errors
+	StatusesNotFound = 25,
+	StatusNotFound = 26,
+
 	// General Errors
 	InternalServerError = 90,
 	ErrorSeedingDb = 500
