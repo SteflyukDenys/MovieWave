@@ -174,4 +174,13 @@
   <data name="RestrictedRatingNotFound" xml:space="preserve">
     <value>RestrictedRating not found</value>
   </data>
+  <data name="StudiosNotFound" xml:space="preserve">
+    <value>Studios not found</value>
+  </data>
+  <data name="StudioNotFound" xml:space="preserve">
+    <value>Studio not found</value>
+  </data>
+  <data name="StudioAlreadyExists" xml:space="preserve">
+    <value>Studio already exists</value>
+  </data>
 </root>

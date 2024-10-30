@@ -223,6 +223,33 @@ namespace MovieWave.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Studio already exists.
+        /// </summary>
+        internal static string StudioAlreadyExists {
+            get {
+                return ResourceManager.GetString("StudioAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Studio not found.
+        /// </summary>
+        internal static string StudioNotFound {
+            get {
+                return ResourceManager.GetString("StudioNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Studios not found.
+        /// </summary>
+        internal static string StudiosNotFound {
+            get {
+                return ResourceManager.GetString("StudiosNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User already exists.
         /// </summary>
         internal static string UserAlreadyExists {

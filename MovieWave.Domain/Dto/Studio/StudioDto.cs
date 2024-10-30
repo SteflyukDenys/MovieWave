@@ -1,3 +1,5 @@
-﻿namespace MovieWave.Domain.Dto.Studio;
+﻿using MovieWave.Domain.Dto.SeoAddition;
 
-public record StudioDto(Guid Id, string Name);
+namespace MovieWave.Domain.Dto.Studio;
+
+public record StudioDto(long Id, string Name, string? LogoPath, string? Description, SeoAdditionDto SeoAddition);

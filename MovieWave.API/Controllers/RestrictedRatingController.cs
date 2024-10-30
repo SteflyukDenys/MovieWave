@@ -18,7 +18,7 @@ public class RestrictedRatingController : ControllerBase
 		_restrictedRatingService = restrictedRatingService;
 	}
 
-	[HttpGet("/all")]
+	[HttpGet("all")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	public async Task<ActionResult<CollectionResult<RestrictedRatingDto>>> GetAll()

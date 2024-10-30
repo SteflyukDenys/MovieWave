@@ -28,9 +28,14 @@ public enum ErrorCodes
 	StatusesNotFound = 25,
 	StatusNotFound = 26,
 
-	// RestrictedRating
+	// RestrictedRating Errors
 	RestrictedRatingsNotFound = 30,
 	RestrictedRatingNotFound = 31,
+
+	// Studio Errors
+	StudiosNotFound = 35,
+	StudioNotFound = 36,
+	StudioAlreadyExists = 37,
 
 	// General Errors
 	InternalServerError = 90,
