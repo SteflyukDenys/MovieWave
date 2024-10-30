@@ -2,7 +2,7 @@
 
 namespace MovieWave.Domain.Entity;
 
-public class Studio : NamedEntity<Guid>
+public class Studio : NamedEntity<long>
 {
 	public string? LogoPath { get; set; }
 	public string? Description { get; set; }

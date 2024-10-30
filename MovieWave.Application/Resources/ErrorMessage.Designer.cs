@@ -61,6 +61,33 @@ namespace MovieWave.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Countries not found.
+        /// </summary>
+        internal static string CountriesNotFound {
+            get {
+                return ResourceManager.GetString("CountriesNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Country already exists.
+        /// </summary>
+        internal static string CountryAlreadyExists {
+            get {
+                return ResourceManager.GetString("CountryAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Country not found.
+        /// </summary>
+        internal static string CountryNotFound {
+            get {
+                return ResourceManager.GetString("CountryNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error occurred while seeding database.
         /// </summary>
         internal static string ErrorSeedingDB {

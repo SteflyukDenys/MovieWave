@@ -1,40 +1,40 @@
-﻿using Bogus;
-using MovieWave.Domain.Entity;
+﻿using MovieWave.Domain.Entity;
 using MovieWave.Domain.Enum;
 
-namespace MovieWave.DAL.Seeders.DataGenerators
+namespace MovieWave.DAL.Seeders.DataGenerators;
+
+public static class MediaItemTypeDataGenerator
 {
-	public static class MediaItemTypeDataGenerator
+	public static List<MediaItemType> GenerateMediaItemTypes()
 	{
-		public static List<MediaItemType> GenerateMediaItemTypes()
+		return new List<MediaItemType>
 		{
-			return new List<MediaItemType>
+			new MediaItemType
 			{
-				new MediaItemType
+				Id = 1,
+				MediaItemName = MediaItemName.Film,
+				SeoAddition = new SeoAddition
 				{
-					Id = 1,
-					MediaItemName = MediaItemName.Film,
-					SeoAddition = SeoAdditionDataGenerator.GenerateSpecificSeoAddition(
-						"film",
-						"Фільми онлайн | Дивитися всі фільми на MovieWave",
-						"Всі фільми, доступні онлайн на MovieWave.",
-						"Переглядайте всі нові фільми онлайн на MovieWave. Обирайте серед безлічі жанрів, акторів та режисерів.",
-						"https://path-to-film-category-image.jpg"
-					)
-				},
-				new MediaItemType
-				{
-					Id = 2,
-					MediaItemName = MediaItemName.Series,
-					SeoAddition = SeoAdditionDataGenerator.GenerateSpecificSeoAddition(
-						"series",
-						"Серіали онлайн | Дивитися всі серіали на MovieWave",
-						"Всі серіали, доступні онлайн на MovieWave.",
-						"Дивіться нові серіали онлайн. Вибирайте серед популярних серіалів різних жанрів.",
-						"https://path-to-series-category-image.jpg"
-					)
+					Slug = "film",
+					MetaTitle = "Фільми онлайн | Дивитися всі фільми на MovieWave",
+					Description = "Всі фільми, доступні онлайн на MovieWave.",
+					MetaDescription = "Переглядайте всі нові фільми онлайн на MovieWave. Обирайте серед безлічі жанрів, акторів та режисерів.",
+					MetaImagePath = "https://path-to-film-category-image.jpg"
 				}
-			};
-		}
+			},
+			new MediaItemType
+			{
+				Id = 2,
+				MediaItemName = MediaItemName.Series,
+				SeoAddition = new SeoAddition
+				{
+					Slug = "series",
+					MetaTitle = "Серіали онлайн | Дивитися всі серіали на MovieWave",
+					Description = "Всі серіали, доступні онлайн на MovieWave.",
+					MetaDescription = "Дивіться нові серіали онлайн. Вибирайте серед популярних серіалів різних жанрів.",
+					MetaImagePath = "https://path-to-series-category-image.jpg"
+				}
+			}
+		};
 	}
 }

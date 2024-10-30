@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
+using MovieWave.DAL.Seeders.DataGenerators;
 using MovieWave.Domain.Entity;
+using MovieWave.Domain.Enum;
 
 namespace MovieWave.DAL.Configurations;
 

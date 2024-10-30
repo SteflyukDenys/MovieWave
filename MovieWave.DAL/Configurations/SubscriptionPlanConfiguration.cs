@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using MovieWave.Domain.Entity;
+using MovieWave.Domain.Enum;
 
 namespace MovieWave.DAL.Configurations;
 
@@ -9,7 +10,7 @@ public class SubscriptionPlanConfiguration : IEntityTypeConfiguration<Subscripti
 	public void Configure(EntityTypeBuilder<SubscriptionPlan> builder)
 	{
 		builder.HasKey(sp => sp.Id);
-		builder.Property(sp => sp.Id).ValueGeneratedOnAdd();
+		builder.Property(sp => sp.Id).ValueGeneratedNever();
 
 		builder.Property(sp => sp.Name)
 			.HasColumnName("SubLevel")

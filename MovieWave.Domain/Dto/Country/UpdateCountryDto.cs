@@ -2,4 +2,4 @@
 
 namespace MovieWave.Domain.Dto.Country;
 
-public record CountryDto(long Id, string Name, SeoAdditionDto SeoAddition);
+public record UpdateCountryDto(long Id, string Name, SeoAdditionDto SeoAddition);

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using MovieWave.Domain.Entity;
+using MovieWave.Domain.Enum;
 
 namespace MovieWave.DAL.Configurations;
 
@@ -16,5 +17,6 @@ public class StatusConfiguration : IEntityTypeConfiguration<Status>
 		builder.HasMany(s => s.MediaItems)
 			.WithOne(m => m.Status)
 			.HasForeignKey(m => m.StatusId);
+
 	}
 }

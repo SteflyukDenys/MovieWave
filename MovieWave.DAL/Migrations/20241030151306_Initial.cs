@@ -16,7 +16,8 @@ namespace MovieWave.DAL.Migrations
                 name: "Countries",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     SeoAddition_Slug = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: true),
                     SeoAddition_MetaTitle = table.Column<string>(type: "text", nullable: true),
                     SeoAddition_Description = table.Column<string>(type: "text", nullable: true),
@@ -35,7 +36,7 @@ namespace MovieWave.DAL.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<int>(type: "integer", nullable: false),
+                    MediaItemName = table.Column<int>(type: "integer", nullable: false),
                     SeoAddition_Slug = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
                     SeoAddition_MetaTitle = table.Column<string>(type: "text", nullable: true),
                     SeoAddition_Description = table.Column<string>(type: "text", nullable: true),
@@ -81,14 +82,15 @@ namespace MovieWave.DAL.Migrations
                 name: "Studios",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     LogoPath = table.Column<string>(type: "text", nullable: true),
                     Description = table.Column<string>(type: "text", nullable: true),
                     SeoAddition_Slug = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: true),
-                    SeoAddition_MetaTitle = table.Column<string>(type: "text", nullable: true),
-                    SeoAddition_Description = table.Column<string>(type: "text", nullable: true),
-                    SeoAddition_MetaDescription = table.Column<string>(type: "text", nullable: true),
-                    SeoAddition_MetaImagePath = table.Column<string>(type: "text", nullable: true),
+                    SeoAddition_MetaTitle = table.Column<string>(type: "character varying(60)", maxLength: 60, nullable: true),
+                    SeoAddition_Description = table.Column<string>(type: "character varying(160)", maxLength: 160, nullable: true),
+                    SeoAddition_MetaDescription = table.Column<string>(type: "character varying(160)", maxLength: 160, nullable: true),
+                    SeoAddition_MetaImagePath = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     Name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
@@ -155,10 +157,10 @@ namespace MovieWave.DAL.Migrations
                     CreatedBy = table.Column<long>(type: "bigint", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     UpdatedBy = table.Column<long>(type: "bigint", nullable: true),
-                    UserName = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
+                    UserName = table.Column<string>(type: "text", nullable: true),
                     NormalizedUserName = table.Column<string>(type: "text", nullable: true),
-                    Email = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    NormalizedEmail = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "text", nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "text", nullable: true),
                     EmailConfirmed = table.Column<bool>(type: "boolean", nullable: false),
                     PasswordHash = table.Column<string>(type: "text", nullable: true),
                     SecurityStamp = table.Column<string>(type: "text", nullable: true),
@@ -179,7 +181,8 @@ namespace MovieWave.DAL.Migrations
                 name: "Voices",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Description = table.Column<string>(type: "text", nullable: true),
                     Locale = table.Column<string>(type: "text", nullable: false),
                     IconPath = table.Column<string>(type: "text", nullable: true),
@@ -200,14 +203,14 @@ namespace MovieWave.DAL.Migrations
                     Description = table.Column<string>(type: "text", nullable: false),
                     StatusId = table.Column<long>(type: "bigint", nullable: true),
                     RestrictedRatingId = table.Column<long>(type: "bigint", nullable: true),
-                    PosterPath = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    PosterPath = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     Duration = table.Column<int>(type: "integer", nullable: true),
                     FirstAirDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     LastAirDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     EpisodesCount = table.Column<int>(type: "integer", nullable: true),
                     ImdbScore = table.Column<decimal>(type: "numeric(3,1)", nullable: true),
                     PublishedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    SeoAddition_Slug = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
+                    SeoAddition_Slug = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: true),
                     SeoAddition_MetaTitle = table.Column<string>(type: "text", nullable: true),
                     SeoAddition_Description = table.Column<string>(type: "text", nullable: true),
                     SeoAddition_MetaDescription = table.Column<string>(type: "text", nullable: true),
@@ -296,7 +299,7 @@ namespace MovieWave.DAL.Migrations
                 name: "MediaItemCountries",
                 columns: table => new
                 {
-                    CountryId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CountryId = table.Column<long>(type: "bigint", nullable: false),
                     MediaItemId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
@@ -321,7 +324,7 @@ namespace MovieWave.DAL.Migrations
                 columns: table => new
                 {
                     MediaItemId = table.Column<Guid>(type: "uuid", nullable: false),
-                    StudioId = table.Column<Guid>(type: "uuid", nullable: false)
+                    StudioId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -607,7 +610,7 @@ namespace MovieWave.DAL.Migrations
                 columns: table => new
                 {
                     EpisodeId = table.Column<Guid>(type: "uuid", nullable: false),
-                    VoiceId = table.Column<Guid>(type: "uuid", nullable: false),
+                    VoiceId = table.Column<long>(type: "bigint", nullable: false),
                     VideoUrl = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>

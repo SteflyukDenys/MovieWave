@@ -2,7 +2,7 @@
 
 namespace MovieWave.Domain.Entity;
 
-public class Voice : NamedEntity<Guid>
+public class Voice : NamedEntity<long>
 {
 	public string? Description { get; set; }
 	public string Locale { get; set; }

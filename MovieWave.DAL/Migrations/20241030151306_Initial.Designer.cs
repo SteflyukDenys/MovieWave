@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MovieWave.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241018110536_data_inter")]
-    partial class data_inter
+    [Migration("20241030151306_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,8 +27,8 @@ namespace MovieWave.DAL.Migrations
 
             modelBuilder.Entity("MediaItemCountries", b =>
                 {
-                    b.Property<Guid>("CountryId")
-                        .HasColumnType("uuid");
+                    b.Property<long>("CountryId")
+                        .HasColumnType("bigint");
 
                     b.Property<Guid>("MediaItemId")
                         .HasColumnType("uuid");
@@ -45,8 +45,8 @@ namespace MovieWave.DAL.Migrations
                     b.Property<Guid>("MediaItemId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("StudioId")
-                        .HasColumnType("uuid");
+                    b.Property<long>("StudioId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("MediaItemId", "StudioId");
 
@@ -164,8 +164,11 @@ namespace MovieWave.DAL.Migrations
 
             modelBuilder.Entity("MovieWave.Domain.Entity.Country", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -234,8 +237,8 @@ namespace MovieWave.DAL.Migrations
                     b.Property<Guid>("EpisodeId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("VoiceId")
-                        .HasColumnType("uuid");
+                    b.Property<long>("VoiceId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("VideoUrl")
                         .IsRequired()
@@ -581,8 +584,11 @@ namespace MovieWave.DAL.Migrations
 
             modelBuilder.Entity("MovieWave.Domain.Entity.Studio", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
@@ -602,7 +608,6 @@ namespace MovieWave.DAL.Migrations
             modelBuilder.Entity("MovieWave.Domain.Entity.SubscriptionPlan", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("Description")
@@ -656,6 +661,7 @@ namespace MovieWave.DAL.Migrations
             modelBuilder.Entity("MovieWave.Domain.Entity.User", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<int>("AccessFailedCount")
@@ -685,9 +691,7 @@ namespace MovieWave.DAL.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("text");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
@@ -710,8 +714,7 @@ namespace MovieWave.DAL.Migrations
                         .HasColumnType("character varying(32)");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                        .HasColumnType("text");
 
                     b.Property<string>("NormalizedUserName")
                         .HasColumnType("text");
@@ -738,9 +741,7 @@ namespace MovieWave.DAL.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
+                        .HasColumnType("text");
 
                     b.Property<int>("UserRole")
                         .HasColumnType("integer");
@@ -806,8 +807,11 @@ namespace MovieWave.DAL.Migrations
 
             modelBuilder.Entity("MovieWave.Domain.Entity.Voice", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
@@ -914,8 +918,8 @@ namespace MovieWave.DAL.Migrations
                 {
                     b.OwnsOne("MovieWave.Domain.Entity.SeoAddition", "SeoAddition", b1 =>
                         {
-                            b1.Property<Guid>("CountryId")
-                                .HasColumnType("uuid");
+                            b1.Property<long>("CountryId")
+                                .HasColumnType("bigint");
 
                             b1.Property<string>("Description")
                                 .HasColumnType("text");
@@ -1251,20 +1255,24 @@ namespace MovieWave.DAL.Migrations
                 {
                     b.OwnsOne("MovieWave.Domain.Entity.SeoAddition", "SeoAddition", b1 =>
                         {
-                            b1.Property<Guid>("StudioId")
-                                .HasColumnType("uuid");
+                            b1.Property<long>("StudioId")
+                                .HasColumnType("bigint");
 
                             b1.Property<string>("Description")
-                                .HasColumnType("text");
+                                .HasMaxLength(160)
+                                .HasColumnType("character varying(160)");
 
                             b1.Property<string>("MetaDescription")
-                                .HasColumnType("text");
+                                .HasMaxLength(160)
+                                .HasColumnType("character varying(160)");
 
                             b1.Property<string>("MetaImagePath")
-                                .HasColumnType("text");
+                                .HasMaxLength(255)
+                                .HasColumnType("character varying(255)");
 
                             b1.Property<string>("MetaTitle")
-                                .HasColumnType("text");
+                                .HasMaxLength(60)
+                                .HasColumnType("character varying(60)");
 
                             b1.Property<string>("Slug")
                                 .IsRequired()

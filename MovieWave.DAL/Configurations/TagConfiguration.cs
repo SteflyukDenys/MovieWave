@@ -11,7 +11,9 @@ public class TagConfiguration : IEntityTypeConfiguration<Tag>
 		builder.HasKey(t => t.Id);
 		builder.Property(t => t.Id).ValueGeneratedNever();
 
-		builder.Property(t => t.Name).IsRequired();
+		builder.Property(t => t.Name)
+			.IsRequired();
+
 		builder.Property(t => t.IsGenre).HasDefaultValue(false);
 
 		// Configuring the self-referencing relationship

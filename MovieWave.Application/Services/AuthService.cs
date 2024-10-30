@@ -10,6 +10,7 @@ using MovieWave.Domain.Settings;
 using Serilog;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Cryptography;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using MovieWave.Application.Resources;
@@ -162,4 +163,10 @@ public class AuthService : IAuthService
 			};
 		}
 	}
+
+	   private string HashPassword(string password)
+    {
+        var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(password));
+        return Convert.ToBase64String(bytes);
+    }
 }

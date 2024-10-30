@@ -153,4 +153,13 @@
   <data name="FailedToCreateUser" xml:space="preserve">
     <value>Failed to create user</value>
   </data>
+  <data name="CountriesNotFound" xml:space="preserve">
+    <value>Countries not found</value>
+  </data>
+  <data name="CountryNotFound" xml:space="preserve">
+    <value>Country not found</value>
+  </data>
+  <data name="CountryAlreadyExists" xml:space="preserve">
+    <value>Country already exists</value>
+  </data>
 </root>

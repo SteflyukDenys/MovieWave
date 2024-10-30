@@ -1,21 +1,41 @@
-﻿using Bogus;
-using MovieWave.Domain.Entity;
+﻿using MovieWave.Domain.Entity;
 using MovieWave.Domain.Enum;
-using System.Collections.Generic;
 
-namespace MovieWave.DAL.Seeders.DataGenerators
+namespace MovieWave.DAL.Seeders.DataGenerators;
+
+public static class SubscriptionPlanDataGenerator
 {
-	public static class SubscriptionPlanDataGenerator
+	public static List<SubscriptionPlan> GenerateSubscriptionPlans()
 	{
-		public static List<SubscriptionPlan> GenerateSubscriptionPlans(int count)
+		return new List<SubscriptionPlan>
 		{
-			return new Faker<SubscriptionPlan>()
-				.RuleFor(sp => sp.Name, f => f.PickRandom<SubscriptionLevel>())
-				.RuleFor(sp => sp.Description, f => f.Lorem.Sentence())
-				.RuleFor(sp => sp.PricePerMonth, f => f.Random.Decimal(5, 20))
-				.RuleFor(sp => sp.MaxDevices, f => f.Random.Int(1, 5))
-				.RuleFor(sp => sp.VideoQuality, f => f.PickRandom<VideoQuality>())
-				.Generate(count);
-		}
+			new SubscriptionPlan
+			{
+				Id = Guid.NewGuid(),
+				Name = SubscriptionLevel.Basic,
+				Description = "Базовий план для одного пристрою з HD якістю.",
+				PricePerMonth = 149.99m,
+				MaxDevices = 1,
+				VideoQuality = VideoQuality.HD
+			},
+			new SubscriptionPlan
+			{
+				Id = Guid.NewGuid(),
+				Name = SubscriptionLevel.Standart,
+				Description = "Стандартний план для двох пристроїв з Full HD якістю.",
+				PricePerMonth = 249.99m,
+				MaxDevices = 2,
+				VideoQuality = VideoQuality.FullHD
+			},
+			new SubscriptionPlan
+			{
+				Id = Guid.NewGuid(),
+				Name = SubscriptionLevel.Premium,
+				Description = "Преміум план для чотирьох пристроїв з Ultra HD якістю.",
+				PricePerMonth = 349.99m,
+				MaxDevices = 4,
+				VideoQuality = VideoQuality.UHD
+			}
+		};
 	}
 }

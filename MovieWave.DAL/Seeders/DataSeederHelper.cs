@@ -107,52 +107,6 @@ namespace MovieWave.DAL.Seeders
 			await _userRepository.SaveChangesAsync();
 		}
 
-		private async Task SeedStatusesAsync()
-		{
-			var statuses = StatusDataGenerator.GenerateStatuses(5);
-			foreach (var status in statuses)
-			{
-				await _statusRepository.CreateAsync(status);
-			}
-			await _statusRepository.SaveChangesAsync();
-		}
-
-		private async Task SeedMediaItemTypesAsync()
-		{
-			var existingTypes = _mediaItemTypeRepository.GetAll().Select(t => t.MediaItemName).ToList();
-
-			var mediaItemTypes = MediaItemTypeDataGenerator.GenerateMediaItemTypes()
-				.Where(t => !existingTypes.Contains(t.MediaItemName))
-				.ToList();
-
-			foreach (var type in mediaItemTypes)
-			{
-				await _mediaItemTypeRepository.CreateAsync(type);
-			}
-
-			await _mediaItemTypeRepository.SaveChangesAsync();
-		}
-
-		private async Task SeedRestrictedRatingsAsync()
-		{
-			var restrictedRatings = RestrictedRatingDataGenerator.GenerateRestrictedRatings(5);
-			foreach (var rating in restrictedRatings)
-			{
-				await _restrictedRatingRepository.CreateAsync(rating);
-			}
-			await _restrictedRatingRepository.SaveChangesAsync();
-		}
-
-		private async Task SeedSubscriptionPlansAsync()
-		{
-			var subscriptionPlans = SubscriptionPlanDataGenerator.GenerateSubscriptionPlans(3);
-			foreach (var plan in subscriptionPlans)
-			{
-				await _subscriptionPlanRepository.CreateAsync(plan);
-			}
-			await _subscriptionPlanRepository.SaveChangesAsync();
-		}
-
 		private async Task SeedMediaItemsAsync()
 		{
 			var statuses = _statusRepository.GetAll().ToList();
@@ -173,6 +127,36 @@ namespace MovieWave.DAL.Seeders
 			await _mediaItemRepository.SaveChangesAsync();
 		}
 
+		private async Task SeedMediaItemTypesAsync()
+		{
+			var existingMediaItemTypes = await _mediaItemTypeRepository.GetAll().ToListAsync();
+			var mediaItemTypes = MediaItemTypeDataGenerator.GenerateMediaItemTypes();
+
+			foreach (var mediaItemType in mediaItemTypes)
+			{
+				if (existingMediaItemTypes.All(m => m.MediaItemName != mediaItemType.MediaItemName))
+				{
+					await _mediaItemTypeRepository.CreateAsync(mediaItemType);
+				}
+			}
+			await _mediaItemTypeRepository.SaveChangesAsync();
+		}
+
+		private async Task SeedStatusesAsync()
+		{
+			var existingStatuses = await _statusRepository.GetAll().ToListAsync();
+			var statuses = StatusDataGenerator.GenerateStatuses();
+
+			foreach (var status in statuses)
+			{
+				if (existingStatuses.All(s => s.StatusType != status.StatusType))
+				{
+					await _statusRepository.CreateAsync(status);
+				}
+			}
+			await _statusRepository.SaveChangesAsync();
+		}
+
 		private async Task SeedSeasonsAsync()
 		{
 			var mediaItems = _mediaItemRepository.GetAll().ToList();
@@ -182,16 +166,6 @@ namespace MovieWave.DAL.Seeders
 				await _seasonRepository.CreateAsync(season);
 			}
 			await _seasonRepository.SaveChangesAsync();
-		}
-
-		private async Task SeedVoicesAsync()
-		{
-			var voices = VoiceDataGenerator.GenerateVoices(10);
-			foreach (var voice in voices)
-			{
-				await _voiceRepository.CreateAsync(voice);
-			}
-			await _voiceRepository.SaveChangesAsync();
 		}
 
 		private async Task SeedEpisodesAsync()
@@ -279,33 +253,91 @@ namespace MovieWave.DAL.Seeders
 
 		private async Task SeedCountriesAsync()
 		{
-			var countries = CountryDataGenerator.GenerateCountries(10);
+			var existingCountries = await _countryRepository.GetAll().ToListAsync();
+			var countries = CountryDataGenerator.GenerateCountries();
+
 			foreach (var country in countries)
 			{
-				await _countryRepository.CreateAsync(country);
+				if (existingCountries.All(c => c.Name != country.Name))
+				{
+					await _countryRepository.CreateAsync(country);
+				}
 			}
 			await _countryRepository.SaveChangesAsync();
 		}
 
+		private async Task SeedRestrictedRatingsAsync()
+		{
+			var existingRatings = await _restrictedRatingRepository.GetAll().ToListAsync();
+			var restrictedRatings = RestrictedRatingDataGenerator.GenerateRestrictedRatings();
+
+			foreach (var rating in restrictedRatings)
+			{
+				if (existingRatings.All(r => r.Name != rating.Name))
+				{
+					await _restrictedRatingRepository.CreateAsync(rating);
+				}
+			}
+			await _restrictedRatingRepository.SaveChangesAsync();
+		}
+
+		private async Task SeedSubscriptionPlansAsync()
+		{
+			var existingPlans = await _subscriptionPlanRepository.GetAll().ToListAsync();
+			var subscriptionPlans = SubscriptionPlanDataGenerator.GenerateSubscriptionPlans();
+
+			foreach (var plan in subscriptionPlans)
+			{
+				if (existingPlans.All(p => p.Name != plan.Name))
+				{
+					await _subscriptionPlanRepository.CreateAsync(plan);
+				}
+			}
+			await _subscriptionPlanRepository.SaveChangesAsync();
+		}
+
+		private async Task SeedVoicesAsync()
+		{
+			var existingVoices = await _voiceRepository.GetAll().ToListAsync();
+			var voices = VoiceDataGenerator.GenerateVoices();
+
+			foreach (var voice in voices)
+			{
+				if (existingVoices.All(v => v.Name != voice.Name))
+				{
+					await _voiceRepository.CreateAsync(voice);
+				}
+			}
+			await _voiceRepository.SaveChangesAsync();
+		}
+
 		private async Task SeedStudiosAsync()
 		{
-			var studios = StudioDataGenerator.GenerateStudios(10);
+			var existingStudios = await _studioRepository.GetAll().ToListAsync();
+			var studios = StudioDataGenerator.GenerateStudios();
+
 			foreach (var studio in studios)
 			{
-				await _studioRepository.CreateAsync(studio);
+				if (existingStudios.All(s => s.Name != studio.Name))
+				{
+					await _studioRepository.CreateAsync(studio);
+				}
 			}
 			await _studioRepository.SaveChangesAsync();
 		}
 
 		private async Task SeedTagsAsync()
 		{
-			var tags = TagDataGenerator.GenerateTags(10, 5);
+			var existingTags = await _tagRepository.GetAll().ToListAsync();
+			var tags = TagDataGenerator.GenerateTags();
 
 			foreach (var tag in tags)
 			{
-				await _tagRepository.CreateAsync(tag);
+				if (existingTags.All(t => t.Name != tag.Name))
+				{
+					await _tagRepository.CreateAsync(tag);
+				}
 			}
-
 			await _tagRepository.SaveChangesAsync();
 		}
 
@@ -344,7 +376,5 @@ namespace MovieWave.DAL.Seeders
 
 			await _episodeVoiceRepository.SaveChangesAsync();
 		}
-
-
 	}
 }

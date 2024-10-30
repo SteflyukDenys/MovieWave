@@ -3,7 +3,9 @@ using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MovieWave.DAL;
@@ -20,11 +22,16 @@ public static class Startup
 	/// <param name="services"></param>
 	public static void AddAuthenticationAndAuthorization(this IServiceCollection services, WebApplicationBuilder builder)
 	{
-		var jwtSettingsSection = builder.Configuration.GetSection("Jwt");
-		var jwtSettings = jwtSettingsSection.Get<JwtSettings>();
-		services.Configure<JwtSettings>(jwtSettingsSection);
+		//services.AddIdentityCore<User>()
+		//	.AddRoles<IdentityRole<Guid>>()
+		//	.AddEntityFrameworkStores<AppDbContext>()
+		//	.AddSignInManager()
+		//	.AddTokenProvider(TokenOptions.DefaultProvider, typeof(DataProtectorTokenProvider<User>))
+		//	.AddTokenProvider(TokenOptions.DefaultEmailProvider, typeof(EmailTokenProvider<User>))
+		//	.AddTokenProvider(TokenOptions.DefaultPhoneProvider, typeof(PhoneNumberTokenProvider<User>))
+		//	.AddTokenProvider(TokenOptions.DefaultAuthenticatorProvider, typeof(AuthenticatorTokenProvider<User>));
 
-		services.AddIdentity<User, IdentityRole<Guid>>(options =>
+		services.AddIdentityCore<User>(options =>
 			{
 				options.Password.RequireDigit = false;
 				options.Password.RequiredLength = 6;
@@ -32,37 +39,45 @@ public static class Startup
 				options.Password.RequireUppercase = false;
 				options.Password.RequireLowercase = false;
 			})
+			.AddRoles<IdentityRole<Guid>>()
 			.AddEntityFrameworkStores<AppDbContext>()
 			.AddDefaultTokenProviders();
-
 		services.AddAuthentication(options =>
 			{
 				options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-				options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
-				options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+				options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 			})
-			.AddCookie()
+			.AddCookie(IdentityConstants.ExternalScheme)
 			.AddJwtBearer(options =>
 			{
-				var key = Encoding.UTF8.GetBytes(jwtSettings.JwtKey);
+				var jwtSettings = builder.Configuration.GetSection(JwtSettings.DefaultSection).Get<JwtSettings>();
+
 				options.TokenValidationParameters = new TokenValidationParameters
 				{
 					ValidIssuer = jwtSettings.Issuer,
 					ValidAudience = jwtSettings.Audience,
-					IssuerSigningKey = new SymmetricSecurityKey(key),
+					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.JwtKey)),
 					ValidateIssuer = true,
 					ValidateAudience = true,
 					ValidateIssuerSigningKey = true,
-					ValidateLifetime = true
+					ValidateLifetime = true,
+					ClockSkew = TimeSpan.FromMinutes(1)
 				};
 			})
-			.AddGoogle(googleOptions =>
+			.AddGoogle(options =>
 			{
-				googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
-				googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
-				googleOptions.CallbackPath = "/signin-google";
-				googleOptions.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+				var googleSettings = builder.Configuration.GetSection(GoogleAuthSettings.DefaultSection).Get<GoogleAuthSettings>();
+				options.ClientId = googleSettings.ClientId;
+				options.ClientSecret = googleSettings.ClientSecret;
+				options.CallbackPath = googleSettings.CallbackPath;
+				options.SignInScheme = IdentityConstants.ExternalScheme;
 			});
+		services.Configure<CookiePolicyOptions>(options =>
+		{
+			options.CheckConsentNeeded = context => true;
+			options.MinimumSameSitePolicy = SameSiteMode.Unspecified;
+			options.Secure = CookieSecurePolicy.Always;
+		});
 		services.AddAuthorization();
 	}
 

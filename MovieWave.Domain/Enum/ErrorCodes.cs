@@ -19,6 +19,11 @@ public enum ErrorCodes
 	UserCreationFailed = 15,
 	PasswordNotEqualsPasswordConfirm = 16,
 
+	// Country Errors
+	CountriesNotFound = 20,
+	CountryNotFound = 21,
+	CountryAlreadyExists = 22,
+
 	// General Errors
 	InternalServerError = 90,
 	ErrorSeedingDb = 500

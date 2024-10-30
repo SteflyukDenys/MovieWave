@@ -9,7 +9,7 @@ public class VoiceConfiguration : IEntityTypeConfiguration<Voice>
 	public void Configure(EntityTypeBuilder<Voice> builder)
 	{
 		builder.HasKey(v => v.Id);
-		builder.Property(v => v.Id).ValueGeneratedNever();
+		builder.Property(v => v.Id).ValueGeneratedOnAdd();
 
 		builder.Property(v => v.Name).IsRequired();
 

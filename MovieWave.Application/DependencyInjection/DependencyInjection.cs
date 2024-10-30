@@ -15,8 +15,21 @@ public static class DependencyInjection
 {
 	public static void AddApplication(this IServiceCollection services)
 	{
-		services.AddAutoMapper(typeof(MappingProfile));
-
+		services.AddAutoMapper(typeof(MediaItemMapping));
+		services.AddAutoMapper(typeof(MediaItemTypeMapping));
+		services.AddAutoMapper(typeof(StatusMapping));
+		services.AddAutoMapper(typeof(CountryMapping));
+		services.AddAutoMapper(typeof(UserMapping));
+		services.AddAutoMapper(typeof(SeoAdditionMapping));
+		services.AddAutoMapper(typeof(TagMapping));
+		services.AddAutoMapper(typeof(RestrictedRatingMapping));
+		services.AddAutoMapper(typeof(NotificationMapping));
+		services.AddAutoMapper(typeof(ReviewMapping));
+		services.AddAutoMapper(typeof(AttachmentMapping));
+		services.AddAutoMapper(typeof(CommentMapping));
+		services.AddAutoMapper(typeof(EpisodeMapping));
+		services.AddAutoMapper(typeof(PersonMapping));
+		services.AddAutoMapper(typeof(StudioMapping));
 
 		InitService(services);
 	}
@@ -29,6 +42,7 @@ public static class DependencyInjection
 
 		services.AddScoped<IMediaItemService, MediaItemService>();
 		services.AddScoped<IMediaItemTypeService, MediaItemTypeService>();
+		services.AddScoped<ICountryService, CountryService>();
 		services.AddScoped<IDataSeederService, DataSeederService>();
 		services.AddScoped<IJwtTokenGeneratorService, JwtTokenGeneratorService>();
 		services.AddScoped<IAuthService, AuthService>();
