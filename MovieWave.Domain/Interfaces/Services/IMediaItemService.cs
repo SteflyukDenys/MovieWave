@@ -14,5 +14,7 @@ public interface IMediaItemService
 	Task<BaseResult<MediaItemDto>> DeleteMediaItemAsync(Guid id);
 
 	Task<BaseResult<MediaItemDto>> UpdateMediaItemAsync(UpdateMediaItemDto dto);
+
+	//Task<CollectionResult<MediaItemDto>> SearchMediaItemsAsync(MediaItemSearchDto searchDto);
 }
 

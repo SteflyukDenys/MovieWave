@@ -43,6 +43,7 @@ public class AppDbContext : DbContext
 	public DbSet<SubscriptionPlan> SubscriptionPlans { get; set; }
 	public DbSet<Tag> Tags { get; set; }
 	public DbSet<User> Users { get; set; }
+	public DbSet<UserToken> UserToken { get; set; }
 	public DbSet<UserMediaItemList> UserMediaItemLists { get; set; }
 	public DbSet<UserSubscription> UserSubscriptions { get; set; }
 	public DbSet<Voice> Voices { get; set; }

@@ -4,9 +4,7 @@ using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MovieWave.DAL;
@@ -29,45 +27,40 @@ public static class Startup
 		//	.AddSignInManager()
 		//	.AddTokenProvider(TokenOptions.DefaultProvider, typeof(DataProtectorTokenProvider<User>))
 		//	.AddTokenProvider(TokenOptions.DefaultEmailProvider, typeof(EmailTokenProvider<User>))
-		//	.AddTokenProvider(TokenOptions.DefaultPhoneProvider, typeof(PhoneNumberTokenProvider<User>))
 		//	.AddTokenProvider(TokenOptions.DefaultAuthenticatorProvider, typeof(AuthenticatorTokenProvider<User>));
-
-		services.AddIdentityCore<User>(options =>
-			{
-				options.Password.RequireDigit = false;
-				options.Password.RequiredLength = 6;
-				options.Password.RequireNonAlphanumeric = false;
-				options.Password.RequireUppercase = false;
-				options.Password.RequireLowercase = false;
-			})
-			.AddRoles<IdentityRole<Guid>>()
+		services.AddIdentity<User, IdentityRole<Guid>>()
 			.AddEntityFrameworkStores<AppDbContext>()
 			.AddDefaultTokenProviders();
+		services.AddAuthorization();
 		services.AddAuthentication(options =>
 			{
 				options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
 				options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+				options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 			})
-			.AddCookie(IdentityConstants.ExternalScheme)
-			.AddJwtBearer(options =>
+			.AddJwtBearer(o =>
 			{
-				var jwtSettings = builder.Configuration.GetSection(JwtSettings.DefaultSection).Get<JwtSettings>();
-
-				options.TokenValidationParameters = new TokenValidationParameters
+				var options = builder.Configuration.GetSection(JwtSettings.DefaultSection).Get<JwtSettings>();
+				var jwtKey = options.JwtKey;
+				var issuer = options.Issuer;
+				var audience = options.Audience;
+				o.Authority = options.Authority;
+				o.RequireHttpsMetadata = false;
+				o.TokenValidationParameters = new TokenValidationParameters()
 				{
-					ValidIssuer = jwtSettings.Issuer,
-					ValidAudience = jwtSettings.Audience,
-					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.JwtKey)),
-					ValidateIssuer = true,
+					ValidIssuer = issuer,
+					ValidAudience = audience,
+					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
 					ValidateAudience = true,
-					ValidateIssuerSigningKey = true,
+					ValidateIssuer = true,
 					ValidateLifetime = true,
-					ClockSkew = TimeSpan.FromMinutes(1)
+					ValidateIssuerSigningKey = true
 				};
 			})
 			.AddGoogle(options =>
 			{
-				var googleSettings = builder.Configuration.GetSection(GoogleAuthSettings.DefaultSection).Get<GoogleAuthSettings>();
+				var googleSettings = builder.Configuration.GetSection(GoogleAuthSettings.DefaultSection)
+					.Get<GoogleAuthSettings>();
 				options.ClientId = googleSettings.ClientId;
 				options.ClientSecret = googleSettings.ClientSecret;
 				options.CallbackPath = googleSettings.CallbackPath;
@@ -79,7 +72,6 @@ public static class Startup
 			options.MinimumSameSitePolicy = SameSiteMode.Unspecified;
 			options.Secure = CookieSecurePolicy.Always;
 		});
-		services.AddAuthorization();
 	}
 
 	/// <summary>

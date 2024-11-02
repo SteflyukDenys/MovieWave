@@ -6,6 +6,10 @@ namespace MovieWave.Domain.Entity;
 
 public class User : IdentityUser<Guid>, IAuditable
 {
+	public User()
+	{
+		Id = Guid.NewGuid();
+	}
 	public UserRole UserRole { get; set; }
 
 	public string Login { get; set; }
@@ -16,6 +20,8 @@ public class User : IdentityUser<Guid>, IAuditable
 	public string? Description { get; set; }
 	public DateTime? Birthday { get; set; }
 	public DateTime? LastSeenAt { get; set; }
+
+	public UserToken UserToken { get; set; }
 
 	public DateTime CreatedAt { get; set; }
 	public long CreatedBy { get; set; }

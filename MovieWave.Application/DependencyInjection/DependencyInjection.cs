@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using MovieWave.Application.Mapping;
 using MovieWave.Application.Services;
@@ -40,14 +41,16 @@ public static class DependencyInjection
 		services.AddScoped<IValidator<CreateMediaItemDto>, CreateMediaItemValidator>();
 		services.AddScoped<IValidator<UpdateMediaItemDto>, UpdateMediaItemValidator>();
 
+		services.AddScoped<IDataSeederService, DataSeederService>();
+
 		services.AddScoped<IMediaItemService, MediaItemService>();
 		services.AddScoped<IMediaItemTypeService, MediaItemTypeService>();
 		services.AddScoped<ICountryService, CountryService>();
 		services.AddScoped<IStatusService, StatusService>();
 		services.AddScoped<IRestrictedRatingService, RestrictedRatingService>();
 		services.AddScoped<IStudioService, StudioService>();
-		services.AddScoped<IDataSeederService, DataSeederService>();
-		services.AddScoped<IJwtTokenGeneratorService, JwtTokenGeneratorService>();
+
 		services.AddScoped<IAuthService, AuthService>();
+		services.AddScoped<ITokenGeneratorService, TokenGeneratorService>();
 	}
 }

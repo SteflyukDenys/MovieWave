@@ -8,6 +8,8 @@ public class JwtSettings
 
 	public string Audience { get; set; }
 
+	public string Authority { get; set; }
+
 	public string JwtKey { get; set; }
 
 	public int Lifetime { get; set; }

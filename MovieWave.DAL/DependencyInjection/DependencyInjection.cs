@@ -8,6 +8,7 @@ using MovieWave.DAL.Seeders;
 using MovieWave.Domain.Entity;
 using MovieWave.Domain.Interfaces.Repositories;
 using MovieWave.Domain.Interfaces.Services;
+using System;
 namespace MovieWave.DAL.DependencyInjection;
 
 public static class DependencyInjection
@@ -15,7 +16,6 @@ public static class DependencyInjection
 	public static void AddDataAccessLayer(this IServiceCollection services, IConfiguration configuration)
 	{
 		var connectionString = configuration.GetConnectionString("PostgreSQL");
-
 		services.AddSingleton<DateInterceptor>();
 		services.AddDbContext<AppDbContext>(options =>
 		{
@@ -50,5 +50,7 @@ public static class DependencyInjection
 
 		// For Identity
 		services.AddScoped<IBaseRepository<User>, BaseRepository<User>>();
+		services.AddScoped<IBaseRepository<UserToken>, BaseRepository<UserToken>>();
+
 	}
 }

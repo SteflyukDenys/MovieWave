@@ -5,6 +5,7 @@ public record UserDto
 	public Guid Id { get; init; }
 	public string Login { get; init; }
 	public string Email { get; init; }
+	public string PasswordHash { get; init; }
 	public string UserRole { get; init; }
 	public string? AvatarPath { get; init; }
 	public string? BackdropPath { get; init; }

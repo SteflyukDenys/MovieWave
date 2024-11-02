@@ -12,12 +12,11 @@ public enum ErrorCodes
 	MediaItemTypeNotFound = 7,
 
 	// User Errors
-	UserNotFound = 11,
-	UserAlreadyExists = 12,
-	InvalidLogin = 13,
-	InvalidPassword = 14,
-	UserCreationFailed = 15,
-	PasswordNotEqualsPasswordConfirm = 16,
+	UserAlreadyExists = 10,
+	InvalidLogin = 11,
+	InvalidPassword = 12,
+	UserCreationFailed = 13,
+	PasswordNotEqualsPasswordConfirm = 14,
 
 	// Country Errors
 	CountriesNotFound = 20,

@@ -12,8 +12,9 @@ public class UserMapping : Profile
 			.ForMember(dest => dest.UserRole, opt => opt.MapFrom(src => src.UserRole.ToString()))
 			.ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender.HasValue ? src.Gender.Value.ToString() : null));
 
-		//CreateMap<CreateUserDto, User>()
-		//	.AfterMap((src, dest) => dest.Id = Guid.NewGuid())
-		//	.ReverseMap();
+		CreateMap<RegisterUserDto, User>()
+			.ForMember(dest => dest.Id, opt => opt.Ignore())
+			.ForMember(dest => dest.PasswordHash, opt => opt.Ignore())
+			.AfterMap((src, dest) => dest.Id = Guid.NewGuid());
 	}
 }

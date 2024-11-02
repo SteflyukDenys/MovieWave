@@ -33,7 +33,7 @@ public class AuthController : ControllerBase
 	/// <code>
 	/// POST /api/v2.0/auth/register
 	/// {
-	///     "username": "user123",
+	///     "login": "user123",
 	///     "email": "user@example.com",
 	///     "password": "password123",
 	///     "passwordConfirm": "password123"
@@ -48,7 +48,11 @@ public class AuthController : ControllerBase
 	public async Task<ActionResult<BaseResult<UserDto>>> Register([FromBody] RegisterUserDto dto)
 	{
 		var response = await _authService.RegisterAsync(dto);
-		return response.IsSuccess ? Ok(response) : BadRequest(response);
+		if (response.IsSuccess)
+		{
+			return Ok(response);
+		}
+		return BadRequest(response);
 	}
 
 	/// <summary>
@@ -59,7 +63,7 @@ public class AuthController : ControllerBase
 	/// <code>
 	/// POST /api/v2.0/auth/login
 	/// {
-	///     "username": "user123",
+	///     "login": "user123",
 	///     "password": "password123"
 	/// }
 	/// </code>
@@ -72,7 +76,12 @@ public class AuthController : ControllerBase
 	public async Task<ActionResult<BaseResult<TokenDto>>> Login([FromBody] LoginUserDto dto)
 	{
 		var response = await _authService.LoginAsync(dto);
-		return response.IsSuccess ? Ok(response) : BadRequest(response);
+		if (response.IsSuccess)
+		{
+			return Ok(response);
+		}
+
+		return BadRequest(response);
 	}
 
 	/// <summary>

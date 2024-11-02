@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MovieWave.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241030151306_Initial")]
-    partial class Initial
+    [Migration("20241101230409_AddUserToken")]
+    partial class AddUserToken
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -805,6 +805,29 @@ namespace MovieWave.DAL.Migrations
                     b.ToTable("UserSubscriptions");
                 });
 
+            modelBuilder.Entity("MovieWave.Domain.Entity.UserToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("RefreshToken")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("RefreshTokenExpireTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserTokenId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserTokenId")
+                        .IsUnique();
+
+                    b.ToTable("UserToken");
+                });
+
             modelBuilder.Entity("MovieWave.Domain.Entity.Voice", b =>
                 {
                     b.Property<long>("Id")
@@ -1377,6 +1400,17 @@ namespace MovieWave.DAL.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("MovieWave.Domain.Entity.UserToken", b =>
+                {
+                    b.HasOne("MovieWave.Domain.Entity.User", "User")
+                        .WithOne("UserToken")
+                        .HasForeignKey("MovieWave.Domain.Entity.UserToken", "UserTokenId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("MovieWave.Domain.Entity.Comment", b =>
                 {
                     b.Navigation("Children");
@@ -1458,6 +1492,9 @@ namespace MovieWave.DAL.Migrations
                     b.Navigation("UserMediaItemLists");
 
                     b.Navigation("UserSubscriptions");
+
+                    b.Navigation("UserToken")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("MovieWave.Domain.Entity.UserSubscription", b =>

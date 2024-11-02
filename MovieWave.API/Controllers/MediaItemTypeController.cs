@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieWave.Domain.Dto.MediaItemType;
 using MovieWave.Domain.Interfaces.Services;
@@ -6,6 +7,7 @@ using MovieWave.Domain.Result;
 
 namespace MovieWave.API.Controllers;
 
+[Authorize]
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
