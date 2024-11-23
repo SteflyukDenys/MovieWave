@@ -27,22 +27,10 @@ namespace MovieWave.Application.Services
 		public async Task<CollectionResult<RestrictedRatingDto>> GetAllAsync()
 		{
 			List<RestrictedRatingDto> ratings;
-			try
-			{
-				ratings = await _restrictedRatingRepository.GetAll()
-					.Select(r => _mapper.Map<RestrictedRatingDto>(r))
-					.ToListAsync();
-			}
-			catch (Exception ex)
-			{
-				_logger.Error(ex, ex.Message);
 
-				return new CollectionResult<RestrictedRatingDto>
-				{
-					ErrorMessage = ErrorMessage.InternalServerError,
-					ErrorCode = (int)ErrorCodes.InternalServerError
-				};
-			}
+			ratings = await _restrictedRatingRepository.GetAll()
+				.Select(r => _mapper.Map<RestrictedRatingDto>(r))
+				.ToListAsync();
 
 			if (!ratings.Any())
 			{
@@ -61,67 +49,41 @@ namespace MovieWave.Application.Services
 		{
 			RestrictedRatingDto? ratingDto;
 
-			try
+			var rating = await _restrictedRatingRepository.GetAll()
+				.FirstOrDefaultAsync(r => r.Id == id);
+
+			if (rating == null)
 			{
-				var rating = await _restrictedRatingRepository.GetAll()
-					.FirstOrDefaultAsync(r => r.Id == id);
-
-				if (rating == null)
-				{
-					_logger.Warning($"RestrictedRating {id} not found");
-					return new BaseResult<RestrictedRatingDto>
-					{
-						ErrorMessage = ErrorMessage.RestrictedRatingNotFound,
-						ErrorCode = (int)ErrorCodes.RestrictedRatingNotFound
-					};
-				}
-
-				ratingDto = _mapper.Map<RestrictedRatingDto>(rating);
-			}
-			catch (Exception ex)
-			{
-				_logger.Error(ex, ex.Message);
-
+				_logger.Warning($"RestrictedRating {id} not found");
 				return new BaseResult<RestrictedRatingDto>
 				{
-					ErrorMessage = ErrorMessage.InternalServerError,
-					ErrorCode = (int)ErrorCodes.InternalServerError
+					ErrorMessage = ErrorMessage.RestrictedRatingNotFound,
+					ErrorCode = (int)ErrorCodes.RestrictedRatingNotFound
 				};
 			}
+
+			ratingDto = _mapper.Map<RestrictedRatingDto>(rating);
 
 			return new BaseResult<RestrictedRatingDto> { Data = ratingDto };
 		}
 
 		public async Task<BaseResult<RestrictedRatingDto>> UpdateAsync(UpdateRestrictedRatingDto dto)
 		{
-			try
+			var rating = await _restrictedRatingRepository.GetAll().FirstOrDefaultAsync(r => r.Id == dto.Id);
+			if (rating == null)
 			{
-				var rating = await _restrictedRatingRepository.GetAll().FirstOrDefaultAsync(r => r.Id == dto.Id);
-				if (rating == null)
-				{
-					return new BaseResult<RestrictedRatingDto>
-					{
-						ErrorMessage = ErrorMessage.RestrictedRatingNotFound,
-						ErrorCode = (int)ErrorCodes.RestrictedRatingNotFound
-					};
-				}
-
-				_mapper.Map(dto, rating);
-				var updatedRating = _restrictedRatingRepository.Update(rating);
-				await _restrictedRatingRepository.SaveChangesAsync();
-
-				return new BaseResult<RestrictedRatingDto> { Data = _mapper.Map<RestrictedRatingDto>(updatedRating) };
-			}
-			catch (Exception ex)
-			{
-				_logger.Error(ex, ex.Message);
-
 				return new BaseResult<RestrictedRatingDto>
 				{
-					ErrorMessage = ErrorMessage.InternalServerError,
-					ErrorCode = (int)ErrorCodes.InternalServerError
+					ErrorMessage = ErrorMessage.RestrictedRatingNotFound,
+					ErrorCode = (int)ErrorCodes.RestrictedRatingNotFound
 				};
 			}
+
+			_mapper.Map(dto, rating);
+			var updatedRating = _restrictedRatingRepository.Update(rating);
+			await _restrictedRatingRepository.SaveChangesAsync();
+
+			return new BaseResult<RestrictedRatingDto> { Data = _mapper.Map<RestrictedRatingDto>(updatedRating) };
 		}
 	}
 }

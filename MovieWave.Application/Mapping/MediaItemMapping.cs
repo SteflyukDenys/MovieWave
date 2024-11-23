@@ -20,5 +20,7 @@ public class MediaItemMapping : Profile
 
 		CreateMap<UpdateMediaItemDto, MediaItem>()
 			.ReverseMap();
+
+		CreateMap<MediaItemSearchDto, MediaItem>();
 	}
 }

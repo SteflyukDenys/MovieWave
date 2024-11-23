@@ -17,26 +17,33 @@ public enum ErrorCodes
 	InvalidPassword = 12,
 	UserCreationFailed = 13,
 	PasswordNotEqualsPasswordConfirm = 14,
+	UserNotFound = 15,
+	UserAlreadyExistsThisRole = 16,
+
+	// Role
+	RoleAlreadyExists = 20,
+	RoleNotFound = 21,
+	RolesNotFound = 22,
 
 	// Country Errors
-	CountriesNotFound = 20,
-	CountryNotFound = 21,
-	CountryAlreadyExists = 22,
+	CountriesNotFound = 25,
+	CountryNotFound = 26,
+	CountryAlreadyExists = 27,
 
 	// Status Errors
-	StatusesNotFound = 25,
-	StatusNotFound = 26,
+	StatusesNotFound = 30,
+	StatusNotFound = 31,
 
 	// RestrictedRating Errors
-	RestrictedRatingsNotFound = 30,
-	RestrictedRatingNotFound = 31,
+	RestrictedRatingsNotFound = 35,
+	RestrictedRatingNotFound = 36,
 
 	// Studio Errors
-	StudiosNotFound = 35,
-	StudioNotFound = 36,
-	StudioAlreadyExists = 37,
+	StudiosNotFound = 37,
+	StudioNotFound = 38,
+	StudioAlreadyExists = 39,
 
 	// General Errors
 	InternalServerError = 90,
-	ErrorSeedingDb = 500
+	ErrorSeedingDb = 95
 }

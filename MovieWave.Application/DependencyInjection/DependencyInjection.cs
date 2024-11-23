@@ -1,12 +1,9 @@
 ﻿using FluentValidation;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using MovieWave.Application.Mapping;
 using MovieWave.Application.Services;
-using MovieWave.Application.Validations;
 using MovieWave.Application.Validations.FluentValidations.MediaItem;
 using MovieWave.Domain.Dto.MediaItem;
-using MovieWave.Domain.Entity;
 using MovieWave.Domain.Interfaces.Services;
 using MovieWave.Domain.Interfaces.Validations;
 
@@ -31,6 +28,8 @@ public static class DependencyInjection
 		services.AddAutoMapper(typeof(EpisodeMapping));
 		services.AddAutoMapper(typeof(PersonMapping));
 		services.AddAutoMapper(typeof(StudioMapping));
+		services.AddAutoMapper(typeof(RoleMapping));
+
 
 		InitService(services);
 	}
@@ -50,7 +49,11 @@ public static class DependencyInjection
 		services.AddScoped<IRestrictedRatingService, RestrictedRatingService>();
 		services.AddScoped<IStudioService, StudioService>();
 
+		services.AddScoped<IStorageService, StorageService>();
+
 		services.AddScoped<IAuthService, AuthService>();
 		services.AddScoped<ITokenGeneratorService, TokenGeneratorService>();
+		services.AddScoped<IRoleService, RoleService>();
+
 	}
 }

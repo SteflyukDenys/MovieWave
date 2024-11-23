@@ -1,5 +1,7 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
+using MovieWave.Application.Validations;
+using MovieWave.Application.Validations.FluentValidations.MediaItem;
 using MovieWave.Domain.Dto.MediaItem;
 using MovieWave.Domain.Interfaces.Services;
 using MovieWave.Domain.Result;
@@ -164,4 +166,51 @@ public class MediaItemController : ControllerBase
 
 		return BadRequest(response);
 	}
+
+	/// <summary>
+	/// Пошук та фільтрація медіаелементів
+	/// </summary>
+	/// <param name="searchDto">Параметри пошуку та фільтрації</param>
+	/// <remarks>
+	/// Simple request:
+	/// <code>
+	/// POST
+	/// {
+	///     "query": "Драма",
+	///     "tagIds": [1, 2],
+	///     "statusId": 3,
+	///     "mediaTypeId": 1,
+	///     "sortBy": "ReleaseDate",
+	///     "sortDescending": true,
+	///     "pageNumber": 1,
+	///     "pageSize": 10
+	/// }
+	/// </code>
+	/// </remarks>
+	/// <response code="200">Якщо пошук успішний</response>
+	/// <response code="400">Якщо сталася помилка при запиті</response>
+	[HttpPost("search")]
+	public async Task<ActionResult<CollectionResult<MediaItemDto>>> SearchMediaItems([FromBody] MediaItemSearchDto searchDto)
+	{
+		var validator = new MediaItemSearchDtoValidator();
+		var validationResult = validator.Validate(searchDto);
+
+		if (!validationResult.IsValid)
+		{
+			return BadRequest(new CollectionResult<MediaItemDto>
+			{
+				ErrorMessage = validationResult.Errors.First().ErrorMessage
+			});
+		}
+
+		var response = await _mediaItemService.SearchMediaItemsAsync(searchDto);
+
+		if (response.IsSuccess)
+		{
+			return Ok(response);
+		}
+
+		return BadRequest(response);
+	}
+
 }

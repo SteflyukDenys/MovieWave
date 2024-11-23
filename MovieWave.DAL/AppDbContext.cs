@@ -20,6 +20,7 @@ public class AppDbContext : DbContext
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
+		modelBuilder.HasPostgresExtension("pg_trgm");
 		modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 	}
 
@@ -42,7 +43,7 @@ public class AppDbContext : DbContext
 	public DbSet<Studio> Studios { get; set; }
 	public DbSet<SubscriptionPlan> SubscriptionPlans { get; set; }
 	public DbSet<Tag> Tags { get; set; }
-	public DbSet<User> Users { get; set; }
+	public DbSet<Role> Roles { get; set; }
 	public DbSet<UserToken> UserToken { get; set; }
 	public DbSet<UserMediaItemList> UserMediaItemLists { get; set; }
 	public DbSet<UserSubscription> UserSubscriptions { get; set; }

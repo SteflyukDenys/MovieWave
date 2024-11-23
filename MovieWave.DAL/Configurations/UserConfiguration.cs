@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using MovieWave.Domain.Entity;
+using System.Reflection.Emit;
 
 namespace MovieWave.DAL.Configurations;
 
@@ -47,5 +49,12 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 			.WithOne(ut => ut.User)
 			.HasForeignKey<UserToken>(ut => ut.UserTokenId)
 			.OnDelete(DeleteBehavior.Cascade);
+
+		builder.HasMany(x => x.Roles)
+			.WithMany(x => x.Users)
+			.UsingEntity<UserRole>(
+				l => l.HasOne<Role>().WithMany().HasForeignKey(x => x.RoleId),
+				l => l.HasOne<User>().WithMany().HasForeignKey(x => x.UserId)
+			);
 	}
 }

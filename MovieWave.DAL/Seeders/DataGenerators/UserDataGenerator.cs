@@ -17,7 +17,6 @@ public static class UserDataGenerator
 			.RuleFor(u => u.Login, f => f.Internet.UserName())
 			.RuleFor(u => u.AvatarPath, f => f.Internet.Avatar())
 			.RuleFor(u => u.CreatedAt, f => f.Date.Past().ToUniversalTime())
-			.RuleFor(u => u.UserRole, f => f.PickRandom<UserRole>())
 			.Generate(count);
 	}
 }

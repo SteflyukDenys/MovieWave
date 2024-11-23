@@ -27,22 +27,11 @@ public class StudioService : IStudioService
 	public async Task<CollectionResult<StudioDto>> GetAllAsync()
 	{
 		List<StudioDto> studios;
-		try
-		{
-			studios = await _studioRepository.GetAll()
-				.Include(s => s.SeoAddition)
-				.Select(s => _mapper.Map<StudioDto>(s))
-				.ToListAsync();
-		}
-		catch (Exception ex)
-		{
-			_logger.Error(ex, ex.Message);
-			return new CollectionResult<StudioDto>
-			{
-				ErrorMessage = ErrorMessage.InternalServerError,
-				ErrorCode = (int)ErrorCodes.InternalServerError
-			};
-		}
+
+		studios = await _studioRepository.GetAll()
+			.Include(s => s.SeoAddition)
+			.Select(s => _mapper.Map<StudioDto>(s))
+			.ToListAsync();
 
 		if (!studios.Any())
 		{
@@ -61,126 +50,78 @@ public class StudioService : IStudioService
 	{
 		StudioDto? studioDto;
 
-		try
-		{
-			var studio = await _studioRepository.GetAll()
-				.Include(s => s.SeoAddition)
-				.FirstOrDefaultAsync(s => s.Id == id);
+		var studio = await _studioRepository.GetAll()
+			.Include(s => s.SeoAddition)
+			.FirstOrDefaultAsync(s => s.Id == id);
 
-			if (studio == null)
-			{
-				_logger.Warning($"Studio {id} not found");
-				return new BaseResult<StudioDto>
-				{
-					ErrorMessage = ErrorMessage.StudioNotFound,
-					ErrorCode = (int)ErrorCodes.StudioNotFound
-				};
-			}
-
-			studioDto = _mapper.Map<StudioDto>(studio);
-		}
-		catch (Exception ex)
+		if (studio == null)
 		{
-			_logger.Error(ex, ex.Message);
+			_logger.Warning($"Studio {id} not found");
 			return new BaseResult<StudioDto>
 			{
-				ErrorMessage = ErrorMessage.InternalServerError,
-				ErrorCode = (int)ErrorCodes.InternalServerError
+				ErrorMessage = ErrorMessage.StudioNotFound,
+				ErrorCode = (int)ErrorCodes.StudioNotFound
 			};
 		}
+
+		studioDto = _mapper.Map<StudioDto>(studio);
 
 		return new BaseResult<StudioDto> { Data = studioDto };
 	}
 
 	public async Task<BaseResult<StudioDto>> CreateAsync(CreateStudioDto dto)
 	{
-		try
+		var existingStudio = await _studioRepository.GetAll().FirstOrDefaultAsync(s => s.Name == dto.Name);
+		if (existingStudio != null)
 		{
-			var existingStudio = await _studioRepository.GetAll().FirstOrDefaultAsync(s => s.Name == dto.Name);
-			if (existingStudio != null)
-			{
-				return new BaseResult<StudioDto>
-				{
-					ErrorMessage = ErrorMessage.StudioAlreadyExists,
-					ErrorCode = (int)ErrorCodes.StudioAlreadyExists
-				};
-			}
-
-			var newStudio = _mapper.Map<Studio>(dto);
-			await _studioRepository.CreateAsync(newStudio);
-			await _studioRepository.SaveChangesAsync();
-
-			return new BaseResult<StudioDto> { Data = _mapper.Map<StudioDto>(newStudio) };
-		}
-		catch (Exception ex)
-		{
-			_logger.Error(ex, ex.Message);
 			return new BaseResult<StudioDto>
 			{
-				ErrorMessage = ErrorMessage.InternalServerError,
-				ErrorCode = (int)ErrorCodes.InternalServerError
+				ErrorMessage = ErrorMessage.StudioAlreadyExists,
+				ErrorCode = (int)ErrorCodes.StudioAlreadyExists
 			};
 		}
+
+		var newStudio = _mapper.Map<Studio>(dto);
+		await _studioRepository.CreateAsync(newStudio);
+		await _studioRepository.SaveChangesAsync();
+
+		return new BaseResult<StudioDto> { Data = _mapper.Map<StudioDto>(newStudio) };
 	}
 
 	public async Task<BaseResult<StudioDto>> UpdateAsync(UpdateStudioDto dto)
 	{
-		try
+		var studio = await _studioRepository.GetAll().FirstOrDefaultAsync(s => s.Id == dto.Id);
+		if (studio == null)
 		{
-			var studio = await _studioRepository.GetAll().FirstOrDefaultAsync(s => s.Id == dto.Id);
-			if (studio == null)
-			{
-				return new BaseResult<StudioDto>
-				{
-					ErrorMessage = ErrorMessage.StudioNotFound,
-					ErrorCode = (int)ErrorCodes.StudioNotFound
-				};
-			}
-
-			_mapper.Map(dto, studio);
-			var updatedStudio = _studioRepository.Update(studio);
-			await _studioRepository.SaveChangesAsync();
-
-			return new BaseResult<StudioDto> { Data = _mapper.Map<StudioDto>(updatedStudio) };
-		}
-		catch (Exception ex)
-		{
-			_logger.Error(ex, ex.Message);
 			return new BaseResult<StudioDto>
 			{
-				ErrorMessage = ErrorMessage.InternalServerError,
-				ErrorCode = (int)ErrorCodes.InternalServerError
+				ErrorMessage = ErrorMessage.StudioNotFound,
+				ErrorCode = (int)ErrorCodes.StudioNotFound
 			};
 		}
+
+		_mapper.Map(dto, studio);
+		var updatedStudio = _studioRepository.Update(studio);
+		await _studioRepository.SaveChangesAsync();
+
+		return new BaseResult<StudioDto> { Data = _mapper.Map<StudioDto>(updatedStudio) };
 	}
 
 	public async Task<BaseResult<StudioDto>> DeleteAsync(long id)
 	{
-		try
+		var studio = await _studioRepository.GetAll().FirstOrDefaultAsync(s => s.Id == id);
+		if (studio == null)
 		{
-			var studio = await _studioRepository.GetAll().FirstOrDefaultAsync(s => s.Id == id);
-			if (studio == null)
-			{
-				return new BaseResult<StudioDto>
-				{
-					ErrorMessage = ErrorMessage.StudioNotFound,
-					ErrorCode = (int)ErrorCodes.StudioNotFound
-				};
-			}
-
-			_studioRepository.Remove(studio);
-			await _studioRepository.SaveChangesAsync();
-
-			return new BaseResult<StudioDto> { Data = _mapper.Map<StudioDto>(studio) };
-		}
-		catch (Exception ex)
-		{
-			_logger.Error(ex, ex.Message);
 			return new BaseResult<StudioDto>
 			{
-				ErrorMessage = ErrorMessage.InternalServerError,
-				ErrorCode = (int)ErrorCodes.InternalServerError
+				ErrorMessage = ErrorMessage.StudioNotFound,
+				ErrorCode = (int)ErrorCodes.StudioNotFound
 			};
 		}
+
+		_studioRepository.Remove(studio);
+		await _studioRepository.SaveChangesAsync();
+
+		return new BaseResult<StudioDto> { Data = _mapper.Map<StudioDto>(studio) };
 	}
 }

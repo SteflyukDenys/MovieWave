@@ -1,4 +1,5 @@
 ﻿using MovieWave.Domain.AbstractEntity;
+using NpgsqlTypes;
 
 namespace MovieWave.Domain.Entity;
 
@@ -26,6 +27,8 @@ public class MediaItem : NamedAuditableEntity<Guid>
 
 	// Composition
 	public SeoAddition? SeoAddition { get; set; } = new SeoAddition();
+
+	public NpgsqlTsVector SearchVector { get; set; }
 
 	// One-to-Many
 	public ICollection<Season> Seasons { get; set; }

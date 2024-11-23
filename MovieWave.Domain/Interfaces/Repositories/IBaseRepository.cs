@@ -1,6 +1,8 @@
-﻿namespace MovieWave.Domain.Interfaces.Repositories;
+﻿using MovieWave.Domain.Interfaces.Databases;
 
-public interface IBaseRepository<TEntity>
+namespace MovieWave.Domain.Interfaces.Repositories;
+
+public interface IBaseRepository<TEntity> : IStateSaveChanges
 {
 	IQueryable<TEntity> GetAll();
 
@@ -9,6 +11,4 @@ public interface IBaseRepository<TEntity>
 	TEntity Update(TEntity entity);
 
 	void Remove(TEntity entity);
-
-	Task<int> SaveChangesAsync();
 }

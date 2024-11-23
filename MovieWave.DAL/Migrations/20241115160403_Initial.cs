@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using NpgsqlTypes;
 
 #nullable disable
 
@@ -12,6 +13,9 @@ namespace MovieWave.DAL.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterDatabase()
+                .Annotation("Npgsql:PostgresExtension:pg_trgm", ",,");
+
             migrationBuilder.CreateTable(
                 name: "Countries",
                 columns: table => new
@@ -62,6 +66,19 @@ namespace MovieWave.DAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RestrictedRatings", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Roles",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Roles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -141,11 +158,10 @@ namespace MovieWave.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "User",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserRole = table.Column<int>(type: "integer", nullable: false),
                     Login = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
                     AvatarPath = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     BackdropPath = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
@@ -174,7 +190,7 @@ namespace MovieWave.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.PrimaryKey("PK_User", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -215,6 +231,9 @@ namespace MovieWave.DAL.Migrations
                     SeoAddition_Description = table.Column<string>(type: "text", nullable: true),
                     SeoAddition_MetaDescription = table.Column<string>(type: "text", nullable: true),
                     SeoAddition_MetaImagePath = table.Column<string>(type: "text", nullable: true),
+                    SearchVector = table.Column<NpgsqlTsVector>(type: "tsvector", nullable: false)
+                        .Annotation("Npgsql:TsVectorConfig", "russian")
+                        .Annotation("Npgsql:TsVectorProperties", new[] { "Name", "Description" }),
                     Name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedBy = table.Column<long>(type: "bigint", nullable: false),
@@ -243,6 +262,30 @@ namespace MovieWave.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserRole",
+                columns: table => new
+                {
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    RoleId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserRole", x => new { x.RoleId, x.UserId });
+                    table.ForeignKey(
+                        name: "FK_UserRole_Roles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserRole_User_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserSubscriptions",
                 columns: table => new
                 {
@@ -263,9 +306,29 @@ namespace MovieWave.DAL.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserSubscriptions_Users_UserId",
+                        name: "FK_UserSubscriptions_User_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserToken",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    RefreshToken = table.Column<string>(type: "text", nullable: false),
+                    RefreshTokenExpireTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UserTokenId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserToken", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserToken_User_UserTokenId",
+                        column: x => x.UserTokenId,
+                        principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -423,9 +486,9 @@ namespace MovieWave.DAL.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Reviews_Users_UserId",
+                        name: "FK_Reviews_User_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -467,9 +530,9 @@ namespace MovieWave.DAL.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserMediaItemLists_Users_UserId",
+                        name: "FK_UserMediaItemLists_User_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -598,9 +661,9 @@ namespace MovieWave.DAL.Migrations
                         principalTable: "MediaItems",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Comments_Users_UserId",
+                        name: "FK_Comments_User_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -661,9 +724,9 @@ namespace MovieWave.DAL.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Notifications_Users_UserId",
+                        name: "FK_Notifications_User_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -744,6 +807,12 @@ namespace MovieWave.DAL.Migrations
                 name: "IX_MediaItems_RestrictedRatingId",
                 table: "MediaItems",
                 column: "RestrictedRatingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MediaItems_SearchVector",
+                table: "MediaItems",
+                column: "SearchVector")
+                .Annotation("Npgsql:IndexMethod", "GIN");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MediaItems_SeoAddition_Slug",
@@ -836,21 +905,26 @@ namespace MovieWave.DAL.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_User_Login",
+                table: "User",
+                column: "Login",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_User_NormalizedEmail",
+                table: "User",
+                column: "NormalizedEmail",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserMediaItemLists_MediaItemId",
                 table: "UserMediaItemLists",
                 column: "MediaItemId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_Login",
-                table: "Users",
-                column: "Login",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_NormalizedEmail",
-                table: "Users",
-                column: "NormalizedEmail",
-                unique: true);
+                name: "IX_UserRole_UserId",
+                table: "UserRole",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserSubscriptions_SubscriptionPlanId",
@@ -861,6 +935,12 @@ namespace MovieWave.DAL.Migrations
                 name: "IX_UserSubscriptions_UserId",
                 table: "UserSubscriptions",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserToken_UserTokenId",
+                table: "UserToken",
+                column: "UserTokenId",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -900,6 +980,12 @@ namespace MovieWave.DAL.Migrations
                 name: "UserMediaItemLists");
 
             migrationBuilder.DropTable(
+                name: "UserRole");
+
+            migrationBuilder.DropTable(
+                name: "UserToken");
+
+            migrationBuilder.DropTable(
                 name: "Voices");
 
             migrationBuilder.DropTable(
@@ -921,13 +1007,16 @@ namespace MovieWave.DAL.Migrations
                 name: "UserSubscriptions");
 
             migrationBuilder.DropTable(
+                name: "Roles");
+
+            migrationBuilder.DropTable(
                 name: "Seasons");
 
             migrationBuilder.DropTable(
                 name: "SubscriptionPlans");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "User");
 
             migrationBuilder.DropTable(
                 name: "MediaItems");

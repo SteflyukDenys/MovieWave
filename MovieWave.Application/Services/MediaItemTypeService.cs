@@ -28,20 +28,9 @@ namespace MovieWave.Application.Services
 		{
 			List<MediaItemTypeDto> mediaItemTypes;
 
-			try
-			{
-				var entities = await _mediaItemTypeRepository.GetAll().ToListAsync();
-				mediaItemTypes = entities.Select(entity => _mapper.Map<MediaItemTypeDto>(entity)).ToList();
-			}
-			catch (Exception ex)
-			{
-				_logger.Error(ex, ex.Message);
-				return new CollectionResult<MediaItemTypeDto>()
-				{
-					ErrorMessage = ErrorMessage.InternalServerError,
-					ErrorCode = (int)ErrorCodes.InternalServerError
-				};
-			}
+			var entities = await _mediaItemTypeRepository.GetAll().ToListAsync();
+
+			mediaItemTypes = entities.Select(entity => _mapper.Map<MediaItemTypeDto>(entity)).ToList();
 
 			if (!mediaItemTypes.Any())
 			{
@@ -64,31 +53,19 @@ namespace MovieWave.Application.Services
 		{
 			MediaItemTypeDto? mediaItemType;
 
-			try
-			{
-				var entity = await _mediaItemTypeRepository.GetAll().FirstOrDefaultAsync(x => x.Id == id);
+			var entity = await _mediaItemTypeRepository.GetAll().FirstOrDefaultAsync(x => x.Id == id);
 
-				if (entity == null)
-				{
-					_logger.Warning($"MediaItemType with ID {id} not found.");
-					return new BaseResult<MediaItemTypeDto>()
-					{
-						ErrorMessage = ErrorMessage.MediaItemTypeNotFound,
-						ErrorCode = (int)ErrorCodes.MediaItemTypeNotFound
-					};
-				}
-
-				mediaItemType = _mapper.Map<MediaItemTypeDto>(entity);
-			}
-			catch (Exception ex)
+			if (entity == null)
 			{
-				_logger.Error(ex, ex.Message);
+				_logger.Warning($"MediaItemType with ID {id} not found.");
 				return new BaseResult<MediaItemTypeDto>()
 				{
-					ErrorMessage = ErrorMessage.InternalServerError,
-					ErrorCode = (int)ErrorCodes.InternalServerError
+					ErrorMessage = ErrorMessage.MediaItemTypeNotFound,
+					ErrorCode = (int)ErrorCodes.MediaItemTypeNotFound
 				};
 			}
+
+			mediaItemType = _mapper.Map<MediaItemTypeDto>(entity);
 
 			return new BaseResult<MediaItemTypeDto>()
 			{

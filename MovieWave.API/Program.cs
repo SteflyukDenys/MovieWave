@@ -1,3 +1,4 @@
+using Amazon.S3;
 using Microsoft.AspNetCore.CookiePolicy;
 using MovieWave.API;
 using MovieWave.DAL.DependencyInjection;
@@ -6,6 +7,7 @@ using MovieWave.Domain.Settings;
 using Serilog;
 using Microsoft.AspNetCore.Builder;
 using MovieWave.API.Extensions;
+using MovieWave.API.Middlewares;
 using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +22,8 @@ builder.Services.AddControllers();
 
 builder.Services.AddAuthenticationAndAuthorization(builder);
 builder.Services.AddSwagger();
+builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
+builder.Services.AddAWSService<IAmazonS3>();
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
@@ -28,6 +32,8 @@ builder.Services.AddDataAccessLayer(builder.Configuration);
 builder.Services.AddApplication();
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 //if (app.Environment.IsDevelopment())
 app.UseSwagger();
@@ -45,12 +51,6 @@ app.UseHttpsRedirection();
 
 app.UseMetricServer();
 app.UseHttpMetrics();
-
-app.MapGet("/random-number", () =>
-{
-	var number = Random.Shared.Next(0, 10);
-	return Results.Ok(number);
-});
 
 app.MapMetrics();
 app.MapControllers();

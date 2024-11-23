@@ -12,7 +12,7 @@ using MovieWave.Domain.Result;
 using System.Security.Claims;
 
 [ApiController]
-[ApiVersion("2.0")]
+[ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
 public class AuthController : ControllerBase
 {
@@ -133,7 +133,7 @@ public class AuthController : ControllerBase
 		if (response.IsSuccess)
 		{
 			await _signInManager.SignOutAsync();
-			if (!string.IsNullOrEmpty(returnUrl))
+			if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
 			{
 				return Redirect(returnUrl);
 			}

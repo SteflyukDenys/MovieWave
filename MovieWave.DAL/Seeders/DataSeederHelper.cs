@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using MovieWave.Domain.Entity;
+﻿using MovieWave.Domain.Entity;
 using MovieWave.DAL.Seeders.DataGenerators;
 using MovieWave.Domain.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace MovieWave.DAL.Seeders
 {
 	public class DataSeederHelper
 	{
 		private readonly IBaseRepository<User> _userRepository;
+		private readonly IBaseRepository<Role> _roleRepository;
 		private readonly IBaseRepository<MediaItem> _mediaItemRepository;
 		private readonly IBaseRepository<Comment> _commentRepository;
 		private readonly IBaseRepository<Status> _statusRepository;
@@ -33,6 +31,7 @@ namespace MovieWave.DAL.Seeders
 
 		public DataSeederHelper(
 			IBaseRepository<User> userRepository,
+			IBaseRepository<Role> roleRepository,
 			IBaseRepository<MediaItem> mediaItemRepository,
 			IBaseRepository<Comment> commentRepository,
 			IBaseRepository<Status> statusRepository,
@@ -50,10 +49,10 @@ namespace MovieWave.DAL.Seeders
 			IBaseRepository<SubscriptionPlan> subscriptionPlanRepository,
 			IBaseRepository<Person> personRepository,
 			IBaseRepository<Voice> voiceRepository,
-			IBaseRepository<EpisodeVoice> episodeVoiceRepository
-			)
+			IBaseRepository<EpisodeVoice> episodeVoiceRepository)
 		{
 			_userRepository = userRepository;
+			_roleRepository = roleRepository;
 			_mediaItemRepository = mediaItemRepository;
 			_commentRepository = commentRepository;
 			_statusRepository = statusRepository;
@@ -77,6 +76,7 @@ namespace MovieWave.DAL.Seeders
 		public async Task SeedAsync()
 		{
 			await SeedUsersAsync();
+			await SeedRolesAsync();
 			await SeedStatusesAsync();
 			await SeedMediaItemTypesAsync();
 			await SeedRestrictedRatingsAsync();
@@ -105,6 +105,21 @@ namespace MovieWave.DAL.Seeders
 				await _userRepository.CreateAsync(user);
 			}
 			await _userRepository.SaveChangesAsync();
+		}
+
+		private async Task SeedRolesAsync()
+		{
+			var existingRoles = await _roleRepository.GetAll().ToListAsync();
+
+			var roles = RoleDataGenerator.GenerateRoles();
+
+			foreach (var role in roles)
+			{
+				if (existingRoles.All(r => r.Name != role.Name))
+				{
+					await _roleRepository.CreateAsync(role);
+				}
+			}
 		}
 
 		private async Task SeedMediaItemsAsync()

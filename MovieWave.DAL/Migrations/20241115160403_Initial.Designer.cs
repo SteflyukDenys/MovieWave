@@ -6,14 +6,15 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MovieWave.DAL;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using NpgsqlTypes;
 
 #nullable disable
 
 namespace MovieWave.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241101230409_AddUserToken")]
-    partial class AddUserToken
+    [Migration("20241115160403_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,6 +24,7 @@ namespace MovieWave.DAL.Migrations
                 .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "pg_trgm");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("MediaItemCountries", b =>
@@ -304,6 +306,13 @@ namespace MovieWave.DAL.Migrations
                     b.Property<long?>("RestrictedRatingId")
                         .HasColumnType("bigint");
 
+                    b.Property<NpgsqlTsVector>("SearchVector")
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("tsvector")
+                        .HasAnnotation("Npgsql:TsVectorConfig", "russian")
+                        .HasAnnotation("Npgsql:TsVectorProperties", new[] { "Name", "Description" });
+
                     b.Property<long?>("StatusId")
                         .HasColumnType("bigint");
 
@@ -318,6 +327,10 @@ namespace MovieWave.DAL.Migrations
                     b.HasIndex("MediaItemTypeId");
 
                     b.HasIndex("RestrictedRatingId");
+
+                    b.HasIndex("SearchVector");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("SearchVector"), "GIN");
 
                     b.HasIndex("StatusId");
 
@@ -544,6 +557,24 @@ namespace MovieWave.DAL.Migrations
                     b.ToTable("Reviews");
                 });
 
+            modelBuilder.Entity("MovieWave.Domain.Entity.Role", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+                });
+
             modelBuilder.Entity("MovieWave.Domain.Entity.Season", b =>
                 {
                     b.Property<Guid>("Id")
@@ -743,9 +774,6 @@ namespace MovieWave.DAL.Migrations
                     b.Property<string>("UserName")
                         .HasColumnType("text");
 
-                    b.Property<int>("UserRole")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Login")
@@ -754,7 +782,7 @@ namespace MovieWave.DAL.Migrations
                     b.HasIndex("NormalizedEmail")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("MovieWave.Domain.Entity.UserMediaItemList", b =>
@@ -773,6 +801,21 @@ namespace MovieWave.DAL.Migrations
                     b.HasIndex("MediaItemId");
 
                     b.ToTable("UserMediaItemLists");
+                });
+
+            modelBuilder.Entity("MovieWave.Domain.Entity.UserRole", b =>
+                {
+                    b.Property<long>("RoleId")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("RoleId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserRole");
                 });
 
             modelBuilder.Entity("MovieWave.Domain.Entity.UserSubscription", b =>
@@ -1379,6 +1422,21 @@ namespace MovieWave.DAL.Migrations
                     b.Navigation("MediaItem");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MovieWave.Domain.Entity.UserRole", b =>
+                {
+                    b.HasOne("MovieWave.Domain.Entity.Role", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MovieWave.Domain.Entity.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("MovieWave.Domain.Entity.UserSubscription", b =>

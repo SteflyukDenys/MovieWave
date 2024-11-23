@@ -21,16 +21,13 @@ public static class Startup
 	/// <param name="services"></param>
 	public static void AddAuthenticationAndAuthorization(this IServiceCollection services, WebApplicationBuilder builder)
 	{
-		//services.AddIdentityCore<User>()
-		//	.AddRoles<IdentityRole<Guid>>()
-		//	.AddEntityFrameworkStores<AppDbContext>()
-		//	.AddSignInManager()
-		//	.AddTokenProvider(TokenOptions.DefaultProvider, typeof(DataProtectorTokenProvider<User>))
-		//	.AddTokenProvider(TokenOptions.DefaultEmailProvider, typeof(EmailTokenProvider<User>))
-		//	.AddTokenProvider(TokenOptions.DefaultAuthenticatorProvider, typeof(AuthenticatorTokenProvider<User>));
-		services.AddIdentity<User, IdentityRole<Guid>>()
+		services.AddIdentityCore<User>()
 			.AddEntityFrameworkStores<AppDbContext>()
-			.AddDefaultTokenProviders();
+			.AddSignInManager()
+			.AddTokenProvider(TokenOptions.DefaultProvider, typeof(DataProtectorTokenProvider<User>))
+			.AddTokenProvider(TokenOptions.DefaultEmailProvider, typeof(EmailTokenProvider<User>))
+			.AddTokenProvider(TokenOptions.DefaultAuthenticatorProvider, typeof(AuthenticatorTokenProvider<User>));
+
 		services.AddAuthorization();
 		services.AddAuthentication(options =>
 			{
@@ -57,6 +54,8 @@ public static class Startup
 					ValidateIssuerSigningKey = true
 				};
 			})
+			.AddCookie(IdentityConstants.ApplicationScheme)
+			.AddCookie(IdentityConstants.ExternalScheme)
 			.AddGoogle(options =>
 			{
 				var googleSettings = builder.Configuration.GetSection(GoogleAuthSettings.DefaultSection)

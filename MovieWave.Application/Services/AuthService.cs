@@ -1,5 +1,4 @@
 ﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
 using MovieWave.Domain.Dto;
 using MovieWave.Domain.Dto.User;
 using MovieWave.Domain.Entity;
@@ -13,25 +12,30 @@ using MovieWave.Application.Resources;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MovieWave.Domain.Interfaces.Repositories;
+using MovieWave.Domain.Interfaces.Databases;
 
 namespace MovieWave.Application.Services;
 
 public class AuthService : IAuthService
 {
-	private readonly UserManager<User> _userManager;
+	private readonly IUnitOfWork _unitOfWork;
+	private readonly IBaseRepository<User> _userRepository;
+	private readonly IBaseRepository<Role> _roleRepository;
 	private readonly IBaseRepository<UserToken> _userTokenRepository;
 	private readonly ITokenGeneratorService _tokenGeneratorService;
 	private readonly ILogger _logger;
 	private readonly IMapper _mapper;
 
-	public AuthService(UserManager<User> userManager, ITokenGeneratorService tokenGeneratorService,
-		ILogger logger, IMapper mapper, IBaseRepository<UserToken> userTokenRepository)
+	public AuthService(IBaseRepository<User> userRepository, ITokenGeneratorService tokenGeneratorService,
+		ILogger logger, IMapper mapper, IBaseRepository<UserToken> userTokenRepository, IBaseRepository<Role> roleRepository, IUnitOfWork unitOfWork)
 	{
-		_userManager = userManager;
+		_userRepository = userRepository;
 		_tokenGeneratorService = tokenGeneratorService;
 		_logger = logger;
 		_mapper = mapper;
 		_userTokenRepository = userTokenRepository;
+		_roleRepository = roleRepository;
+		_unitOfWork = unitOfWork;
 	}
 
 	public async Task<BaseResult<UserDto>> RegisterAsync(RegisterUserDto dto)
@@ -45,211 +49,201 @@ public class AuthService : IAuthService
 			};
 		}
 
-		try
+		var user = await _userRepository.GetAll()
+			.FirstOrDefaultAsync(u => u.Login == dto.Login);
+		var userEmail = await _userRepository.GetAll()
+			.FirstOrDefaultAsync(u => u.Email == dto.Email);
+		if (user != null || userEmail != null)
 		{
-			var existingUser = await _userManager.FindByNameAsync(dto.Login);
-			var existingUserEmail = await _userManager.FindByEmailAsync(dto.Email);
-			if (existingUser != null || existingUserEmail != null)
+			return new BaseResult<UserDto>
 			{
-				return new BaseResult<UserDto>
-				{
-					ErrorMessage = ErrorMessage.UserAlreadyExists,
-					ErrorCode = (int)ErrorCodes.UserAlreadyExists
-				};
-			}
-
-			var hashUserPassword = HashPassword(dto.Password);
-			var user = new User
-			{
-				UserName = dto.Login,
-				Login = dto.Login,
-				Email = dto.Email,
-				PasswordHash = hashUserPassword,
-				UserRole = UserRole.User
-			};
-
-			var result = await _userManager.CreateAsync(user);
-			if (!result.Succeeded)
-			{
-				return new BaseResult<UserDto>
-				{
-					ErrorMessage = ErrorMessage.FailedToCreateUser,
-					ErrorCode = (int)ErrorCodes.UserCreationFailed
-				};
-			}
-
-			return new BaseResult<UserDto>()
-			{
-				Data = _mapper.Map<UserDto>(user)
+				ErrorMessage = ErrorMessage.UserAlreadyExists,
+				ErrorCode = (int)ErrorCodes.UserAlreadyExists
 			};
 		}
-		catch (Exception ex)
+
+		var hashUserPassword = HashPassword(dto.Password);
+
+		var transaction = await _unitOfWork.BeginTransactionAsync();
+		using (transaction)
 		{
-			_logger.Error(ex, ex.Message);
-			return new BaseResult<UserDto>()
+			try
 			{
-				ErrorMessage = ErrorMessage.InternalServerError,
-				ErrorCode = (int)ErrorCodes.InternalServerError
-			};
+				user = new User
+				{
+					UserName = dto.Email,
+					Email = dto.Email,
+					Login = dto.Login ?? dto.Email,
+					PasswordHash = hashUserPassword
+				};
+				await _unitOfWork.Users.CreateAsync(user);
+
+				await _unitOfWork.SaveChangesAsync();
+
+
+				var role = await _roleRepository.GetAll().FirstOrDefaultAsync(x => x.Name == nameof(Roles.User));
+				if (role == null)
+				{
+					return new BaseResult<UserDto>()
+					{
+						ErrorMessage = ErrorMessage.RoleNotFound,
+						ErrorCode = (int)ErrorCodes.RoleNotFound
+					};
+				}
+
+				UserRole userRole = new UserRole()
+				{
+					UserId = user.Id,
+					RoleId = role.Id
+				};
+				await _unitOfWork.UserRoles.CreateAsync(userRole);
+
+				await _unitOfWork.SaveChangesAsync();
+
+				await transaction.CommitAsync();
+			}
+			catch (Exception)
+			{
+				await transaction.RollbackAsync();
+			}
 		}
+
+		return new BaseResult<UserDto>()
+		{
+			Data = _mapper.Map<UserDto>(user)
+		};
 	}
 
 	public async Task<BaseResult<TokenDto>> LoginAsync(LoginUserDto dto)
 	{
-		try
+		var user = await _userRepository.GetAll()
+			.Include(x => x.Roles)
+			.FirstOrDefaultAsync(u => u.Login == dto.Login);
+		if (user == null)
 		{
-			var user = await _userManager.FindByNameAsync(dto.Login);
-			if (user == null)
+			return new BaseResult<TokenDto>
 			{
-				return new BaseResult<TokenDto>
-				{
-					ErrorMessage = ErrorMessage.InvalidLogin,
-					ErrorCode = (int)ErrorCodes.InvalidLogin
-				};
-			}
-
-			var isVerifyPassword = IsVerifyPassword(user.PasswordHash, dto.Password);
-			if (!isVerifyPassword)
-			{
-				return new BaseResult<TokenDto>
-				{
-					ErrorMessage = ErrorMessage.InvalidPassword,
-					ErrorCode = (int)ErrorCodes.InvalidPassword
-				};
-			}
-
-			var userToken = await _userTokenRepository.GetAll().FirstOrDefaultAsync(x => x.UserTokenId == user.Id);
-
-			var claims = new List<Claim>()
-			{
-				new Claim(ClaimTypes.Name, user.Login),
-				new Claim(ClaimTypes.Role, user.UserRole.ToString())
-			};
-			var accessToken = _tokenGeneratorService.GenerateAccessToken(claims);
-			var refreshToken = _tokenGeneratorService.GenerateRefreshToken();
-			if (userToken == null)
-			{
-				userToken = new UserToken()
-				{
-					UserTokenId = user.Id,
-					RefreshToken = refreshToken,
-					RefreshTokenExpireTime = DateTime.UtcNow.AddDays(7)
-				};
-				await _userTokenRepository.CreateAsync(userToken);
-			}
-			else
-			{
-				userToken.RefreshToken = refreshToken;
-				userToken.RefreshTokenExpireTime = DateTime.UtcNow.AddDays(7);
-				_userTokenRepository.Update(userToken);
-			}
-			await _userTokenRepository.SaveChangesAsync();
-			return new BaseResult<TokenDto>()
-			{
-				Data = new TokenDto()
-				{
-					AccessToken = accessToken,
-					RefreshToken = refreshToken
-				}
-			};
-
-		}
-		catch (Exception ex)
-		{
-			_logger.Error(ex, ex.Message);
-			return new BaseResult<TokenDto>()
-			{
-				ErrorMessage = ErrorMessage.InternalServerError,
-				ErrorCode = (int)ErrorCodes.InternalServerError
+				ErrorMessage = ErrorMessage.InvalidLogin,
+				ErrorCode = (int)ErrorCodes.InvalidLogin
 			};
 		}
+
+		var isVerifyPassword = IsVerifyPassword(user.PasswordHash, dto.Password);
+		if (!isVerifyPassword)
+		{
+			return new BaseResult<TokenDto>
+			{
+				ErrorMessage = ErrorMessage.InvalidPassword,
+				ErrorCode = (int)ErrorCodes.InvalidPassword
+			};
+		}
+
+		var userToken = await _userTokenRepository.GetAll().FirstOrDefaultAsync(x => x.UserTokenId == user.Id);
+
+		var userRoles = user.Roles;
+		var claims = userRoles.Select(u => new Claim(ClaimTypes.Role, u.Name)).ToList();
+		claims.Add(new Claim(ClaimTypes.Name, user.Login));
+
+		var accessToken = _tokenGeneratorService.GenerateAccessToken(claims);
+		var refreshToken = _tokenGeneratorService.GenerateRefreshToken();
+
+		if (userToken == null)
+		{
+			userToken = new UserToken()
+			{
+				UserTokenId = user.Id,
+				RefreshToken = refreshToken,
+				RefreshTokenExpireTime = DateTime.UtcNow.AddDays(7)
+			};
+			await _userTokenRepository.CreateAsync(userToken);
+		}
+		else
+		{
+			userToken.RefreshToken = refreshToken;
+			userToken.RefreshTokenExpireTime = DateTime.UtcNow.AddDays(7);
+			_userTokenRepository.Update(userToken);
+		}
+		await _userTokenRepository.SaveChangesAsync();
+		return new BaseResult<TokenDto>()
+		{
+			Data = new TokenDto()
+			{
+				AccessToken = accessToken,
+				RefreshToken = refreshToken
+			}
+		};
 	}
 
 	public async Task<BaseResult<TokenDto>> ExternalLoginAsync(string email, string name)
 	{
-		try
+		var user = await _userRepository.GetAll().FirstOrDefaultAsync(u => u.Email == email);
+		if (user == null)
 		{
-			var user = await _userManager.FindByEmailAsync(email);
-			if (user == null)
+			user = new User
 			{
-				user = new User
-				{
-					UserName = email,
-					Email = email,
-					Login = name ?? email,
-					UserRole = UserRole.User,
-					EmailConfirmed = true
-				};
-
-				var result = await _userManager.CreateAsync(user);
-				if (!result.Succeeded)
-				{
-					return new BaseResult<TokenDto>
-					{
-						ErrorMessage = ErrorMessage.FailedToCreateUser,
-						ErrorCode = (int)ErrorCodes.UserCreationFailed
-					};
-				}
-			}
-
-			var claims = new List<Claim>
-			{
-				new Claim(ClaimTypes.Name, user.Login),
-				new Claim(ClaimTypes.Email, user.Email),
-				new Claim(ClaimTypes.Role, user.UserRole.ToString())
+				UserName = email,
+				Email = email,
+				Login = name ?? email,
+				EmailConfirmed = true
 			};
-			var accessToken = _tokenGeneratorService.GenerateAccessToken(claims);
-			var refreshToken = _tokenGeneratorService.GenerateRefreshToken();
 
-			var userToken = await _userTokenRepository.GetAll().FirstOrDefaultAsync(x => x.UserTokenId == user.Id);
-			if (userToken == null)
-			{
-				userToken = new UserToken
-				{
-					UserTokenId = user.Id,
-					RefreshToken = refreshToken,
-					RefreshTokenExpireTime = DateTime.UtcNow.AddDays(7)
-				};
-				await _userTokenRepository.CreateAsync(userToken);
-			}
-			else
-			{
-				userToken.RefreshToken = refreshToken;
-				userToken.RefreshTokenExpireTime = DateTime.UtcNow.AddDays(7);
-			}
-
-			var userDto = _mapper.Map<UserDto>(user);
-			return new BaseResult<TokenDto>
-			{
-				Data = new TokenDto
-				{
-					AccessToken = accessToken,
-					RefreshToken = refreshToken
-				}
-			};
+			await _userRepository.CreateAsync(user);
+			await _userRepository.SaveChangesAsync();
 		}
-		catch (Exception ex)
+
+		var claims = new List<Claim>
 		{
-			_logger.Error(ex, "Error during external login.");
-			return new BaseResult<TokenDto>
+			new Claim(ClaimTypes.Name, user.Login),
+			new Claim(ClaimTypes.Email, user.Email),
+			new Claim(ClaimTypes.Role, nameof(Roles.User))
+		};
+		var accessToken = _tokenGeneratorService.GenerateAccessToken(claims);
+		var refreshToken = _tokenGeneratorService.GenerateRefreshToken();
+
+		var userToken = await _userTokenRepository.GetAll().FirstOrDefaultAsync(x => x.UserTokenId == user.Id);
+		if (userToken == null)
+		{
+			userToken = new UserToken
 			{
-				ErrorMessage = ErrorMessage.InternalServerError,
-				ErrorCode = (int)ErrorCodes.InternalServerError
+				UserTokenId = user.Id,
+				RefreshToken = refreshToken,
+				RefreshTokenExpireTime = DateTime.UtcNow.AddDays(7)
 			};
+			await _userTokenRepository.CreateAsync(userToken);
 		}
+		else
+		{
+			userToken.RefreshToken = refreshToken;
+			userToken.RefreshTokenExpireTime = DateTime.UtcNow.AddDays(7);
+			_userTokenRepository.Update(userToken);
+		}
+
+		await _userTokenRepository.SaveChangesAsync();
+		return new BaseResult<TokenDto>
+		{
+			Data = new TokenDto
+			{
+				AccessToken = accessToken,
+				RefreshToken = refreshToken
+			}
+		};
 	}
-
 
 	private string HashPassword(string password)
 	{
-		var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(password));
-		return Convert.ToBase64String(bytes);
+		using var sha256 = SHA256.Create();
+		var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+		var builder = new StringBuilder();
+		foreach (var b in bytes)
+		{
+			builder.Append(b.ToString("x2"));
+		}
+		return builder.ToString();
 	}
 
-	private bool IsVerifyPassword(string userPasswordHash, string userPassword)
+	private bool IsVerifyPassword(string hash, string password)
 	{
-		var hash = HashPassword(userPassword);
-
-		return userPasswordHash == hash;
+		var hashedInput = HashPassword(password);
+		return hash == hashedInput;
 	}
 }

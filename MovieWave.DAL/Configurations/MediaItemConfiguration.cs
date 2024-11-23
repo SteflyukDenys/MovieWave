@@ -49,6 +49,14 @@ namespace MovieWave.DAL.Configurations
 				seo.HasIndex(s => s.Slug).IsUnique();
 			});
 
+			// Full text search
+			builder.HasGeneratedTsVectorColumn(
+					m => m.SearchVector,
+					"russian",
+					m => new { m.Name, m.Description })
+				.HasIndex(m => m.SearchVector)
+				.HasMethod("GIN");
+
 			// Many-to-Many 
 			builder.HasMany(m => m.Countries)
 				.WithMany(c => c.MediaItems)

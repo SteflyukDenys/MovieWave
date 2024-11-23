@@ -27,23 +27,11 @@ public class CountryService : ICountryService
 	public async Task<CollectionResult<CountryDto>> GetAllAsync()
 	{
 		List<CountryDto> countries;
-		try
-		{
-			countries = await _countryRepository.GetAll()
-				.Include(c => c.SeoAddition)
-				.Select(c => _mapper.Map<CountryDto>(c))
-				.ToListAsync();
-		}
-		catch (Exception ex)
-		{
-			_logger.Error(ex, ex.Message);
 
-			return new CollectionResult<CountryDto>
-			{
-				ErrorMessage = ErrorMessage.InternalServerError,
-				ErrorCode = (int)ErrorCodes.InternalServerError
-			};
-		}
+		countries = await _countryRepository.GetAll()
+			.Include(c => c.SeoAddition)
+			.Select(c => _mapper.Map<CountryDto>(c))
+			.ToListAsync();
 
 		if (!countries.Any())
 		{
@@ -60,134 +48,82 @@ public class CountryService : ICountryService
 
 	public async Task<BaseResult<CountryDto>> GetByIdAsync(long id)
 	{
-		CountryDto? countryDto;
+		CountryDto countryDto;
 
-		try
+		var country = await _countryRepository.GetAll()
+			.Include(c => c.SeoAddition)
+			.FirstOrDefaultAsync(c => c.Id == id);
+
+		if (country == null)
 		{
-			var country = await _countryRepository.GetAll()
-				.Include(c => c.SeoAddition)
-				.FirstOrDefaultAsync(c => c.Id == id);
-
-			if (country == null)
-			{
-				_logger.Warning($"Country {id} not found");
-				return new BaseResult<CountryDto>
-				{
-					ErrorMessage = ErrorMessage.CountryNotFound,
-					ErrorCode = (int)ErrorCodes.CountryNotFound
-				};
-			}
-
-			countryDto = _mapper.Map<CountryDto>(country);
-		}
-		catch (Exception ex)
-		{
-			_logger.Error(ex, ex.Message);
-
+			_logger.Warning($"Country {id} not found");
 			return new BaseResult<CountryDto>
 			{
-				ErrorMessage = ErrorMessage.InternalServerError,
-				ErrorCode = (int)ErrorCodes.InternalServerError
+				ErrorMessage = ErrorMessage.CountryNotFound,
+				ErrorCode = (int)ErrorCodes.CountryNotFound
 			};
 		}
+
+		countryDto = _mapper.Map<CountryDto>(country);
 
 		return new BaseResult<CountryDto> { Data = countryDto };
 	}
 
 	public async Task<BaseResult<CountryDto>> CreateAsync(CreateCountryDto dto)
 	{
-		try
+		var existingCountry = await _countryRepository.GetAll()
+			.FirstOrDefaultAsync(c => c.Name == dto.Name);
+
+		if (existingCountry != null)
 		{
-			var existingCountry = await _countryRepository.GetAll()
-				.FirstOrDefaultAsync(c => c.Name == dto.Name);
-
-			if (existingCountry != null)
-			{
-				return new BaseResult<CountryDto>
-				{
-					ErrorMessage = ErrorMessage.CountryAlreadyExists,
-					ErrorCode = (int)ErrorCodes.CountryAlreadyExists
-				};
-			}
-
-			var newCountry = _mapper.Map<Country>(dto);
-			await _countryRepository.CreateAsync(newCountry);
-			await _countryRepository.SaveChangesAsync();
-
-			return new BaseResult<CountryDto> { Data = _mapper.Map<CountryDto>(newCountry) };
-		}
-		catch (Exception ex)
-		{
-			_logger.Error(ex, ex.Message);
-
 			return new BaseResult<CountryDto>
 			{
-				ErrorMessage = ErrorMessage.InternalServerError,
-				ErrorCode = (int)ErrorCodes.InternalServerError
+				ErrorMessage = ErrorMessage.CountryAlreadyExists,
+				ErrorCode = (int)ErrorCodes.CountryAlreadyExists
 			};
 		}
+
+		var newCountry = _mapper.Map<Country>(dto);
+		await _countryRepository.CreateAsync(newCountry);
+		await _countryRepository.SaveChangesAsync();
+
+		return new BaseResult<CountryDto> { Data = _mapper.Map<CountryDto>(newCountry) };
 	}
 
 	public async Task<BaseResult<CountryDto>> DeleteAsync(long id)
 	{
-		try
+		var country = await _countryRepository.GetAll().FirstOrDefaultAsync(c => c.Id == id);
+		if (country == null)
 		{
-			var country = await _countryRepository.GetAll().FirstOrDefaultAsync(c => c.Id == id);
-			if (country == null)
-			{
-				return new BaseResult<CountryDto>
-				{
-					ErrorMessage = ErrorMessage.CountryNotFound,
-					ErrorCode = (int)ErrorCodes.CountryNotFound
-				};
-			}
-
-			_countryRepository.Remove(country);
-			await _countryRepository.SaveChangesAsync();
-
-			return new BaseResult<CountryDto> { Data = _mapper.Map<CountryDto>(country) };
-		}
-		catch (Exception ex)
-		{
-			_logger.Error(ex, ex.Message);
-
 			return new BaseResult<CountryDto>
 			{
-				ErrorMessage = ErrorMessage.InternalServerError,
-				ErrorCode = (int)ErrorCodes.InternalServerError
+				ErrorMessage = ErrorMessage.CountryNotFound,
+				ErrorCode = (int)ErrorCodes.CountryNotFound
 			};
 		}
+
+		_countryRepository.Remove(country);
+		await _countryRepository.SaveChangesAsync();
+
+		return new BaseResult<CountryDto> { Data = _mapper.Map<CountryDto>(country) };
 	}
 
 	public async Task<BaseResult<CountryDto>> UpdateAsync(UpdateCountryDto dto)
 	{
-		try
+		var country = await _countryRepository.GetAll().FirstOrDefaultAsync(c => c.Id == dto.Id);
+		if (country == null)
 		{
-			var country = await _countryRepository.GetAll().FirstOrDefaultAsync(c => c.Id == dto.Id);
-			if (country == null)
-			{
-				return new BaseResult<CountryDto>
-				{
-					ErrorMessage = ErrorMessage.CountryNotFound,
-					ErrorCode = (int)ErrorCodes.CountryNotFound
-				};
-			}
-
-			_mapper.Map(dto, country);
-			var updatedCountry = _countryRepository.Update(country);
-			await _countryRepository.SaveChangesAsync();
-
-			return new BaseResult<CountryDto> { Data = _mapper.Map<CountryDto>(updatedCountry) };
-		}
-		catch (Exception ex)
-		{
-			_logger.Error(ex, ex.Message);
-
 			return new BaseResult<CountryDto>
 			{
-				ErrorMessage = ErrorMessage.InternalServerError,
-				ErrorCode = (int)ErrorCodes.InternalServerError
+				ErrorMessage = ErrorMessage.CountryNotFound,
+				ErrorCode = (int)ErrorCodes.CountryNotFound
 			};
 		}
+
+		_mapper.Map(dto, country);
+		var updatedCountry = _countryRepository.Update(country);
+		await _countryRepository.SaveChangesAsync();
+
+		return new BaseResult<CountryDto> { Data = _mapper.Map<CountryDto>(updatedCountry) };
 	}
 }

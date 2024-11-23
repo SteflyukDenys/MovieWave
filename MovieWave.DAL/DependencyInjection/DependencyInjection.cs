@@ -9,6 +9,8 @@ using MovieWave.Domain.Entity;
 using MovieWave.Domain.Interfaces.Repositories;
 using MovieWave.Domain.Interfaces.Services;
 using System;
+using MovieWave.Domain.Interfaces.Databases;
+
 namespace MovieWave.DAL.DependencyInjection;
 
 public static class DependencyInjection
@@ -35,22 +37,24 @@ public static class DependencyInjection
 		services.AddScoped<IBaseRepository<Notification>, BaseRepository<Notification>>();
 		services.AddScoped<IBaseRepository<SubscriptionPlan>, BaseRepository<SubscriptionPlan>>();
 		services.AddScoped<IBaseRepository<Payment>, BaseRepository<Payment>>();
-		services.AddScoped<IBaseRepository<UserSubscription>, BaseRepository<UserSubscription>>();
 		services.AddScoped<IBaseRepository<Comment>, BaseRepository<Comment>>();
 		services.AddScoped<IBaseRepository<Status>, BaseRepository<Status>>();
 		services.AddScoped<IBaseRepository<Country>, BaseRepository<Country>>();
 		services.AddScoped<IBaseRepository<Studio>, BaseRepository<Studio>>();
 		services.AddScoped<IBaseRepository<Person>, BaseRepository<Person>>();
-		services.AddScoped<IBaseRepository<UserMediaItemList>, BaseRepository<UserMediaItemList>>();
 		services.AddScoped<IBaseRepository<EpisodeVoice>, BaseRepository<EpisodeVoice>>();
 		services.AddScoped<IBaseRepository<Voice>, BaseRepository<Voice>>();
 		services.AddScoped<IBaseRepository<MediaItemType>, BaseRepository<MediaItemType>>();
 		services.AddScoped<IBaseRepository<RestrictedRating>, BaseRepository<RestrictedRating>>();
 		services.AddScoped<IBaseRepository<Attachment>, BaseRepository<Attachment>>();
 
-		// For Identity
+		// For User
+		services.AddScoped<IUnitOfWork, UnitOfWork>();
 		services.AddScoped<IBaseRepository<User>, BaseRepository<User>>();
 		services.AddScoped<IBaseRepository<UserToken>, BaseRepository<UserToken>>();
-
+		services.AddScoped<IBaseRepository<Role>, BaseRepository<Role>>();
+		services.AddScoped<IBaseRepository<UserRole>, BaseRepository<UserRole>>();
+		services.AddScoped<IBaseRepository<UserMediaItemList>, BaseRepository<UserMediaItemList>>();
+		services.AddScoped<IBaseRepository<UserSubscription>, BaseRepository<UserSubscription>>();
 	}
 }

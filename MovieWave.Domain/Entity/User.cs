@@ -10,7 +10,6 @@ public class User : IdentityUser<Guid>, IAuditable
 	{
 		Id = Guid.NewGuid();
 	}
-	public UserRole UserRole { get; set; }
 
 	public string Login { get; set; }
 
@@ -34,4 +33,5 @@ public class User : IdentityUser<Guid>, IAuditable
 	public ICollection<UserSubscription> UserSubscriptions { get; set; }
 	public ICollection<Notification> Notifications { get; set; }
 	public ICollection<Review> Reviews { get; set; }
+	public List<Role> Roles { get; set; }
 }
