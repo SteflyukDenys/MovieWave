@@ -12,4 +12,6 @@ public interface IStorageService
 	Task<BaseResult<Stream>> GetFileAsync(string key);
 
 	Task<CollectionResult<S3ObjectDto>> ListFilesAsync(string? prefix = null);
+
+	string GenerateFileUrl(string key);
 }

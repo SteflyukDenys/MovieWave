@@ -1,4 +1,5 @@
 ﻿using MovieWave.Domain.Dto.MediaItem;
+using MovieWave.Domain.Dto.S3Storage;
 using MovieWave.Domain.Result;
 
 namespace MovieWave.Domain.Interfaces.Services;

@@ -9,17 +9,20 @@ public class MediaItemMapping : Profile
 	public MediaItemMapping()
 	{
 		CreateMap<MediaItem, MediaItemDto>()
-			.ForMember(dest => dest.FirstAirDate, opt => opt.MapFrom(src => src.FirstAirDate.HasValue ? src.FirstAirDate.Value.ToString("yyyy-MM-dd") : null))
-			.ForMember(dest => dest.LastAirDate, opt => opt.MapFrom(src => src.LastAirDate.HasValue ? src.LastAirDate.Value.ToString("yyyy-MM-dd") : null))
-			.ForMember(dest => dest.PublishedAt, opt => opt.MapFrom(src => src.PublishedAt.HasValue ? src.PublishedAt.Value.ToString("yyyy-MM-dd") : null))
+			.ForMember(dest => dest.FirstAirDate, opt => opt.MapFrom(src => src.FirstAirDate))
+			.ForMember(dest => dest.LastAirDate, opt => opt.MapFrom(src => src.LastAirDate))
+			.ForMember(dest => dest.PublishedAt, opt => opt.MapFrom(src => src.PublishedAt))
 			.ReverseMap();
 
 		CreateMap<CreateMediaItemDto, MediaItem>()
-			.AfterMap((src, dest) => dest.Id = Guid.NewGuid())
-			.ReverseMap();
+			.ForMember(dest => dest.FirstAirDate, opt => opt.MapFrom(src => src.FirstAirDate.HasValue ? DateTime.SpecifyKind(src.FirstAirDate.Value, DateTimeKind.Utc) : (DateTime?)null))
+			.ForMember(dest => dest.LastAirDate, opt => opt.MapFrom(src => src.LastAirDate.HasValue ? DateTime.SpecifyKind(src.LastAirDate.Value, DateTimeKind.Utc) : (DateTime?)null))
+			.ForMember(dest => dest.PublishedAt, opt => opt.MapFrom(src => src.PublishedAt.HasValue ? DateTime.SpecifyKind(src.PublishedAt.Value, DateTimeKind.Utc) : (DateTime?)null));
 
 		CreateMap<UpdateMediaItemDto, MediaItem>()
-			.ReverseMap();
+			.ForMember(dest => dest.FirstAirDate, opt => opt.MapFrom(src => src.FirstAirDate.HasValue ? DateTime.SpecifyKind(src.FirstAirDate.Value, DateTimeKind.Utc) : (DateTime?)null))
+			.ForMember(dest => dest.LastAirDate, opt => opt.MapFrom(src => src.LastAirDate.HasValue ? DateTime.SpecifyKind(src.LastAirDate.Value, DateTimeKind.Utc) : (DateTime?)null))
+			.ForMember(dest => dest.PublishedAt, opt => opt.MapFrom(src => src.PublishedAt.HasValue ? DateTime.SpecifyKind(src.PublishedAt.Value, DateTimeKind.Utc) : (DateTime?)null));
 
 		CreateMap<MediaItemSearchDto, MediaItem>();
 	}

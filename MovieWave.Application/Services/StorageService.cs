@@ -91,4 +91,10 @@ public class StorageService : IStorageService
 
 		return new CollectionResult<S3ObjectDto> { Data = files, Count = files.Count };
 	}
+
+	public string GenerateFileUrl(string key)
+	{
+		return $"https://{_bucketName}.s3.{_s3Client.Config.RegionEndpoint.SystemName}.amazonaws.com/{key}";
+	}
+
 };

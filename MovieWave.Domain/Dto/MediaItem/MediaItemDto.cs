@@ -13,35 +13,36 @@ using MovieWave.Domain.Dto.Status;
 using MovieWave.Domain.Dto.Studio;
 using MovieWave.Domain.Dto.Tag;
 
-namespace MovieWave.Domain.Dto.MediaItem
-{
-    public record MediaItemDto(
-		Guid Id,
-		string Name,
-		string? OriginalName,
-		string? Description,
-		string? PosterPath,
-		int? Duration,
-		int? EpisodesCount,
-		decimal? ImdbScore,
-		string? FirstAirDate,
-		string? LastAirDate,
-		string? PublishedAt,
-		MediaItemTypeDto MediaItemType,
-		StatusDto Status,
-		RestrictedRatingDto RestrictedRating,
-		SeoAdditionDto SeoAddition,
-		// One-to-Many
-		List<SeasonDto> Seasons,
-		List<EpisodeDto> Episodes,
-		List<AttachmentDto> Attachments,
-		List<ReviewDto> Reviews,
-		List<NotificationDto> Notifications,
-		List<CommentDto> Comments,
-		// Many-to-Many
-		List<CountryDto> Countries,
-		List<StudioDto> Studios,
-		List<TagDto> Tags,
-		List<PersonDto> People
-	);
+namespace MovieWave.Domain.Dto.MediaItem;
+
+public class MediaItemDto{
+	public Guid Id {get; set; }
+	public string Name {get; set; }
+	public string? OriginalName { get; set; }
+	public string? Description { get; set; }
+	public int? Duration { get; set; }
+	public int? EpisodesCount { get; set; }
+	public decimal? ImdbScore { get; set; }
+
+	public string? FirstAirDate { get; set; }
+	public string? LastAirDate { get; set; }
+	public string? PublishedAt { get; set; }
+
+	public MediaItemTypeDto MediaItemType = new MediaItemTypeDto();
+	public StatusDto Status = new StatusDto();
+	public RestrictedRatingDto RestrictedRating = new RestrictedRatingDto();
+
+	public SeoAdditionInputDto SeoAddition = new SeoAdditionInputDto();
+	//// One-to-Many
+	//List<SeasonDto> Seasons,
+	//List<EpisodeDto> Episodes,
+	//List<AttachmentDto> Attachments,
+	//List<ReviewDto> Reviews,
+	//List<NotificationDto> Notifications,
+	//List<CommentDto> Comments,
+	//// Many-to-Many
+	//List<CountryDto> Countries,
+	//List<StudioDto> Studios,
+	//List<TagDto> Tags,
+	//List<PersonDto> People
 }

@@ -1,10 +1,15 @@
-﻿using Asp.Versioning;
+﻿using Amazon.Runtime.Internal;
+using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
+using MovieWave.Application.Services;
 using MovieWave.Application.Validations;
 using MovieWave.Application.Validations.FluentValidations.MediaItem;
+using MovieWave.Domain.Dto.Banner;
 using MovieWave.Domain.Dto.MediaItem;
+using MovieWave.Domain.Dto.S3Storage;
 using MovieWave.Domain.Interfaces.Services;
 using MovieWave.Domain.Result;
+using MovieWave.API.UploadFileRequest;
 
 namespace MovieWave.API.Controllers;
 
@@ -14,10 +19,12 @@ namespace MovieWave.API.Controllers;
 public class MediaItemController : ControllerBase
 {
 	private readonly IMediaItemService _mediaItemService;
+	private readonly IStorageService _storageService;
 
-	public MediaItemController(IMediaItemService mediaItemService)
+	public MediaItemController(IMediaItemService mediaItemService, IStorageService storageService)
 	{
 		_mediaItemService = mediaItemService;
+		_storageService = storageService;
 	}
 
 	/// <summary>
@@ -109,20 +116,17 @@ public class MediaItemController : ControllerBase
 	/// </remarks>
 	/// <response code="200">Якщо медіаелемент успішно створений</response>
 	/// <response code="400">Якщо сталася помилка при запиті</response>
-	[HttpPost]
+	[HttpPost("create")]
+	[Consumes("multipart/form-data")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
-	public async Task<ActionResult<BaseResult<MediaItemDto>>> Create([FromBody] CreateMediaItemDto dto)
+	public async Task<ActionResult<BaseResult<MediaItemDto>>> CreateMediaItem([FromForm] CreateMediaItemDto dto)
 	{
-		var response = await _mediaItemService.CreateMediaItemAsync(dto);
+		var result = await _mediaItemService.CreateMediaItemAsync(dto);
 
-		if (response.IsSuccess)
-		{
-			return Ok(response);
-		}
-
-		return BadRequest(response);
+		return result.IsSuccess ? Ok(result) : BadRequest(result);
 	}
+
 
 	/// <summary>
 	/// Оновити інформацію про фільм/серіал
@@ -152,20 +156,17 @@ public class MediaItemController : ControllerBase
 	/// </remarks>
 	/// <response code="200">Якщо медіаелемент успішно оновлений</response>
 	/// <response code="400">Якщо сталася помилка при запиті або медіаелемент не знайдений</response>
-	[HttpPut]
+	[HttpPut("update")]
+	[Consumes("multipart/form-data")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
-	public async Task<ActionResult<BaseResult<MediaItemDto>>> Update([FromBody] UpdateMediaItemDto dto)
+	public async Task<ActionResult<BaseResult<MediaItemDto>>> UpdateMediaItem([FromForm] UpdateMediaItemDto dto)
 	{
-		var response = await _mediaItemService.UpdateMediaItemAsync(dto);
+		var result = await _mediaItemService.UpdateMediaItemAsync(dto);
 
-		if (response.IsSuccess)
-		{
-			return Ok(response);
-		}
-
-		return BadRequest(response);
+		return result.IsSuccess ? Ok(result) : BadRequest(result);
 	}
+
 
 	/// <summary>
 	/// Пошук та фільтрація медіаелементів

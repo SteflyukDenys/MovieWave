@@ -3,10 +3,13 @@ using System.Linq;
 using System.Xml.Linq;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using MovieWave.Application.Resources;
 using MovieWave.Domain.Dto.MediaItem;
+using MovieWave.Domain.Dto.S3Storage;
 using MovieWave.Domain.Entity;
 using MovieWave.Domain.Enum;
+using MovieWave.Domain.Interfaces.Databases;
 using MovieWave.Domain.Interfaces.Repositories;
 using MovieWave.Domain.Interfaces.Services;
 using MovieWave.Domain.Interfaces.Validations;
@@ -20,15 +23,19 @@ public class MediaItemService : IMediaItemService
 	private readonly IBaseRepository<MediaItem> _mediaItemRepository;
 	private readonly ILogger _logger;
 	private readonly IMediaItemValidator _mediaItemValidator;
+	private readonly IStorageService _storageService;
+	private readonly IUnitOfWork _unitOfWork;
 	private readonly IMapper _mapper;
 
 	public MediaItemService(IBaseRepository<MediaItem> mediaItemRepository, ILogger logger,
-		IMediaItemValidator mediaItemValidator, IMapper mapper)
+		IMediaItemValidator mediaItemValidator, IMapper mapper, IStorageService storageService, IUnitOfWork unitOfWork)
 	{
 		_mediaItemRepository = mediaItemRepository;
 		_logger = logger;
 		_mediaItemValidator = mediaItemValidator;
 		_mapper = mapper;
+		_storageService = storageService;
+		_unitOfWork = unitOfWork;
 	}
 
 	public async Task<CollectionResult<MediaItemDto>> GetMediaItemsAsync()
@@ -104,23 +111,49 @@ public class MediaItemService : IMediaItemService
 
 	public async Task<BaseResult<MediaItemDto>> CreateMediaItemAsync(CreateMediaItemDto dto)
 	{
-		var existingMediaItem = await _mediaItemRepository.GetAll().FirstOrDefaultAsync(x => x.Name == dto.Name);
-		var validationResult = _mediaItemValidator.CreateValidator(existingMediaItem);
+		using var transaction = await _unitOfWork.BeginTransactionAsync();
 
-		if (!validationResult.IsSuccess)
+		try
 		{
-			return new BaseResult<MediaItemDto>()
+			var existingMediaItem = await _mediaItemRepository.GetAll()
+				.FirstOrDefaultAsync(x => x.OriginalName == dto.OriginalName);
+
+			var validationResult = _mediaItemValidator.CreateValidator(existingMediaItem);
+
+			if (!validationResult.IsSuccess)
 			{
-				ErrorMessage = validationResult.ErrorMessage,
-				ErrorCode = validationResult.ErrorCode
+				return new BaseResult<MediaItemDto>
+				{
+					ErrorMessage = validationResult.ErrorMessage,
+					ErrorCode = validationResult.ErrorCode
+				};
+			}
+
+			var mediaItem = _mapper.Map<MediaItem>(dto);
+			
+			await _mediaItemRepository.CreateAsync(mediaItem);
+			await _unitOfWork.SaveChangesAsync();
+			await transaction.CommitAsync();
+
+			var resultDto = _mapper.Map<MediaItemDto>(mediaItem);
+
+			return new BaseResult<MediaItemDto> { Data = resultDto };
+		}
+		catch (Exception ex)
+		{
+			_logger.Error(ex, "Помилка при створенні MediaItem: {Message}", ex.Message);
+
+			if (transaction != null && transaction.GetDbTransaction().Connection != null)
+			{
+				await transaction.RollbackAsync();
+			}
+
+			return new BaseResult<MediaItemDto>
+			{
+				ErrorMessage = ErrorMessage.InternalServerError,
+				ErrorCode = (int)ErrorCodes.InternalServerError
 			};
 		}
-
-		var newMediaItem = _mapper.Map<MediaItem>(dto);
-		await _mediaItemRepository.CreateAsync(newMediaItem);
-		await _mediaItemRepository.SaveChangesAsync();
-
-		return new BaseResult<MediaItemDto>() { Data = _mapper.Map<MediaItemDto>(newMediaItem) };
 	}
 
 	public async Task<BaseResult<MediaItemDto>> DeleteMediaItemAsync(Guid id)
@@ -145,23 +178,44 @@ public class MediaItemService : IMediaItemService
 
 	public async Task<BaseResult<MediaItemDto>> UpdateMediaItemAsync(UpdateMediaItemDto dto)
 	{
-		var mediaItem = await _mediaItemRepository.GetAll().FirstOrDefaultAsync(x => x.Id == dto.id);
-		var validationResult = _mediaItemValidator.ValidateOnNull(mediaItem);
+		using var transaction = await _unitOfWork.BeginTransactionAsync();
 
-		if (!validationResult.IsSuccess)
+		try
 		{
-			return new BaseResult<MediaItemDto>()
+			var mediaItem = await _mediaItemRepository.GetAll()
+				.FirstOrDefaultAsync(x => x.Id == dto.Id);
+
+			var validationResult = _mediaItemValidator.ValidateOnNull(mediaItem);
+
+			if (!validationResult.IsSuccess)
 			{
-				ErrorMessage = validationResult.ErrorMessage,
-				ErrorCode = validationResult.ErrorCode
+				return new BaseResult<MediaItemDto>
+				{
+					ErrorMessage = validationResult.ErrorMessage,
+					ErrorCode = validationResult.ErrorCode
+				};
+			}
+
+			_mapper.Map(dto, mediaItem);
+
+			_mediaItemRepository.Update(mediaItem);
+			await _unitOfWork.SaveChangesAsync();
+			await transaction.CommitAsync();
+
+			var resultDto = _mapper.Map<MediaItemDto>(mediaItem);
+
+			return new BaseResult<MediaItemDto> { Data = resultDto };
+		}
+		catch (Exception ex)
+		{
+			await transaction.RollbackAsync();
+			_logger.Error("Помилка при оновленні MediaItem: {Message}", ex.Message);
+			return new BaseResult<MediaItemDto>
+			{
+				ErrorMessage = ErrorMessage.InternalServerError,
+				ErrorCode = (int)ErrorCodes.InternalServerError
 			};
 		}
-
-		_mapper.Map(dto, mediaItem);
-		var updatedMediaItem = _mediaItemRepository.Update(mediaItem);
-		await _mediaItemRepository.SaveChangesAsync();
-
-		return new BaseResult<MediaItemDto>() { Data = _mapper.Map<MediaItemDto>(updatedMediaItem) };
 	}
 
 	public async Task<CollectionResult<MediaItemDto>> SearchMediaItemsAsync(MediaItemSearchDto searchDto)

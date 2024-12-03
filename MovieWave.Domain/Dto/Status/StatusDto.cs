@@ -2,4 +2,9 @@
 
 namespace MovieWave.Domain.Dto.Status;
 
-public record StatusDto(long Id, string StatusType, string? Description);
+public class StatusDto
+{
+	public long Id { get; set; }
+	public StatusType StatusType { get; set; }
+	public string? Description { get; set; }
+};

@@ -17,7 +17,6 @@ public static class MediaItemDataGenerator
 			.RuleFor(m => m.Name, f => f.Lorem.Word())
 			.RuleFor(m => m.OriginalName, f => f.Lorem.Word())
 			.RuleFor(m => m.Description, f => f.Lorem.Paragraph())
-			.RuleFor(m => m.PosterPath, f => f.Image.PicsumUrl()) 
 			.RuleFor(m => m.MediaItemTypeId, f => f.PickRandom(mediaItemTypes).Id)
 			.RuleFor(m => m.StatusId, f => f.PickRandom(statuses).Id)
 			.RuleFor(m => m.RestrictedRatingId, f => f.PickRandom(restrictedRatings).Id)

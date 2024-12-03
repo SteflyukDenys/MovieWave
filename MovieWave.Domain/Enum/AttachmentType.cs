@@ -3,8 +3,11 @@
 public enum AttachmentType
 {
 	Poster,
+	Thumbnail,
 	Scene,
 	Trailer,
-	Video,
+	VideoHD,
+	VideoFullHD,
+	VideoUHD,
 	Music
 }

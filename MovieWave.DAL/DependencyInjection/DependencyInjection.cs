@@ -47,9 +47,10 @@ public static class DependencyInjection
 		services.AddScoped<IBaseRepository<MediaItemType>, BaseRepository<MediaItemType>>();
 		services.AddScoped<IBaseRepository<RestrictedRating>, BaseRepository<RestrictedRating>>();
 		services.AddScoped<IBaseRepository<Attachment>, BaseRepository<Attachment>>();
+		services.AddScoped<IBaseRepository<Banner>, BaseRepository<Banner>>();
 
-		// For User
-		services.AddScoped<IUnitOfWork, UnitOfWork>();
+	// For User
+	services.AddScoped<IUnitOfWork, UnitOfWork>();
 		services.AddScoped<IBaseRepository<User>, BaseRepository<User>>();
 		services.AddScoped<IBaseRepository<UserToken>, BaseRepository<UserToken>>();
 		services.AddScoped<IBaseRepository<Role>, BaseRepository<Role>>();

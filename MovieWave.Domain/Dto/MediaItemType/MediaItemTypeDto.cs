@@ -2,4 +2,9 @@
 
 namespace MovieWave.Domain.Dto.MediaItemType;
 
-public record MediaItemTypeDto(int Id, string MediaItemName, SeoAdditionDto SeoAddition);
+public class MediaItemTypeDto
+{
+	public int Id { get; set; }
+	public string MediaItemName { get; set; }
+	public SeoAdditionInputDto SeoAddition = new SeoAdditionInputDto();
+};

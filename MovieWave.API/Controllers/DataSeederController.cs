@@ -1,7 +1,6 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using MovieWave.Domain.Interfaces.Services;
-using MovieWave.Domain.Result;
 
 [ApiController]
 [ApiVersion("1.0")]

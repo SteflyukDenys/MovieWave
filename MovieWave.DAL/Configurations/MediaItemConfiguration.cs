@@ -33,9 +33,6 @@ namespace MovieWave.DAL.Configurations
 				.WithMany(r => r.MediaItems)
 				.HasForeignKey(m => m.RestrictedRatingId);
 
-			builder.Property(m => m.PosterPath)
-				.HasMaxLength(255);
-
 			builder.Property(m => m.ImdbScore)
 				.HasColumnType("decimal(3, 1)");
 

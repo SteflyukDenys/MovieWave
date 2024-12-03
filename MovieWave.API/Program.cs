@@ -8,6 +8,7 @@ using Serilog;
 using Microsoft.AspNetCore.Builder;
 using MovieWave.API.Extensions;
 using MovieWave.API.Middlewares;
+using MovieWave.API.UploadFileRequest;
 using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,8 +23,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddAuthenticationAndAuthorization(builder);
 builder.Services.AddSwagger();
-builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
-builder.Services.AddAWSService<IAmazonS3>();
+builder.Services.AddAwsS3(builder);
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));

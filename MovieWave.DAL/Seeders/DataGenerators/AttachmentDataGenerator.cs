@@ -20,7 +20,6 @@ public static class AttachmentDataGenerator
 			.RuleFor(a => a.MediaItemId, f => f.PickRandom(mediaItemIds))
 			.RuleFor(a => a.AttachmentType, f => f.PickRandom<AttachmentType>())
 			.RuleFor(a => a.AttachmentUrl, f => f.Internet.Url())
-			.RuleFor(a => a.ThumbnailPath, f => f.Image.PicsumUrl())
 			.Generate(count);
 	}
 }

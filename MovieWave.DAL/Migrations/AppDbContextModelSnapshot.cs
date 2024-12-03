@@ -90,9 +90,6 @@ namespace MovieWave.DAL.Migrations
                     b.Property<Guid>("MediaItemId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("ThumbnailPath")
-                        .HasColumnType("text");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -104,6 +101,37 @@ namespace MovieWave.DAL.Migrations
                     b.HasIndex("MediaItemId");
 
                     b.ToTable("Attachments");
+                });
+
+            modelBuilder.Entity("MovieWave.Domain.Entity.Banner", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Banners");
                 });
 
             modelBuilder.Entity("MovieWave.Domain.Entity.Comment", b =>
@@ -290,10 +318,6 @@ namespace MovieWave.DAL.Migrations
 
                     b.Property<string>("OriginalName")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
-
-                    b.Property<string>("PosterPath")
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 

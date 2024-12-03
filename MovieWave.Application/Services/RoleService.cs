@@ -281,7 +281,7 @@ namespace MovieWave.Application.Services
 
 			_userRoleRepository.Remove(userRole);
 			_userRoleRepository.SaveChangesAsync();
-
+				
 			return new BaseResult<UserRoleDto>()
 			{
 				Data = new UserRoleDto()

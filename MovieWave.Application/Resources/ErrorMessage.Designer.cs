@@ -61,6 +61,33 @@ namespace MovieWave.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Attachment not found.
+        /// </summary>
+        internal static string AttachmentNotFound {
+            get {
+                return ResourceManager.GetString("AttachmentNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Banner not found.
+        /// </summary>
+        internal static string BannerNotFound {
+            get {
+                return ResourceManager.GetString("BannerNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Banners not found.
+        /// </summary>
+        internal static string BannersNotFound {
+            get {
+                return ResourceManager.GetString("BannersNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Countries not found.
         /// </summary>
         internal static string CountriesNotFound {
@@ -241,6 +268,15 @@ namespace MovieWave.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Roles not found.
+        /// </summary>
+        internal static string RolesNotFound {
+            get {
+                return ResourceManager.GetString("RolesNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Statuses not found.
         /// </summary>
         internal static string StatusesNotFound {
@@ -286,11 +322,47 @@ namespace MovieWave.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tag already exists.
+        /// </summary>
+        internal static string TagAlreadyExists {
+            get {
+                return ResourceManager.GetString("TagAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tag not found.
+        /// </summary>
+        internal static string TagNotFound {
+            get {
+                return ResourceManager.GetString("TagNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tags not found.
+        /// </summary>
+        internal static string TagsNotFound {
+            get {
+                return ResourceManager.GetString("TagsNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User already exists.
         /// </summary>
         internal static string UserAlreadyExists {
             get {
                 return ResourceManager.GetString("UserAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User already exists this role.
+        /// </summary>
+        internal static string UserAlreadyExistsThisRole {
+            get {
+                return ResourceManager.GetString("UserAlreadyExistsThisRole", resourceCulture);
             }
         }
         
@@ -302,20 +374,21 @@ namespace MovieWave.Application.Resources {
                 return ResourceManager.GetString("UserCreationFailed", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User not found.
+        /// </summary>
+        internal static string UserNotFound {
+            get {
+                return ResourceManager.GetString("UserNotFound", resourceCulture);
+            }
+        }
 
-        internal static string UserNotFound
+        internal static string InvalidFile
         {
-			get
-			{
-				return ResourceManager.GetString("UserNotFound", resourceCulture);
-			}
-		}
-
-        internal static string UserAlreadyExistsThisRole
-		{
 	        get
 	        {
-		        return ResourceManager.GetString("UserAlreadyExistsThisRole", resourceCulture);
+		        return ResourceManager.GetString("InvalidFile", resourceCulture);
 	        }
         }
 	}

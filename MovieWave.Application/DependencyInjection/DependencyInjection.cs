@@ -29,7 +29,7 @@ public static class DependencyInjection
 		services.AddAutoMapper(typeof(PersonMapping));
 		services.AddAutoMapper(typeof(StudioMapping));
 		services.AddAutoMapper(typeof(RoleMapping));
-
+		services.AddAutoMapper(typeof(BannerMapping));
 
 		InitService(services);
 	}
@@ -42,12 +42,16 @@ public static class DependencyInjection
 
 		services.AddScoped<IDataSeederService, DataSeederService>();
 
+		services.AddScoped<IBannerService, BannerService>();
+		services.AddScoped<IAttachmentService, AttachmentService>();
 		services.AddScoped<IMediaItemService, MediaItemService>();
 		services.AddScoped<IMediaItemTypeService, MediaItemTypeService>();
 		services.AddScoped<ICountryService, CountryService>();
 		services.AddScoped<IStatusService, StatusService>();
 		services.AddScoped<IRestrictedRatingService, RestrictedRatingService>();
 		services.AddScoped<IStudioService, StudioService>();
+		services.AddScoped<ISeoAdditionService, SeoAdditionService>();
+		services.AddScoped<ITagService, TagService>();
 
 		services.AddScoped<IStorageService, StorageService>();
 

@@ -48,4 +48,5 @@ public class AppDbContext : DbContext
 	public DbSet<UserMediaItemList> UserMediaItemLists { get; set; }
 	public DbSet<UserSubscription> UserSubscriptions { get; set; }
 	public DbSet<Voice> Voices { get; set; }
+	public DbSet<Banner> Banners { get; set; }
 }

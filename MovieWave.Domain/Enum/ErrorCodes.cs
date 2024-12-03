@@ -43,6 +43,18 @@ public enum ErrorCodes
 	StudioNotFound = 38,
 	StudioAlreadyExists = 39,
 
+	// Attachments Errors
+	AttachmentNotFound = 40,
+
+	// Banners Errors
+	BannerNotFound = 45,
+	BannersNotFound = 46,
+
+	// Tags Errors
+	TagsNotFound = 50,
+	TagNotFound = 51,
+	TagAlreadyExists = 52,
+
 	// General Errors
 	InternalServerError = 90,
 	ErrorSeedingDb = 95

@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Text;
+using Amazon.S3;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -7,8 +8,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using MovieWave.Application.Services;
 using MovieWave.DAL;
 using MovieWave.Domain.Entity;
+using MovieWave.Domain.Interfaces.Services;
 using MovieWave.Domain.Settings;
 
 namespace MovieWave.API;
@@ -71,6 +74,21 @@ public static class Startup
 			options.MinimumSameSitePolicy = SameSiteMode.Unspecified;
 			options.Secure = CookieSecurePolicy.Always;
 		});
+	}
+
+	/// <summary>
+	/// Connecting AWS S3
+	/// </summary>
+	/// <param name="services"></param>
+	/// <param name="builder"></param>
+	public static void AddAwsS3(this IServiceCollection services, WebApplicationBuilder builder)
+	{
+		var awsOptions = builder.Configuration.GetAWSOptions();
+		awsOptions.Credentials = new Amazon.Runtime.BasicAWSCredentials(
+			builder.Configuration["AWS:AccessKey"],
+			builder.Configuration["AWS:SecretKey"]);
+		services.AddDefaultAWSOptions(awsOptions);
+		services.AddAWSService<IAmazonS3>();
 	}
 
 	/// <summary>

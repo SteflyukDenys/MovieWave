@@ -8,6 +8,8 @@ public class SeoAdditionMapping : Profile
 {
 	public SeoAdditionMapping()
 	{
-		CreateMap<SeoAddition, SeoAdditionDto>().ReverseMap();
+		CreateMap<SeoAddition, SeoAdditionDto>();
+
+		CreateMap<SeoAdditionInputDto, SeoAddition>().ReverseMap();
 	}
 }

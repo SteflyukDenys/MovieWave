@@ -23,15 +23,13 @@ namespace MovieWave.DAL.Configurations
 
 			builder.Property(c => c.Text).IsRequired();
 
-			// Поля для зберігання ID і типу сутності, до якої прив'язаний коментар
 			builder.Property(c => c.CommentableId)
-				.IsRequired(false); // Поле може бути null, якщо коментар ще не прив'язано
+				.IsRequired(false);
 
 			builder.Property(c => c.CommentableType)
 				.HasMaxLength(50)
-				.IsRequired(false); // Поле може бути null
+				.IsRequired(false);
 
-			// Індексація полів для швидшого пошуку
 			builder.HasIndex(c => new { c.CommentableId, c.CommentableType });
 		}
 	}

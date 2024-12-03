@@ -5,6 +5,10 @@ namespace MovieWave.Domain.Entity;
 
 public class MediaItem : NamedAuditableEntity<Guid>
 {
+	public MediaItem()
+	{
+		Id = Guid.NewGuid();
+	}
 	public int MediaItemTypeId { get; set; }
 	public MediaItemType MediaItemType { get; set; }
 
@@ -16,8 +20,7 @@ public class MediaItem : NamedAuditableEntity<Guid>
 
 	public long? RestrictedRatingId { get; set; }
 	public RestrictedRating RestrictedRating { get; set; }
-
-	public string? PosterPath { get; set; }
+	
 	public int? Duration { get; set; } // In minutes
 	public DateTime? FirstAirDate { get; set; }
 	public DateTime? LastAirDate { get; set; }

@@ -28,9 +28,9 @@ public class StorageController : ControllerBase
 	[Consumes("multipart/form-data")]
 	[ProducesResponseType(typeof(BaseResult<string>), StatusCodes.Status200OK)]
 	[ProducesResponseType(typeof(BaseResult<string>), StatusCodes.Status400BadRequest)]
-	public async Task<ActionResult<BaseResult<string>>> UploadFile([FromForm] UploadFileRequest.UploadFileRequest request)
+	public async Task<ActionResult<BaseResult<string>>> UploadFile(FormFile request, string folder)
 	{
-		if (request.File == null || request.File.Length == 0)
+		if (request == null || request.Length == 0)
 		{
 			return BadRequest(new BaseResult<string>
 			{
@@ -41,12 +41,12 @@ public class StorageController : ControllerBase
 
 		var fileDto = new FileDto
 		{
-			FileName = request.File.FileName,
-			Content = request.File.OpenReadStream(),
-			ContentType = request.File.ContentType
+			FileName = request.FileName,
+			Content = request.OpenReadStream(),
+			ContentType = request.ContentType
 		};
 
-		var response = await _storageService.UploadFileAsync(fileDto, request.Folder);
+		var response = await _storageService.UploadFileAsync(fileDto, folder);
 
 		if (response.IsSuccess)
 		{

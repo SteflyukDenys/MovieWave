@@ -207,4 +207,25 @@
   <data name="UserAlreadyExistsThisRole" xml:space="preserve">
     <value>User already exists this role</value>
   </data>
+  <data name="AttachmentNotFound" xml:space="preserve">
+    <value>Attachment not found</value>
+  </data>
+  <data name="BannerNotFound" xml:space="preserve">
+    <value>Banner not found</value>
+  </data>
+  <data name="BannersNotFound" xml:space="preserve">
+    <value>Banners not found</value>
+  </data>
+  <data name="TagsNotFound" xml:space="preserve">
+    <value>Tags not found</value>
+  </data>
+  <data name="TagNotFound" xml:space="preserve">
+    <value>Tag not found</value>
+  </data>
+  <data name="TagAlreadyExists" xml:space="preserve">
+    <value>Tag already exists</value>
+  </data>
+  <data name="InvalidFile" xml:space="preserve">
+    <value>Invalid file</value>
+  </data>
 </root>

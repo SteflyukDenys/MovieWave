@@ -4,6 +4,11 @@ namespace MovieWave.Domain.Entity;
 
 public class Tag : NamedEntity<Guid>
 {
+	public Tag()
+	{
+		Id = Guid.NewGuid();
+	}
+
 	public string? Description { get; set; }
 	public bool IsGenre { get; set; } // default 0
 
