@@ -10,8 +10,8 @@ public class PersonMapping : Profile
 	{
 		CreateMap<Person, PersonDto>().ReverseMap();
 
-		//CreateMap<CreatePersonDto, Person>()
-		//	.AfterMap((src, dest) => dest.Id = Guid.NewGuid())
-		//	.ReverseMap();
+		CreateMap<CreatePersonDto, Person>().ReverseMap();
+
+		CreateMap<UpdatePersonDto, Person>().ReverseMap();
 	}
 }

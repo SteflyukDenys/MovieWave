@@ -1,10 +1,7 @@
-﻿using MovieWave.Domain.Dto.Studio;
+﻿using MovieWave.Domain.Dto.S3Storage;
+using MovieWave.Domain.Dto.Studio;
+using MovieWave.Domain.Entity;
 using MovieWave.Domain.Result;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MovieWave.Domain.Interfaces.Services;
 
@@ -14,9 +11,11 @@ public interface IStudioService
 
 	Task<BaseResult<StudioDto>> GetByIdAsync(long id);
 
-	Task<BaseResult<StudioDto>> CreateAsync(CreateStudioDto dto);
+	Task<CollectionResult<Studio>> GetStudioByIdsAsync(List<long> studioIds);
 
-	Task<BaseResult<StudioDto>> UpdateAsync(UpdateStudioDto dto);
+	Task<BaseResult<StudioDto>> CreateAsync(CreateStudioDto dto, FileDto logoPath);
+
+	Task<BaseResult<StudioDto>> UpdateAsync(UpdateStudioDto dto, FileDto newLogoPath);
 
 	Task<BaseResult<StudioDto>> DeleteAsync(long id);
 }

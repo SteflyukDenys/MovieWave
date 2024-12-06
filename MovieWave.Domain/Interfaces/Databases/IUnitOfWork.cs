@@ -20,4 +20,7 @@ public interface IUnitOfWork : IStateSaveChanges
 
 	IBaseRepository<Banner> Banners { get; set; }
 
+	IBaseRepository<Person> Persons { get; set; }
+
+	IBaseRepository<Tag> Tags { get; set; }
 }

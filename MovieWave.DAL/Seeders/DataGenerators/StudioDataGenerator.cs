@@ -10,7 +10,6 @@ public static class StudioDataGenerator
 		{
 			new Studio
 			{
-				Id = 1L,
 				Name = "Warner Bros.",
 				LogoPath = "https://path-to-warner-bros-logo.jpg",
 				Description = "Одна з найбільших кіностудій, відома такими фільмами, як Гаррі Поттер, Діана, та ін.",
@@ -25,7 +24,6 @@ public static class StudioDataGenerator
 			},
 			new Studio
 			{
-				Id = 2L,
 				Name = "Universal Pictures",
 				LogoPath = "https://path-to-universal-pictures-logo.jpg",
 				Description =
@@ -42,7 +40,6 @@ public static class StudioDataGenerator
 			},
 			new Studio
 			{
-				Id = 3L,
 				Name = "Netflix",
 				LogoPath = "https://path-to-netflix-logo.jpg",
 				Description =
@@ -59,7 +56,6 @@ public static class StudioDataGenerator
 			},
 			new Studio
 			{
-				Id = 4L,
 				Name = "Pixar Animation Studios",
 				LogoPath = "https://path-to-pixar-logo.jpg",
 				Description = "Анімаційна студія, відома емоційними та технічно інноваційними мультфільмами.",
@@ -74,7 +70,6 @@ public static class StudioDataGenerator
 			},
 			new Studio
 			{
-				Id = 5L,
 				Name = "Paramount Pictures",
 				LogoPath = "https://path-to-paramount-logo.jpg",
 				Description = "Голлівудська кіностудія, відома численними культовими фільмами та франшизами.",
@@ -89,7 +84,6 @@ public static class StudioDataGenerator
 			},
 			new Studio
 			{
-				Id = 6L,
 				Name = "Columbia Pictures",
 				LogoPath = "https://path-to-columbia-logo.jpg",
 				Description =
@@ -106,7 +100,6 @@ public static class StudioDataGenerator
 			},
 			new Studio
 			{
-				Id = 7L,
 				Name = "Disney",
 				LogoPath = "https://path-to-disney-logo.jpg",
 				Description = "Світовий лідер у виробництві анімаційних та сімейних фільмів.",

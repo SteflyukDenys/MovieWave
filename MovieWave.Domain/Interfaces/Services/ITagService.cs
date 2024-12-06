@@ -1,5 +1,6 @@
 ﻿using MovieWave.Domain.Dto.S3Storage;
 using MovieWave.Domain.Dto.Tag;
+using MovieWave.Domain.Entity;
 using MovieWave.Domain.Result;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,8 @@ public interface ITagService
 	Task<CollectionResult<TagDto>> GetAllAsync();
 
 	Task<BaseResult<TagDto>> GetByIdAsync(Guid id);
+
+	Task<CollectionResult<Tag>> GetTagsByIdsAsync(List<Guid> tagIds);
 
 	Task<BaseResult<TagDto>> CreateAsync(CreateTagDto dto, FileDto seoImage);
 

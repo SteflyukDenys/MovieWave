@@ -1,15 +1,9 @@
-﻿using Amazon.Runtime.Internal;
-using Asp.Versioning;
+﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
-using MovieWave.Application.Services;
-using MovieWave.Application.Validations;
 using MovieWave.Application.Validations.FluentValidations.MediaItem;
-using MovieWave.Domain.Dto.Banner;
 using MovieWave.Domain.Dto.MediaItem;
-using MovieWave.Domain.Dto.S3Storage;
 using MovieWave.Domain.Interfaces.Services;
 using MovieWave.Domain.Result;
-using MovieWave.API.UploadFileRequest;
 
 namespace MovieWave.API.Controllers;
 
@@ -19,12 +13,10 @@ namespace MovieWave.API.Controllers;
 public class MediaItemController : ControllerBase
 {
 	private readonly IMediaItemService _mediaItemService;
-	private readonly IStorageService _storageService;
 
-	public MediaItemController(IMediaItemService mediaItemService, IStorageService storageService)
+	public MediaItemController(IMediaItemService mediaItemService)
 	{
 		_mediaItemService = mediaItemService;
-		_storageService = storageService;
 	}
 
 	/// <summary>

@@ -1,4 +1,6 @@
-﻿namespace MovieWave.Domain.Dto.S3Storage;
+﻿using MovieWave.Domain.Enum;
+
+namespace MovieWave.Domain.Dto.S3Storage;
 
 public class FileDto
 {

@@ -13,6 +13,5 @@ public class AttachmentMapping : Profile
 		CreateMap<UpdateAttachmentDto, Attachment>().ReverseMap();
 
 		CreateMap<CreateAttachmentDto, Attachment>().ReverseMap();
-
 	}
 }

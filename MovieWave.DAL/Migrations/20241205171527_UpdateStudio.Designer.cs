@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MovieWave.DAL;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,11 @@ using NpgsqlTypes;
 namespace MovieWave.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241205171527_UpdateStudio")]
+    partial class UpdateStudio
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -488,6 +491,9 @@ namespace MovieWave.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("text");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("text");
@@ -506,40 +512,6 @@ namespace MovieWave.DAL.Migrations
                     b.HasIndex("MediaItemId");
 
                     b.ToTable("People");
-                });
-
-            modelBuilder.Entity("MovieWave.Domain.Entity.PersonImage", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("ImagePath")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("ImageType")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("PersonId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<long?>("UpdatedBy")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PersonId");
-
-                    b.ToTable("PersonImage");
                 });
 
             modelBuilder.Entity("MovieWave.Domain.Entity.RestrictedRating", b =>
@@ -1339,17 +1311,6 @@ namespace MovieWave.DAL.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MovieWave.Domain.Entity.PersonImage", b =>
-                {
-                    b.HasOne("MovieWave.Domain.Entity.Person", "Person")
-                        .WithMany("Images")
-                        .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Person");
-                });
-
             modelBuilder.Entity("MovieWave.Domain.Entity.Review", b =>
                 {
                     b.HasOne("MovieWave.Domain.Entity.MediaItem", "MediaItem")
@@ -1574,8 +1535,6 @@ namespace MovieWave.DAL.Migrations
 
             modelBuilder.Entity("MovieWave.Domain.Entity.Person", b =>
                 {
-                    b.Navigation("Images");
-
                     b.Navigation("MediaItemPeople");
                 });
 

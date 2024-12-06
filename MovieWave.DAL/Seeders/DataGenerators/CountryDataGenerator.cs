@@ -11,7 +11,6 @@ namespace MovieWave.DAL.Seeders.DataGenerators
 			{
 				new Country
 				{
-					Id = 1L,
 					Name = "США",
 					SeoAddition = new SeoAddition
 					{
@@ -24,7 +23,6 @@ namespace MovieWave.DAL.Seeders.DataGenerators
 				},
 				new Country
 				{
-					Id = 2L,
 					Name = "Велика Британія",
 					SeoAddition = new SeoAddition
 					{
@@ -37,7 +35,6 @@ namespace MovieWave.DAL.Seeders.DataGenerators
 				},
 				new Country
 				{
-					Id = 3L,
 					Name = "Франція",
 					SeoAddition = new SeoAddition
 					{
@@ -50,7 +47,6 @@ namespace MovieWave.DAL.Seeders.DataGenerators
 				},
 				new Country
 				{
-					Id = 4L,
 					Name = "Німеччина",
 					SeoAddition = new SeoAddition
 					{
@@ -63,7 +59,6 @@ namespace MovieWave.DAL.Seeders.DataGenerators
 				},
 				new Country
 				{
-					Id = 5L,
 					Name = "Японія",
 					SeoAddition = new SeoAddition
 					{
@@ -76,7 +71,6 @@ namespace MovieWave.DAL.Seeders.DataGenerators
 				},
 				new Country
 				{
-					Id = 6L,
 					Name = "Україна",
 					SeoAddition = new SeoAddition
 					{

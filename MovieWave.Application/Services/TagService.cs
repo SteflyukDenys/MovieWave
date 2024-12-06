@@ -91,6 +91,30 @@ public class TagService : ITagService
 		return new BaseResult<TagDto> { Data = tagDto };
 	}
 
+	public async Task<CollectionResult<Tag>> GetTagsByIdsAsync(List<Guid> tagIds)
+	{
+		var tags = await _tagRepository.GetAll()
+			.Include(t => t.SeoAddition)
+			.Where(t => tagIds.Contains(t.Id))
+			.ToListAsync();
+
+		if (tags == null || !tags.Any())
+		{
+			_logger.Warning("Теги не знайдено для наданих ідентифікаторів.");
+			return new CollectionResult<Tag>
+			{
+				ErrorMessage = ErrorMessage.TagsNotFound,
+				ErrorCode = (int)ErrorCodes.TagsNotFound
+			};
+		}
+
+		return new CollectionResult<Tag>
+		{
+			Data = tags,
+			Count = tags.Count
+		};
+	}
+
 	public async Task<BaseResult<TagDto>> CreateAsync(CreateTagDto dto, FileDto imageUrl)
 	{
 		using var transaction = await _unitOfWork.BeginTransactionAsync();
@@ -107,6 +131,7 @@ public class TagService : ITagService
 			}
 
 			var tag = _mapper.Map<Tag>(dto);
+
 			// For S3
 			var folder = $"tags";
 

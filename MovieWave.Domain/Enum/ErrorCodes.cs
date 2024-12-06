@@ -55,6 +55,10 @@ public enum ErrorCodes
 	TagNotFound = 51,
 	TagAlreadyExists = 52,
 
+	// Person
+	PersonNotFound = 55,
+	PersonsNotFound = 56,
+
 	// General Errors
 	InternalServerError = 90,
 	ErrorSeedingDb = 95

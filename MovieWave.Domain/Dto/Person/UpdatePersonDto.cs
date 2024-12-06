@@ -1,14 +1,16 @@
-﻿namespace MovieWave.Domain.Dto.Person;
+﻿using MovieWave.Domain.Dto.SeoAddition;
 
-public class PersonDto
+namespace MovieWave.Domain.Dto.Person;
+
+public class UpdatePersonDto
 {
 	public Guid Id { get; set; }
-
 	public string FirstName { get; set; }
 	public string LastName { get; set; }
-
 	public DateTime? BirthDate { get; set; }
 	public DateTime? DeathDate { get; set; }
-
+	public string? ImagePath { get; set; }
 	public string? Biography { get; set; }
+
+	public SeoAdditionInputDto SeoAddition { get; set; }
 }

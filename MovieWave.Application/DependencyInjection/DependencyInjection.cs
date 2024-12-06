@@ -52,6 +52,8 @@ public static class DependencyInjection
 		services.AddScoped<IStudioService, StudioService>();
 		services.AddScoped<ISeoAdditionService, SeoAdditionService>();
 		services.AddScoped<ITagService, TagService>();
+		services.AddScoped<IStudioService, StudioService>();
+		services.AddScoped<IPersonService, PersonService>();
 
 		services.AddScoped<IStorageService, StorageService>();
 

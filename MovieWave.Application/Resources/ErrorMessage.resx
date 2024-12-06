@@ -228,4 +228,10 @@
   <data name="InvalidFile" xml:space="preserve">
     <value>Invalid file</value>
   </data>
+  <data name="PersonNotFound" xml:space="preserve">
+    <value>Person not found</value>
+  </data>
+  <data name="PersonsNotFound" xml:space="preserve">
+    <value>Persons not found</value>
+  </data>
 </root>

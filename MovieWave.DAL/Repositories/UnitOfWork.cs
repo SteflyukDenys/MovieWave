@@ -15,7 +15,9 @@ namespace MovieWave.DAL.Repositories
 			IBaseRepository<Role> roles,
 			IBaseRepository<UserRole> userRoles,
 			IBaseRepository<MediaItem> mediaItems,
-			IBaseRepository<Attachment> attachments)
+			IBaseRepository<Attachment> attachments,
+			IBaseRepository<Person> persons,
+			IBaseRepository<Tag> tags)
 		{
 			_context = context;
 			Users = users;
@@ -23,6 +25,8 @@ namespace MovieWave.DAL.Repositories
 			UserRoles = userRoles;
 			MediaItems = mediaItems;
 			Attachments = attachments;
+			Persons=persons;
+			Tags=tags;
 		}
 
 		public async Task<IDbContextTransaction> BeginTransactionAsync()
@@ -41,6 +45,7 @@ namespace MovieWave.DAL.Repositories
 		public IBaseRepository<MediaItem> MediaItems { get; set; }
 		public IBaseRepository<Attachment> Attachments { get; set; }
 		public IBaseRepository<Banner> Banners { get; set; }
-
+		public IBaseRepository<Person> Persons { get; set; }
+		public IBaseRepository<Tag> Tags { get; set; }
 	}
 }

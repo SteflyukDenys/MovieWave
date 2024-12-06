@@ -11,7 +11,6 @@ public static class PersonDataGenerator
 			.RuleFor(p => p.LastName, f => f.Name.LastName())
 			.RuleFor(p => p.BirthDate, f => f.Date.Past().ToUniversalTime())
 			.RuleFor(p => p.DeathDate, f => f.Date.Past().ToUniversalTime())
-			.RuleFor(p => p.ImagePath, f => f.Image.PicsumUrl())
 			.RuleFor(p => p.Biography, f => f.Lorem.Paragraph())
 			.RuleFor(p => p.SeoAddition, _ => SeoAdditionDataGenerator.GenerateSeoAddition())
 			.RuleFor(p => p.CreatedAt, f => f.Date.Past().ToUniversalTime())

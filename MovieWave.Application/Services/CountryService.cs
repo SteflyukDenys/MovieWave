@@ -69,6 +69,30 @@ public class CountryService : ICountryService
 		return new BaseResult<CountryDto> { Data = countryDto };
 	}
 
+	public async Task<CollectionResult<Country>> GetCountriesByIdsAsync(List<long> countryIds)
+	{
+		var countries = await _countryRepository.GetAll()
+			.Include(t => t.SeoAddition)
+			.Where(t => countryIds.Contains(t.Id))
+			.ToListAsync();
+
+		if (countries == null || !countries.Any())
+		{
+			_logger.Warning("Країни не знайдено для наданих ідентифікаторів.");
+			return new CollectionResult<Country>
+			{
+				ErrorMessage = ErrorMessage.CountriesNotFound,
+				ErrorCode = (int)ErrorCodes.CountriesNotFound
+			};
+		}
+
+		return new CollectionResult<Country>
+		{
+			Data = countries,
+			Count = countries.Count
+		};
+	}
+
 	public async Task<BaseResult<CountryDto>> CreateAsync(CreateCountryDto dto)
 	{
 		var existingCountry = await _countryRepository.GetAll()

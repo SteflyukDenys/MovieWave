@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Xml.Linq;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using MovieWave.Application.Resources;
@@ -21,21 +18,26 @@ namespace MovieWave.Application.Services;
 public class MediaItemService : IMediaItemService
 {
 	private readonly IBaseRepository<MediaItem> _mediaItemRepository;
+	private readonly ITagService _tagService;
+	private readonly ICountryService _countryService;
+	private readonly IStudioService _studioService;
 	private readonly ILogger _logger;
 	private readonly IMediaItemValidator _mediaItemValidator;
-	private readonly IStorageService _storageService;
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IMapper _mapper;
 
 	public MediaItemService(IBaseRepository<MediaItem> mediaItemRepository, ILogger logger,
-		IMediaItemValidator mediaItemValidator, IMapper mapper, IStorageService storageService, IUnitOfWork unitOfWork)
+		IMediaItemValidator mediaItemValidator, IMapper mapper, IUnitOfWork unitOfWork, ITagService tagService,
+		ICountryService countryService, IStudioService studioService)
 	{
 		_mediaItemRepository = mediaItemRepository;
 		_logger = logger;
 		_mediaItemValidator = mediaItemValidator;
 		_mapper = mapper;
-		_storageService = storageService;
 		_unitOfWork = unitOfWork;
+		_tagService = tagService;
+		_countryService = countryService;
+		_studioService = studioService;
 	}
 
 	public async Task<CollectionResult<MediaItemDto>> GetMediaItemsAsync()
@@ -116,7 +118,7 @@ public class MediaItemService : IMediaItemService
 		try
 		{
 			var existingMediaItem = await _mediaItemRepository.GetAll()
-				.FirstOrDefaultAsync(x => x.OriginalName == dto.OriginalName);
+				.FirstOrDefaultAsync(x => x.Name == dto.Name);
 
 			var validationResult = _mediaItemValidator.CreateValidator(existingMediaItem);
 
@@ -130,7 +132,58 @@ public class MediaItemService : IMediaItemService
 			}
 
 			var mediaItem = _mapper.Map<MediaItem>(dto);
-			
+
+			// Tags
+			if (dto.TagIds != null && dto.TagIds.Any())
+			{
+				var tagsResult = await _tagService.GetTagsByIdsAsync(dto.TagIds);
+
+				if (!tagsResult.IsSuccess)
+				{
+					return new BaseResult<MediaItemDto>
+					{
+						ErrorMessage = tagsResult.ErrorMessage,
+						ErrorCode = tagsResult.ErrorCode
+					};
+				}
+
+				mediaItem.Tags = tagsResult.Data.ToList();
+			}
+
+			// Countries
+			if (dto.CountryIds != null && dto.CountryIds.Any())
+			{
+				var countriesResult = await _countryService.GetCountriesByIdsAsync(dto.CountryIds);
+
+				if (!countriesResult.IsSuccess)
+				{
+					return new BaseResult<MediaItemDto>
+					{
+						ErrorMessage = countriesResult.ErrorMessage,
+						ErrorCode = countriesResult.ErrorCode
+					};
+				}
+
+				mediaItem.Countries = countriesResult.Data.ToList();
+			}
+
+			// Studio
+			if (dto.StudioIds != null && dto.StudioIds.Any())
+			{
+				var studiosResult = await _studioService.GetStudioByIdsAsync(dto.StudioIds);
+
+				if (!studiosResult.IsSuccess)
+				{
+					return new BaseResult<MediaItemDto>
+					{
+						ErrorMessage = studiosResult.ErrorMessage,
+						ErrorCode = studiosResult.ErrorCode
+					};
+				}
+
+				mediaItem.Studios = studiosResult.Data.ToList();
+			}
+
 			await _mediaItemRepository.CreateAsync(mediaItem);
 			await _unitOfWork.SaveChangesAsync();
 			await transaction.CommitAsync();

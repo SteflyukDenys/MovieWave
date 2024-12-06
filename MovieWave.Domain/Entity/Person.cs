@@ -1,17 +1,26 @@
 ﻿using MovieWave.Domain.AbstractEntity;
+using MovieWave.Domain.Enum;
 
 namespace MovieWave.Domain.Entity;
 
 public class Person : AuditableEntity<Guid>
 {
+	public Person()
+	{
+		Id = Guid.NewGuid();
+	}
+
 	public string FirstName { get; set; }
 	public string LastName { get; set; }
-	public DateTime? BirthDate { get; set; }
-	public DateTime? DeathDate { get; set; }
-	public string? ImagePath { get; set; }
+
 	public string? Biography { get; set; }
 
+	public DateTime? BirthDate { get; set; }
+	public DateTime? DeathDate { get; set; }
+
 	public SeoAddition SeoAddition { get; set; } = new SeoAddition();
+
+	public ICollection<PersonImage> Images { get; set; } = new List<PersonImage>();
 
 	public ICollection<MediaItemPerson> MediaItemPeople { get; set; } = new List<MediaItemPerson>();
 }

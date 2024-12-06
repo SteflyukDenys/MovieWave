@@ -1,8 +1,13 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
+using MovieWave.API.UploadFileRequest;
+using MovieWave.Application.Services;
+using MovieWave.Domain.Dto.Banner;
+using MovieWave.Domain.Dto.S3Storage;
 using MovieWave.Domain.Dto.Studio;
 using MovieWave.Domain.Interfaces.Services;
 using MovieWave.Domain.Result;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace MovieWave.API.Controllers;
 
@@ -81,18 +86,26 @@ public class StudioController : ControllerBase
 	/// </remarks>
 	/// <response code="200">Якщо студію успішно створено</response>
 	/// <response code="400">Якщо сталася помилка при запиті</response>
-	[HttpPost]
+	[HttpPost("create")]
+	[Consumes("multipart/form-data")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
-	public async Task<ActionResult<BaseResult<StudioDto>>> Create([FromBody] CreateStudioDto dto)
+	public async Task<ActionResult<BaseResult<StudioDto>>> Create([FromForm] CreateStudioDto dto, IFormFile imageLogo)
 	{
-		var response = await _studioService.CreateAsync(dto);
-		if (response.IsSuccess)
+		if (imageLogo == null || imageLogo.Length == 0)
 		{
-			return Ok(response);
+			return BadRequest(new BaseResult<StudioDto>
+			{
+				ErrorMessage = "Сталася помилка при завантаження файла",
+				ErrorCode = 400
+			});
 		}
 
-		return BadRequest(response);
+		var imageDto = FileRequest.ConvertToFileDto(imageLogo);
+
+		var result = await _studioService.CreateAsync(dto, imageDto);
+
+		return result.IsSuccess ? Ok(result) : BadRequest(result);
 	}
 
 	/// <summary>
@@ -120,18 +133,22 @@ public class StudioController : ControllerBase
 	/// </remarks>
 	/// <response code="200">Якщо студію успішно оновлено</response>
 	/// <response code="400">Якщо сталася помилка при запиті або студію не знайдено</response>
-	[HttpPut]
+	[HttpPut("update")]
+	[Consumes("multipart/form-data")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
-	public async Task<ActionResult<BaseResult<StudioDto>>> Update([FromBody] UpdateStudioDto dto)
+	public async Task<ActionResult<BaseResult<StudioDto>>> Update([FromForm] UpdateStudioDto dto, IFormFile newImageLogo)
 	{
-		var response = await _studioService.UpdateAsync(dto);
-		if (response.IsSuccess)
+		FileDto imageDto = null;
+
+		if (newImageLogo != null && newImageLogo.Length > 0)
 		{
-			return Ok(response);
+			imageDto = FileRequest.ConvertToFileDto(newImageLogo);
 		}
 
-		return BadRequest(response);
+		var result = await _studioService.UpdateAsync(dto, imageDto);
+
+		return result.IsSuccess ? Ok(result) : BadRequest(result);
 	}
 
 	/// <summary>

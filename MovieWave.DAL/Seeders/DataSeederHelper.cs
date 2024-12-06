@@ -37,7 +37,6 @@ namespace MovieWave.DAL.Seeders
 			IBaseRepository<Status> statusRepository,
 			IBaseRepository<MediaItemType> mediaItemTypeRepository,
 			IBaseRepository<RestrictedRating> restrictedRatingRepository,
-			IBaseRepository<Attachment> attachmentRepository,
 			IBaseRepository<Country> countryRepository,
 			IBaseRepository<Studio> studioRepository,
 			IBaseRepository<Tag> tagRepository,
@@ -58,7 +57,6 @@ namespace MovieWave.DAL.Seeders
 			_statusRepository = statusRepository;
 			_mediaItemTypeRepository = mediaItemTypeRepository;
 			_restrictedRatingRepository = restrictedRatingRepository;
-			_attachmentRepository = attachmentRepository;
 			_countryRepository = countryRepository;
 			_studioRepository = studioRepository;
 			_tagRepository = tagRepository;
@@ -89,7 +87,6 @@ namespace MovieWave.DAL.Seeders
 			await SeedNotificationsAsync();
 			await SeedReviewsAsync();
 			await SeedUserSubscriptionsAsync();
-			await SeedAttachmentsAsync();
 			await SeedCountriesAsync();
 			await SeedStudiosAsync();
 			await SeedTagsAsync();
@@ -251,19 +248,6 @@ namespace MovieWave.DAL.Seeders
 			}
 
 			await _userSubscriptionRepository.SaveChangesAsync();
-		}
-
-		private async Task SeedAttachmentsAsync()
-		{
-			var mediaItems = _mediaItemRepository.GetAll().ToList();
-			var attachments = AttachmentDataGenerator.GenerateAttachments(20, mediaItems);
-
-			foreach (var attachment in attachments)
-			{
-				await _attachmentRepository.CreateAsync(attachment);
-			}
-
-			await _attachmentRepository.SaveChangesAsync();
 		}
 
 		private async Task SeedCountriesAsync()

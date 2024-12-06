@@ -1,17 +1,7 @@
-﻿using MovieWave.Domain.Dto.Attachment;
-using MovieWave.Domain.Dto.Comment;
-using MovieWave.Domain.Dto.Country;
-using MovieWave.Domain.Dto.Episode;
-using MovieWave.Domain.Dto.MediaItemType;
-using MovieWave.Domain.Dto.Notification;
-using MovieWave.Domain.Dto.Person;
+﻿using MovieWave.Domain.Dto.MediaItemType;
 using MovieWave.Domain.Dto.RestrictedRating;
-using MovieWave.Domain.Dto.Review;
-using MovieWave.Domain.Dto.Season;
 using MovieWave.Domain.Dto.SeoAddition;
 using MovieWave.Domain.Dto.Status;
-using MovieWave.Domain.Dto.Studio;
-using MovieWave.Domain.Dto.Tag;
 
 namespace MovieWave.Domain.Dto.MediaItem;
 

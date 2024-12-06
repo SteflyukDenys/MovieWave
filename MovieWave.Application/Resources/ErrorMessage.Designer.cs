@@ -151,6 +151,15 @@ namespace MovieWave.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid file.
+        /// </summary>
+        internal static string InvalidFile {
+            get {
+                return ResourceManager.GetString("InvalidFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid login.
         /// </summary>
         internal static string InvalidLogin {
@@ -228,6 +237,24 @@ namespace MovieWave.Application.Resources {
         internal static string PasswordNotEqualsPasswordConfirm {
             get {
                 return ResourceManager.GetString("PasswordNotEqualsPasswordConfirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Person not found.
+        /// </summary>
+        internal static string PersonNotFound {
+            get {
+                return ResourceManager.GetString("PersonNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Persons not found.
+        /// </summary>
+        internal static string PersonsNotFound {
+            get {
+                return ResourceManager.GetString("PersonsNotFound", resourceCulture);
             }
         }
         
@@ -383,13 +410,5 @@ namespace MovieWave.Application.Resources {
                 return ResourceManager.GetString("UserNotFound", resourceCulture);
             }
         }
-
-        internal static string InvalidFile
-        {
-	        get
-	        {
-		        return ResourceManager.GetString("InvalidFile", resourceCulture);
-	        }
-        }
-	}
+    }
 }
