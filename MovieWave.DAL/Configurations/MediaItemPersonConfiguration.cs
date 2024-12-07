@@ -4,7 +4,7 @@ using MovieWave.Domain.Entity;
 
 namespace MovieWave.DAL.Configurations
 {
-	public class MediaItemPeopleConfiguration : IEntityTypeConfiguration<MediaItemPerson>
+	public class MediaItemPersonConfiguration : IEntityTypeConfiguration<MediaItemPerson>
 	{
 		public void Configure(EntityTypeBuilder<MediaItemPerson> builder)
 		{
@@ -12,16 +12,11 @@ namespace MovieWave.DAL.Configurations
 
 			builder.HasOne(mip => mip.MediaItem)
 				.WithMany(mi => mi.MediaItemPeople)
-				.HasForeignKey(mip => mip.MediaItemId)
-				.OnDelete(DeleteBehavior.Cascade);
+				.HasForeignKey(mip => mip.MediaItemId);
 
 			builder.HasOne(mip => mip.Person)
 				.WithMany(p => p.MediaItemPeople)
-				.HasForeignKey(mip => mip.PersonId)
-				.OnDelete(DeleteBehavior.Cascade);
-
-			builder.Property(mip => mip.PersonRole)
-				.IsRequired();
+				.HasForeignKey(mip => mip.PersonId);
 		}
 	}
 }

@@ -1,7 +1,17 @@
-﻿using MovieWave.Domain.Dto.MediaItemType;
+﻿using MovieWave.Domain.Dto.Attachment;
+using MovieWave.Domain.Dto.Comment;
+using MovieWave.Domain.Dto.Country;
+using MovieWave.Domain.Dto.Episode;
+using MovieWave.Domain.Dto.MediaItemType;
+using MovieWave.Domain.Dto.Notification;
+using MovieWave.Domain.Dto.Person;
 using MovieWave.Domain.Dto.RestrictedRating;
+using MovieWave.Domain.Dto.Review;
+using MovieWave.Domain.Dto.Season;
 using MovieWave.Domain.Dto.SeoAddition;
 using MovieWave.Domain.Dto.Status;
+using MovieWave.Domain.Dto.Studio;
+using MovieWave.Domain.Dto.Tag;
 
 namespace MovieWave.Domain.Dto.MediaItem;
 
@@ -23,16 +33,16 @@ public class MediaItemDto{
 	public RestrictedRatingDto RestrictedRating = new RestrictedRatingDto();
 
 	public SeoAdditionInputDto SeoAddition = new SeoAdditionInputDto();
-	//// One-to-Many
-	//List<SeasonDto> Seasons,
-	//List<EpisodeDto> Episodes,
-	//List<AttachmentDto> Attachments,
-	//List<ReviewDto> Reviews,
-	//List<NotificationDto> Notifications,
-	//List<CommentDto> Comments,
-	//// Many-to-Many
-	//List<CountryDto> Countries,
-	//List<StudioDto> Studios,
-	//List<TagDto> Tags,
-	//List<PersonDto> People
+
+	List<SeasonDto> Seasons { get; set; }
+	List<EpisodeDto> Episodes { get; set; }
+	List<AttachmentDto> Attachments { get; set; }
+	List<ReviewDto> Reviews { get; set; }
+	List<NotificationDto> Notifications { get; set; }
+	List<CommentDto> Comments { get; set; }
+	// Many-to-Many
+	List<CountryDto> Countries { get; set; }
+	List<StudioDto> Studios { get; set; }
+	List<TagDto> Tags { get; set; }
+	List<PersonDto> People { get; set; }
 }

@@ -58,6 +58,7 @@ public enum ErrorCodes
 	// Person
 	PersonNotFound = 55,
 	PersonsNotFound = 56,
+	PersonImageNotFound = 57,
 
 	// General Errors
 	InternalServerError = 90,

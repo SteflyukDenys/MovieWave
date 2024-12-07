@@ -17,7 +17,8 @@ namespace MovieWave.DAL.Repositories
 			IBaseRepository<MediaItem> mediaItems,
 			IBaseRepository<Attachment> attachments,
 			IBaseRepository<Person> persons,
-			IBaseRepository<Tag> tags)
+			IBaseRepository<Tag> tags,
+			IBaseRepository<PersonImage> personImages)
 		{
 			_context = context;
 			Users = users;
@@ -27,6 +28,7 @@ namespace MovieWave.DAL.Repositories
 			Attachments = attachments;
 			Persons=persons;
 			Tags=tags;
+			PersonImages=personImages;
 		}
 
 		public async Task<IDbContextTransaction> BeginTransactionAsync()
@@ -46,6 +48,7 @@ namespace MovieWave.DAL.Repositories
 		public IBaseRepository<Attachment> Attachments { get; set; }
 		public IBaseRepository<Banner> Banners { get; set; }
 		public IBaseRepository<Person> Persons { get; set; }
+		public IBaseRepository<PersonImage> PersonImages { get; set; }
 		public IBaseRepository<Tag> Tags { get; set; }
 	}
 }

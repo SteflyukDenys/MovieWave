@@ -47,6 +47,7 @@ public static class DependencyInjection
 		services.AddScoped<IBaseRepository<MediaItemType>, BaseRepository<MediaItemType>>();
 		services.AddScoped<IBaseRepository<RestrictedRating>, BaseRepository<RestrictedRating>>();
 		services.AddScoped<IBaseRepository<Attachment>, BaseRepository<Attachment>>();
+		services.AddScoped<IBaseRepository<PersonImage>, BaseRepository<PersonImage>>();
 		services.AddScoped<IBaseRepository<Banner>, BaseRepository<Banner>>();
 
 	// For User

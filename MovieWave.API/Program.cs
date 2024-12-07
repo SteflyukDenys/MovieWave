@@ -1,14 +1,10 @@
 using Amazon.S3;
-using Microsoft.AspNetCore.CookiePolicy;
 using MovieWave.API;
 using MovieWave.DAL.DependencyInjection;
 using MovieWave.Application.DependencyInjection;
 using MovieWave.Domain.Settings;
 using Serilog;
-using Microsoft.AspNetCore.Builder;
-using MovieWave.API.Extensions;
 using MovieWave.API.Middlewares;
-using MovieWave.API.UploadFileRequest;
 using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);

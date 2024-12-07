@@ -27,9 +27,9 @@ public class MediaItemController : ControllerBase
 	[HttpGet("all/")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
-	public async Task<ActionResult<BaseResult<MediaItemDto>>> GetMediaItemAll()
+	public async Task<ActionResult<BaseResult<MediaItemDto>>> GetMediaItemAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
 	{
-		var response = await _mediaItemService.GetMediaItemsAsync();
+		var response = await _mediaItemService.GetMediaItemsAsync(pageNumber, pageSize);
 
 		if (response.IsSuccess)
 		{
@@ -60,6 +60,23 @@ public class MediaItemController : ControllerBase
 		return BadRequest(response);
 	}
 
+	/// <summary>
+	/// Отримати фільм/серіал за тегом
+	/// </summary>
+	[HttpGet("tag/{tagId}")]
+	[ProducesResponseType(typeof(CollectionResult<MediaItemByTagDto>), 200)]
+	[ProducesResponseType(404)]
+	public async Task<IActionResult> GetMediaItemsByTag(Guid tagId, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+	{
+		var result = await _mediaItemService.GetMediaItemsByTagAsync(tagId, pageNumber, pageSize);
+
+		if (result.Data == null || result.Count == 0)
+		{
+			return NotFound(new { message = "No media items found for the specified tag." });
+		}
+
+		return Ok(result);
+	}
 	/// <summary>
 	/// Видалити медіаелемент за ID
 	/// </summary>

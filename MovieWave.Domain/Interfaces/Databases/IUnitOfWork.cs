@@ -22,5 +22,8 @@ public interface IUnitOfWork : IStateSaveChanges
 
 	IBaseRepository<Person> Persons { get; set; }
 
+	IBaseRepository<PersonImage> PersonImages { get; set; }
+
+
 	IBaseRepository<Tag> Tags { get; set; }
 }

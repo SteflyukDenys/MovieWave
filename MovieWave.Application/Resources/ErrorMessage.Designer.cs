@@ -241,6 +241,15 @@ namespace MovieWave.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Person image not found.
+        /// </summary>
+        internal static string PersonImageNotFound {
+            get {
+                return ResourceManager.GetString("PersonImageNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Person not found.
         /// </summary>
         internal static string PersonNotFound {

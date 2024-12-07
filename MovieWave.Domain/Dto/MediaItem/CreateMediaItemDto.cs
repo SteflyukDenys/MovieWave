@@ -1,4 +1,5 @@
 ﻿using MovieWave.Domain.Dto.Attachment;
+using MovieWave.Domain.Dto.Person;
 using MovieWave.Domain.Dto.SeoAddition;
 
 namespace MovieWave.Domain.Dto.MediaItem;
@@ -26,4 +27,5 @@ public class CreateMediaItemDto
 	public List<Guid> TagIds { get; set; }
 	public List<long> CountryIds { get; set; }
 	public List<long> StudioIds { get; set; }
+	public List<PersonRoleDto>? PersonRoles { get; set; }
 };

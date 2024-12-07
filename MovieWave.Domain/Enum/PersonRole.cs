@@ -2,9 +2,9 @@
 
 public enum PersonRole
 {
-	Actor,
-	Director,
-	Writer,
-	Producer,
-	Other
+	Actor = 1,
+	Director = 2,
+	Writer = 3,
+	Producer = 4,
+	Other = 5
 }

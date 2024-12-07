@@ -6,6 +6,7 @@ using MovieWave.Application.Validations.FluentValidations.MediaItem;
 using MovieWave.Domain.Dto.MediaItem;
 using MovieWave.Domain.Interfaces.Services;
 using MovieWave.Domain.Interfaces.Validations;
+using PersonImageService = MovieWave.Application.Services.PersonImageService;
 
 namespace MovieWave.Application.DependencyInjection;
 
@@ -30,6 +31,7 @@ public static class DependencyInjection
 		services.AddAutoMapper(typeof(StudioMapping));
 		services.AddAutoMapper(typeof(RoleMapping));
 		services.AddAutoMapper(typeof(BannerMapping));
+		services.AddAutoMapper(typeof(PersonImageMapping));
 
 		InitService(services);
 	}
@@ -54,6 +56,7 @@ public static class DependencyInjection
 		services.AddScoped<ITagService, TagService>();
 		services.AddScoped<IStudioService, StudioService>();
 		services.AddScoped<IPersonService, PersonService>();
+		services.AddScoped<IPersonImageService, PersonImageService>();
 
 		services.AddScoped<IStorageService, StorageService>();
 

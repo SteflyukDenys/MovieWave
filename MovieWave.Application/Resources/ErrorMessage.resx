@@ -234,4 +234,7 @@
   <data name="PersonsNotFound" xml:space="preserve">
     <value>Persons not found</value>
   </data>
+  <data name="PersonImageNotFound" xml:space="preserve">
+    <value>Person image not found</value>
+  </data>
 </root>
