@@ -10,7 +10,6 @@ public static class TagDataGenerator
 		{
 			new Tag
             {
-                Id = Guid.NewGuid(),
                 Name = "Комедії",
                 Description = "Фільми для гарного настрою з веселими сюжетами та героями.",
                 IsGenre = true,
@@ -25,7 +24,6 @@ public static class TagDataGenerator
             },
             new Tag
             {
-                Id = Guid.NewGuid(),
                 Name = "Бойовики",
                 Description = "Фільми з динамічними сценами та захопливими сюжетами.",
                 IsGenre = true,
@@ -40,7 +38,6 @@ public static class TagDataGenerator
             },
             new Tag
             {
-                Id = Guid.NewGuid(),
                 Name = "Детективи",
                 Description = "Захопливі історії з інтригуючими розслідуваннями.",
                 IsGenre = true,
@@ -55,7 +52,6 @@ public static class TagDataGenerator
             },
             new Tag
             {
-                Id = Guid.NewGuid(),
                 Name = "Мелодрами",
                 Description = "Романтичні фільми з емоційними сюжетами.",
                 IsGenre = true,
@@ -70,7 +66,6 @@ public static class TagDataGenerator
 			},
             new Tag
             {
-                Id = Guid.NewGuid(),
                 Name = "Трилери",
                 Description = "Фільми з напруженими сюжетами, які тримають у напрузі до кінця.",
                 IsGenre = true,
@@ -85,7 +80,6 @@ public static class TagDataGenerator
 			},
             new Tag
             {
-                Id = Guid.NewGuid(),
                 Name = "Ужаси",
                 Description = "Фільми для тих, хто любить полоскотати нерви.",
                 IsGenre = true,
@@ -100,7 +94,6 @@ public static class TagDataGenerator
 			},
             new Tag
             {
-                Id = Guid.NewGuid(),
                 Name = "Мюзикли",
                 Description = "Фільми з яскравими музичними номерами та історіями.",
                 IsGenre = true,
@@ -115,7 +108,6 @@ public static class TagDataGenerator
 			},
             new Tag
             {
-                Id = Guid.NewGuid(),
                 Name = "Пригоди",
                 Description = "Захопливі фільми про подорожі та незвичайні пригоди.",
                 IsGenre = true,
@@ -130,7 +122,6 @@ public static class TagDataGenerator
 			},
             new Tag
             {
-                Id = Guid.NewGuid(),
                 Name = "Спортивні",
                 Description = "Фільми про спорт, досягнення та перемоги.",
                 IsGenre = true,
@@ -145,7 +136,6 @@ public static class TagDataGenerator
 			},
             new Tag
             {
-                Id = Guid.NewGuid(),
                 Name = "Фантастика",
                 Description = "Фільми з незвичайними світами та фантастичними сюжетами.",
                 IsGenre = true,
@@ -160,7 +150,6 @@ public static class TagDataGenerator
 			},
             new Tag
             {
-                Id = Guid.NewGuid(),
                 Name = "Кримінал",
                 Description = "Фільми з кримінальними сюжетами та розслідуваннями.",
                 IsGenre = true,
@@ -175,7 +164,6 @@ public static class TagDataGenerator
 			},
             new Tag
             {
-                Id = Guid.NewGuid(),
                 Name = "Драми",
                 Description = "Емоційні фільми, що розповідають глибокі історії.",
                 IsGenre = true,
@@ -190,7 +178,6 @@ public static class TagDataGenerator
 			},
             new Tag
             {
-                Id = Guid.NewGuid(),
                 Name = "Короткометражні",
                 Description = "Фільми, що передають історії за короткий час.",
                 IsGenre = true,
@@ -205,7 +192,6 @@ public static class TagDataGenerator
 			},
             new Tag
             {
-                Id = Guid.NewGuid(),
                 Name = "Біографія",
                 Description = "Фільми про життя видатних людей.",
                 IsGenre = true,
@@ -220,7 +206,6 @@ public static class TagDataGenerator
 			},
             new Tag
             {
-                Id = Guid.NewGuid(),
                 Name = "Воєнні",
                 Description = "Фільми про війни, героїзм та боротьбу за свободу.",
                 IsGenre = true,
@@ -235,7 +220,6 @@ public static class TagDataGenerator
 			},
             new Tag
             {
-                Id = Guid.NewGuid(),
                 Name = "Історичні",
                 Description = "Фільми, що розповідають про значущі події минулого.",
                 IsGenre = true,
@@ -250,7 +234,6 @@ public static class TagDataGenerator
 			},
             new Tag
             {
-                Id = Guid.NewGuid(),
                 Name = "Документальні",
                 Description = "Фільми, що відкривають правдиві історії та факти.",
                 IsGenre = true,
@@ -265,7 +248,6 @@ public static class TagDataGenerator
 			},
             new Tag
             {
-                Id = Guid.NewGuid(),
                 Name = "18+",
                 Description = "Фільми лише для дорослої аудиторії.",
                 IsGenre = true,
@@ -280,7 +262,6 @@ public static class TagDataGenerator
 			},
             new Tag
             {
-                Id = Guid.NewGuid(),
                 Name = "Сімейні",
                 Description = "Фільми для перегляду всією родиною.",
                 IsGenre = true,
@@ -295,7 +276,6 @@ public static class TagDataGenerator
 			},
             new Tag
             {
-                Id = Guid.NewGuid(),
                 Name = "Фентезі",
                 Description = "Фільми з чарівними світами та казковими персонажами.",
                 IsGenre = true,
@@ -312,7 +292,6 @@ public static class TagDataGenerator
 			// Tags
 			new Tag
 			{
-				Id = Guid.NewGuid(),
 				Name = "Прем'єри",
 				Description = "Фільми та серіали, що вийшли на екран зовсім недавно.",
 				IsGenre = false,
@@ -327,7 +306,6 @@ public static class TagDataGenerator
 			},
 			new Tag
 			{
-				Id = Guid.NewGuid(),
 				Name = "Топ 10",
 				Description = "Фільми та серіали, що входять в топ 10.",
 				IsGenre = false,
@@ -342,7 +320,6 @@ public static class TagDataGenerator
 			},
 			new Tag
 			{
-				Id = Guid.NewGuid(),
 				Name = "Популярне",
 				Description = "Фільми та серіали, які завоювали любов глядачів.",
 				IsGenre = false,
@@ -357,7 +334,6 @@ public static class TagDataGenerator
 			},
 			new Tag
 			{
-				Id = Guid.NewGuid(),
 				Name = "Українське кіно",
 				Description = "Найкращі фільми створені в Україні.",
 				IsGenre = false,

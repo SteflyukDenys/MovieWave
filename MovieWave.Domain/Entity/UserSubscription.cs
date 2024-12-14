@@ -5,6 +5,11 @@ namespace MovieWave.Domain.Entity;
 
 public class UserSubscription : BaseEntity<Guid>
 {
+	public UserSubscription()
+	{
+		Id = Guid.NewGuid();
+	}
+
 	public Guid UserId { get; set; }
 	public User User { get; set; }
 

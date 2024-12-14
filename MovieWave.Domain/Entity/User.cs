@@ -14,13 +14,13 @@ public class User : IdentityUser<Guid>, IAuditable
 	public string Login { get; set; }
 
 	public string? AvatarPath { get; set; }
-	public string? BackdropPath { get; set; }
+
 	public Gender? Gender { get; set; }
 	public string? Description { get; set; }
 	public DateTime? Birthday { get; set; }
 	public DateTime? LastSeenAt { get; set; }
 
-	public UserToken UserToken { get; set; }
+	public UserToken? UserToken { get; set; }
 
 	public DateTime CreatedAt { get; set; }
 	public long CreatedBy { get; set; }
@@ -34,4 +34,5 @@ public class User : IdentityUser<Guid>, IAuditable
 	public ICollection<Notification> Notifications { get; set; }
 	public ICollection<Review> Reviews { get; set; }
 	public List<Role> Roles { get; set; }
+	public ICollection<UserRole> UserRoles { get; set; }
 }

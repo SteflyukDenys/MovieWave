@@ -17,6 +17,23 @@ namespace MovieWave.DAL.Migrations
                 .Annotation("Npgsql:PostgresExtension:pg_trgm", ",,");
 
             migrationBuilder.CreateTable(
+                name: "Banners",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Title = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    ImageUrl = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    StartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    DisplayOrder = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Banners", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Countries",
                 columns: table => new
                 {
@@ -135,10 +152,11 @@ namespace MovieWave.DAL.Migrations
                 name: "Tags",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Description = table.Column<string>(type: "text", nullable: true),
                     IsGenre = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
-                    ParentId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ParentId = table.Column<long>(type: "bigint", nullable: true),
                     SeoAddition_Slug = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
                     SeoAddition_MetaTitle = table.Column<string>(type: "text", nullable: true),
                     SeoAddition_Description = table.Column<string>(type: "text", nullable: true),
@@ -158,13 +176,12 @@ namespace MovieWave.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "User",
+                name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Login = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
                     AvatarPath = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
-                    BackdropPath = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     Gender = table.Column<int>(type: "integer", nullable: true),
                     Description = table.Column<string>(type: "text", nullable: true),
                     Birthday = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -190,7 +207,7 @@ namespace MovieWave.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_User", x => x.Id);
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -219,14 +236,11 @@ namespace MovieWave.DAL.Migrations
                     Description = table.Column<string>(type: "text", nullable: false),
                     StatusId = table.Column<long>(type: "bigint", nullable: true),
                     RestrictedRatingId = table.Column<long>(type: "bigint", nullable: true),
-                    PosterPath = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     Duration = table.Column<int>(type: "integer", nullable: true),
                     FirstAirDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     LastAirDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    EpisodesCount = table.Column<int>(type: "integer", nullable: true),
-                    ImdbScore = table.Column<decimal>(type: "numeric(3,1)", nullable: true),
-                    PublishedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    SeoAddition_Slug = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: true),
+                    ImdbScore = table.Column<double>(type: "double precision", nullable: true),
+                    SeoAddition_Slug = table.Column<string>(type: "text", nullable: true),
                     SeoAddition_MetaTitle = table.Column<string>(type: "text", nullable: true),
                     SeoAddition_Description = table.Column<string>(type: "text", nullable: true),
                     SeoAddition_MetaDescription = table.Column<string>(type: "text", nullable: true),
@@ -262,7 +276,7 @@ namespace MovieWave.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserRole",
+                name: "UserRoles",
                 columns: table => new
                 {
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
@@ -270,17 +284,17 @@ namespace MovieWave.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserRole", x => new { x.RoleId, x.UserId });
+                    table.PrimaryKey("PK_UserRoles", x => new { x.UserId, x.RoleId });
                     table.ForeignKey(
-                        name: "FK_UserRole_Roles_RoleId",
+                        name: "FK_UserRoles_Roles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserRole_User_UserId",
+                        name: "FK_UserRoles_Users_UserId",
                         column: x => x.UserId,
-                        principalTable: "User",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -306,29 +320,29 @@ namespace MovieWave.DAL.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserSubscriptions_User_UserId",
+                        name: "FK_UserSubscriptions_Users_UserId",
                         column: x => x.UserId,
-                        principalTable: "User",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserToken",
+                name: "UserTokens",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     RefreshToken = table.Column<string>(type: "text", nullable: false),
                     RefreshTokenExpireTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UserTokenId = table.Column<Guid>(type: "uuid", nullable: false)
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserToken", x => x.Id);
+                    table.PrimaryKey("PK_UserTokens", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserToken_User_UserTokenId",
-                        column: x => x.UserTokenId,
-                        principalTable: "User",
+                        name: "FK_UserTokens_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -341,7 +355,6 @@ namespace MovieWave.DAL.Migrations
                     MediaItemId = table.Column<Guid>(type: "uuid", nullable: false),
                     AttachmentType = table.Column<int>(type: "integer", nullable: false),
                     AttachmentUrl = table.Column<string>(type: "text", nullable: false),
-                    ThumbnailPath = table.Column<string>(type: "text", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedBy = table.Column<long>(type: "bigint", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -411,7 +424,7 @@ namespace MovieWave.DAL.Migrations
                 columns: table => new
                 {
                     MediaItemId = table.Column<Guid>(type: "uuid", nullable: false),
-                    TagId = table.Column<Guid>(type: "uuid", nullable: false)
+                    TagId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -437,15 +450,9 @@ namespace MovieWave.DAL.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     FirstName = table.Column<string>(type: "text", nullable: false),
                     LastName = table.Column<string>(type: "text", nullable: false),
+                    Biography = table.Column<string>(type: "text", nullable: true),
                     BirthDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     DeathDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ImagePath = table.Column<string>(type: "text", nullable: true),
-                    Biography = table.Column<string>(type: "text", nullable: true),
-                    SeoAddition_Slug = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
-                    SeoAddition_MetaTitle = table.Column<string>(type: "text", nullable: true),
-                    SeoAddition_Description = table.Column<string>(type: "text", nullable: true),
-                    SeoAddition_MetaDescription = table.Column<string>(type: "text", nullable: true),
-                    SeoAddition_MetaImagePath = table.Column<string>(type: "text", nullable: true),
                     MediaItemId = table.Column<Guid>(type: "uuid", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedBy = table.Column<long>(type: "bigint", nullable: false),
@@ -486,9 +493,9 @@ namespace MovieWave.DAL.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Reviews_User_UserId",
+                        name: "FK_Reviews_Users_UserId",
                         column: x => x.UserId,
-                        principalTable: "User",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -530,9 +537,9 @@ namespace MovieWave.DAL.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserMediaItemLists_User_UserId",
+                        name: "FK_UserMediaItemLists_Users_UserId",
                         column: x => x.UserId,
-                        principalTable: "User",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -569,7 +576,7 @@ namespace MovieWave.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MediaItemPeople", x => new { x.MediaItemId, x.PersonId });
+                    table.PrimaryKey("PK_MediaItemPeople", x => new { x.MediaItemId, x.PersonId, x.PersonRole });
                     table.ForeignKey(
                         name: "FK_MediaItemPeople_MediaItems_MediaItemId",
                         column: x => x.MediaItemId,
@@ -578,6 +585,30 @@ namespace MovieWave.DAL.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_MediaItemPeople_People_PersonId",
+                        column: x => x.PersonId,
+                        principalTable: "People",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PersonImage",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    PersonId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ImageType = table.Column<int>(type: "integer", nullable: false),
+                    ImagePath = table.Column<string>(type: "text", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedBy = table.Column<long>(type: "bigint", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    UpdatedBy = table.Column<long>(type: "bigint", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PersonImage", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PersonImage_People_PersonId",
                         column: x => x.PersonId,
                         principalTable: "People",
                         principalColumn: "Id",
@@ -596,7 +627,7 @@ namespace MovieWave.DAL.Migrations
                     AirDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsFiller = table.Column<bool>(type: "boolean", nullable: true, defaultValue: false),
                     ImagePath = table.Column<string>(type: "text", nullable: true),
-                    SeoAddition_Slug = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
+                    SeoAddition_Slug = table.Column<string>(type: "text", nullable: true),
                     SeoAddition_MetaTitle = table.Column<string>(type: "text", nullable: true),
                     SeoAddition_Description = table.Column<string>(type: "text", nullable: true),
                     SeoAddition_MetaDescription = table.Column<string>(type: "text", nullable: true),
@@ -661,9 +692,9 @@ namespace MovieWave.DAL.Migrations
                         principalTable: "MediaItems",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Comments_User_UserId",
+                        name: "FK_Comments_Users_UserId",
                         column: x => x.UserId,
-                        principalTable: "User",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -724,9 +755,9 @@ namespace MovieWave.DAL.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Notifications_User_UserId",
+                        name: "FK_Notifications_Users_UserId",
                         column: x => x.UserId,
-                        principalTable: "User",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -867,10 +898,9 @@ namespace MovieWave.DAL.Migrations
                 column: "MediaItemId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_People_SeoAddition_Slug",
-                table: "People",
-                column: "SeoAddition_Slug",
-                unique: true);
+                name: "IX_PersonImage_PersonId",
+                table: "PersonImage",
+                column: "PersonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reviews_MediaItemId",
@@ -905,26 +935,26 @@ namespace MovieWave.DAL.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_User_Login",
-                table: "User",
-                column: "Login",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_User_NormalizedEmail",
-                table: "User",
-                column: "NormalizedEmail",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_UserMediaItemLists_MediaItemId",
                 table: "UserMediaItemLists",
                 column: "MediaItemId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserRole_UserId",
-                table: "UserRole",
-                column: "UserId");
+                name: "IX_UserRoles_RoleId",
+                table: "UserRoles",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Login",
+                table: "Users",
+                column: "Login",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_NormalizedEmail",
+                table: "Users",
+                column: "NormalizedEmail",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserSubscriptions_SubscriptionPlanId",
@@ -937,9 +967,9 @@ namespace MovieWave.DAL.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserToken_UserTokenId",
-                table: "UserToken",
-                column: "UserTokenId",
+                name: "IX_UserTokens_UserId",
+                table: "UserTokens",
+                column: "UserId",
                 unique: true);
         }
 
@@ -948,6 +978,9 @@ namespace MovieWave.DAL.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Attachments");
+
+            migrationBuilder.DropTable(
+                name: "Banners");
 
             migrationBuilder.DropTable(
                 name: "Comments");
@@ -974,25 +1007,25 @@ namespace MovieWave.DAL.Migrations
                 name: "Payments");
 
             migrationBuilder.DropTable(
+                name: "PersonImage");
+
+            migrationBuilder.DropTable(
                 name: "Reviews");
 
             migrationBuilder.DropTable(
                 name: "UserMediaItemLists");
 
             migrationBuilder.DropTable(
-                name: "UserRole");
+                name: "UserRoles");
 
             migrationBuilder.DropTable(
-                name: "UserToken");
+                name: "UserTokens");
 
             migrationBuilder.DropTable(
                 name: "Voices");
 
             migrationBuilder.DropTable(
                 name: "Countries");
-
-            migrationBuilder.DropTable(
-                name: "People");
 
             migrationBuilder.DropTable(
                 name: "Studios");
@@ -1007,6 +1040,9 @@ namespace MovieWave.DAL.Migrations
                 name: "UserSubscriptions");
 
             migrationBuilder.DropTable(
+                name: "People");
+
+            migrationBuilder.DropTable(
                 name: "Roles");
 
             migrationBuilder.DropTable(
@@ -1016,7 +1052,7 @@ namespace MovieWave.DAL.Migrations
                 name: "SubscriptionPlans");
 
             migrationBuilder.DropTable(
-                name: "User");
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "MediaItems");

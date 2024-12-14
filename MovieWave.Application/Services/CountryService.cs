@@ -150,4 +150,17 @@ public class CountryService : ICountryService
 
 		return new BaseResult<CountryDto> { Data = _mapper.Map<CountryDto>(updatedCountry) };
 	}
+
+	public async Task<List<long>> GetCountriesByNamesAsync(List<string> names)
+	{
+		if (names == null || !names.Any())
+			return new List<long>();
+
+		var found = await _countryRepository.GetAll()
+			.Where(c => names.Contains(c.Name))
+			.Select(c => c.Id)
+			.ToListAsync();
+
+		return found;
+	}
 }

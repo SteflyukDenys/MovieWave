@@ -46,32 +46,30 @@ public class PersonService : IPersonService
 
 	public async Task<BaseResult<PersonDto>> UpdatePersonAsync(UpdatePersonDto dto)
 	{
-			var person = await _personRepository.GetAll()
-				.Include(p => p.SeoAddition)
-				.FirstOrDefaultAsync(p => p.Id == dto.Id);
+		var person = await _personRepository.GetAll()
+			.FirstOrDefaultAsync(p => p.Id == dto.Id);
 
-			if (person == null)
+		if (person == null)
+		{
+			return new BaseResult<PersonDto>
 			{
-				return new BaseResult<PersonDto>
-				{
-					ErrorMessage = ErrorMessage.PersonNotFound,
-					ErrorCode = (int)ErrorCodes.PersonNotFound
-				};
-			}
+				ErrorMessage = ErrorMessage.PersonNotFound,
+				ErrorCode = (int)ErrorCodes.PersonNotFound
+			};
+		}
 
-			_mapper.Map(dto, person);
+		_mapper.Map(dto, person);
 
-			_personRepository.Update(person);
-			await _personRepository.SaveChangesAsync();
+		_personRepository.Update(person);
+		await _personRepository.SaveChangesAsync();
 
-			var personDto = _mapper.Map<PersonDto>(person);
-			return new BaseResult<PersonDto> { Data = personDto };
+		var personDto = _mapper.Map<PersonDto>(person);
+		return new BaseResult<PersonDto> { Data = personDto };
 	}
 
 	public async Task<BaseResult<PersonDto>> GetPersonByIdAsync(Guid personId)
 	{
 		var person = await _personRepository.GetAll()
-			.Include(p => p.SeoAddition)
 			.FirstOrDefaultAsync(p => p.Id == personId);
 
 		if (person == null)
@@ -115,7 +113,6 @@ public class PersonService : IPersonService
 	public async Task<CollectionResult<PersonDto>> GetAllPersonsAsync()
 	{
 		var persons = await _personRepository.GetAll()
-			.Include(p => p.SeoAddition)
 			.ToListAsync();
 
 		if (!persons.Any())
@@ -138,7 +135,6 @@ public class PersonService : IPersonService
 		try
 		{
 			var person = await _personRepository.GetAll()
-				.Include(p => p.SeoAddition)
 				.Include(p => p.Images)
 				.FirstOrDefaultAsync(p => p.Id == personId);
 
@@ -180,6 +176,54 @@ public class PersonService : IPersonService
 				ErrorCode = (int)ErrorCodes.InternalServerError
 			};
 		}
+	}
+
+	public async Task<Dictionary<string, Guid>> GetOrCreatePersonsByNamesAsync(List<string> names)
+	{
+		if (names == null || !names.Any())
+			return new Dictionary<string, Guid>();
+
+		var persons = await _personRepository.GetAll()
+			.Where(p => names.Contains((p.FirstName + " " + p.LastName).Trim())
+						|| names.Contains(p.FirstName))
+			.ToListAsync();
+
+		var result = new Dictionary<string, Guid>();
+
+		foreach (var p in persons)
+		{
+			var fullName = (p.FirstName + " " + p.LastName).Trim();
+			if (string.IsNullOrWhiteSpace(p.LastName))
+				fullName = p.FirstName;
+			if (!result.ContainsKey(fullName))
+				result[fullName] = p.Id;
+		}
+
+		var missing = names.Where(n => !result.ContainsKey(n)).ToList();
+
+		foreach (var m in missing)
+		{
+			var parts = m.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+			string firstName = parts[0];
+			string lastName = parts.Length > 1 ? parts[1] : "";
+
+			var newPerson = new Person
+			{
+				Id = Guid.NewGuid(),
+				FirstName = firstName,
+				LastName = lastName
+			};
+
+			await _personRepository.CreateAsync(newPerson);
+			await _personRepository.SaveChangesAsync();
+
+			var fullName = (newPerson.FirstName + " " + newPerson.LastName).Trim();
+			if (string.IsNullOrWhiteSpace(newPerson.LastName))
+				fullName = newPerson.FirstName;
+			result[fullName] = newPerson.Id;
+		}
+
+		return result;
 	}
 
 }

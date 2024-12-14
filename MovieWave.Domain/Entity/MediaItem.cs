@@ -22,11 +22,11 @@ public class MediaItem : NamedAuditableEntity<Guid>
 	public RestrictedRating RestrictedRating { get; set; }
 	
 	public int? Duration { get; set; } // In minutes
+
 	public DateTime? FirstAirDate { get; set; }
 	public DateTime? LastAirDate { get; set; }
-	public int? EpisodesCount { get; set; }
-	public decimal? ImdbScore { get; set; }
-	public DateTime? PublishedAt { get; set; }
+
+	public double? ImdbScore { get; set; }
 
 	// Composition
 	public SeoAddition? SeoAddition { get; set; } = new SeoAddition();

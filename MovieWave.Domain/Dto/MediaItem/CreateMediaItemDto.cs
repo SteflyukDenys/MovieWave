@@ -10,8 +10,7 @@ public class CreateMediaItemDto
 	public string? OriginalName { get; set; }
 	public string? Description { get; set; }
 	public int? Duration { get; set; }
-	public int? EpisodesCount { get; set; }
-	public decimal? ImdbScore { get; set; }
+	public double? ImdbScore { get; set; }
 
 	public int MediaItemTypeId { get; set; }
 	public long? StatusId { get; set; }
@@ -21,11 +20,10 @@ public class CreateMediaItemDto
 	public DateTime? FirstAirDate { get; set; }
 
 	public DateTime? LastAirDate { get; set; }
-	public DateTime? PublishedAt { get; set; }
 	public SeoAdditionInputDto SeoAddition { get; set; }
 
-	public List<Guid> TagIds { get; set; }
+	public List<long> TagIds { get; set; }
 	public List<long> CountryIds { get; set; }
 	public List<long> StudioIds { get; set; }
-	public List<PersonRoleDto>? PersonRoles { get; set; }
+	public List<PersonRoleDto> PersonRoles { get; set; }
 };

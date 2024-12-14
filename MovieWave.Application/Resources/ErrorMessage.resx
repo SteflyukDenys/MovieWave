@@ -237,4 +237,43 @@
   <data name="PersonImageNotFound" xml:space="preserve">
     <value>Person image not found</value>
   </data>
+  <data name="SeasonNotFound" xml:space="preserve">
+    <value>Season not found</value>
+  </data>
+  <data name="EpisodeNotFound" xml:space="preserve">
+    <value>Episode not found</value>
+  </data>
+  <data name="VoiceNotFound" xml:space="preserve">
+    <value>Voice not found</value>
+  </data>
+  <data name="EpisodeVoiceNotFound" xml:space="preserve">
+    <value>Episode voice not found</value>
+  </data>
+  <data name="EmailOrPhoneInvalid" xml:space="preserve">
+    <value>Either Email or PhoneNumber must be provided</value>
+  </data>
+  <data name="EmailAlreadyUse" xml:space="preserve">
+    <value>Email is already in use</value>
+  </data>
+  <data name="PhoneAalreadyUse" xml:space="preserve">
+    <value>Phone number is already in use</value>
+  </data>
+  <data name="WatchHistoryNotFound" xml:space="preserve">
+    <value>No watch history found</value>
+  </data>
+  <data name="WantToWatchNotFound" xml:space="preserve">
+    <value>No 'Want to Watch' items found</value>
+  </data>
+  <data name="FavoritesNotFound" xml:space="preserve">
+    <value>No favorites found.</value>
+  </data>
+  <data name="ParentCommentNotFound" xml:space="preserve">
+    <value>Parent comment not found</value>
+  </data>
+  <data name="CommentNotFound" xml:space="preserve">
+    <value>Comment not found</value>
+  </data>
+  <data name="Unauthorized" xml:space="preserve">
+    <value>You are not authorized to delete this comment</value>
+  </data>
 </root>

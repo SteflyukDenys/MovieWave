@@ -19,6 +19,7 @@ public enum ErrorCodes
 	PasswordNotEqualsPasswordConfirm = 14,
 	UserNotFound = 15,
 	UserAlreadyExistsThisRole = 16,
+	InvalidInput = 17,
 
 	// Role
 	RoleAlreadyExists = 20,
@@ -59,6 +60,27 @@ public enum ErrorCodes
 	PersonNotFound = 55,
 	PersonsNotFound = 56,
 	PersonImageNotFound = 57,
+
+	// Season
+	SeasonNotFound = 60,
+
+	// Episode
+	EpisodeNotFound = 65,
+
+	// Voice
+	VoiceNotFound = 70,
+
+	// EpisodeVoice
+	EpisodeVoiceNotFound = 75,
+
+	// Watch History
+	WatchHistoryNotFound = 80,
+	WantToWatchNotFound = 81,
+	FavoritesNotFound = 82,
+
+	// Comment
+	ParentCommentNotFound = 85,
+	CommentNotFound = 86,
 
 	// General Errors
 	InternalServerError = 90,

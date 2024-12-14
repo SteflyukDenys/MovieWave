@@ -5,6 +5,11 @@ namespace MovieWave.Domain.Entity;
 
 public class SubscriptionPlan : BaseEntity<Guid>
 {
+	public SubscriptionPlan()
+	{
+		Id = Guid.NewGuid();
+	}
+
 	public SubscriptionLevel Name { get; set; } // enum
 	public string? Description { get; set; }
 	public decimal PricePerMonth { get; set; }

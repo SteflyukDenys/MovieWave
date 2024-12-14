@@ -14,13 +14,15 @@ public interface ITagService
 {
 	Task<CollectionResult<TagDto>> GetAllAsync();
 
-	Task<BaseResult<TagDto>> GetByIdAsync(Guid id);
+	Task<BaseResult<TagDto>> GetByIdAsync(long id);
 
-	Task<CollectionResult<Tag>> GetTagsByIdsAsync(List<Guid> tagIds);
+	Task<CollectionResult<Tag>> GetTagsByIdsAsync(List<long> tagIds);
 
 	Task<BaseResult<TagDto>> CreateAsync(CreateTagDto dto, FileDto seoImage);
 
 	Task<BaseResult<TagDto>> UpdateAsync(UpdateTagDto dto, FileDto seoImage);
 
-	Task<BaseResult<TagDto>> DeleteAsync(Guid id);
+	Task<BaseResult<TagDto>> DeleteAsync(long id);
+
+	Task<List<long>> GetTagsByNamesAsync(List<string> names);
 }

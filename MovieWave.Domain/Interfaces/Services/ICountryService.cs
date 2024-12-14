@@ -18,4 +18,6 @@ public interface ICountryService
 	Task<BaseResult<CountryDto>> DeleteAsync(long id);
 
 	Task<BaseResult<CountryDto>> UpdateAsync(UpdateCountryDto dto);
+
+	Task<List<long>> GetCountriesByNamesAsync(List<string> names);
 }

@@ -79,19 +79,19 @@ namespace MovieWave.DAL.Seeders
 			await SeedMediaItemTypesAsync();
 			await SeedRestrictedRatingsAsync();
 			await SeedSubscriptionPlansAsync();
-			await SeedMediaItemsAsync();
-			await SeedSeasonsAsync();
+			//await SeedMediaItemsAsync();
+			//await SeedSeasonsAsync();
 			await SeedVoicesAsync();
-			await SeedEpisodesAsync();
-			await SeedCommentsAsync();
-			await SeedNotificationsAsync();
-			await SeedReviewsAsync();
-			await SeedUserSubscriptionsAsync();
+			//await SeedEpisodesAsync();
+			//await SeedCommentsAsync();
+			//await SeedNotificationsAsync();
+			//await SeedReviewsAsync();
+			//await SeedUserSubscriptionsAsync();
 			await SeedCountriesAsync();
 			await SeedStudiosAsync();
 			await SeedTagsAsync();
-			await SeedPeopleAsync();
-			await SeedEpisodeVoicesAsync();
+			//await SeedPeopleAsync();
+			//await SeedEpisodeVoicesAsync();
 		}
 
 		private async Task SeedUsersAsync()
@@ -119,25 +119,25 @@ namespace MovieWave.DAL.Seeders
 			}
 		}
 
-		private async Task SeedMediaItemsAsync()
-		{
-			var statuses = _statusRepository.GetAll().ToList();
-			var mediaItemTypes = _mediaItemTypeRepository.GetAll().ToList();
-			var restrictedRatings = _restrictedRatingRepository.GetAll().ToList();
+		//private async Task SeedMediaItemsAsync()
+		//{
+		//	var statuses = _statusRepository.GetAll().ToList();
+		//	var mediaItemTypes = _mediaItemTypeRepository.GetAll().ToList();
+		//	var restrictedRatings = _restrictedRatingRepository.GetAll().ToList();
 
-			if (!statuses.Any() || !mediaItemTypes.Any() || !restrictedRatings.Any())
-			{
-				throw new InvalidOperationException("One or more required lists for media item generation are empty.");
-			}
+		//	if (!statuses.Any() || !mediaItemTypes.Any() || !restrictedRatings.Any())
+		//	{
+		//		throw new InvalidOperationException("One or more required lists for media item generation are empty.");
+		//	}
 
-			var mediaItems = MediaItemDataGenerator.GenerateMediaItems(20, statuses, mediaItemTypes, restrictedRatings);
-			foreach (var item in mediaItems)
-			{
-				await _mediaItemRepository.CreateAsync(item);
-			}
+		//	var mediaItems = MediaItemDataGenerator.GenerateMediaItems(20, statuses, mediaItemTypes, restrictedRatings);
+		//	foreach (var item in mediaItems)
+		//	{
+		//		await _mediaItemRepository.CreateAsync(item);
+		//	}
 
-			await _mediaItemRepository.SaveChangesAsync();
-		}
+		//	await _mediaItemRepository.SaveChangesAsync();
+		//}
 
 		private async Task SeedMediaItemTypesAsync()
 		{
@@ -169,86 +169,86 @@ namespace MovieWave.DAL.Seeders
 			await _statusRepository.SaveChangesAsync();
 		}
 
-		private async Task SeedSeasonsAsync()
-		{
-			var mediaItems = _mediaItemRepository.GetAll().ToList();
-			var seasons = SeasonDataGenerator.GenerateSeasons(15, mediaItems);
-			foreach (var season in seasons)
-			{
-				await _seasonRepository.CreateAsync(season);
-			}
-			await _seasonRepository.SaveChangesAsync();
-		}
+		//private async Task SeedSeasonsAsync()
+		//{
+		//	var mediaItems = _mediaItemRepository.GetAll().ToList();
+		//	var seasons = SeasonDataGenerator.GenerateSeasons(15, mediaItems);
+		//	foreach (var season in seasons)
+		//	{
+		//		await _seasonRepository.CreateAsync(season);
+		//	}
+		//	await _seasonRepository.SaveChangesAsync();
+		//}
 
-		private async Task SeedEpisodesAsync()
-		{
-			var mediaItems = _mediaItemRepository.GetAll().ToList();
-			var seasons = _seasonRepository.GetAll().ToList();
-			var episodes = EpisodeDataGenerator.GenerateEpisodes(30, mediaItems, seasons);
-			foreach (var episode in episodes)
-			{
-				await _episodeRepository.CreateAsync(episode);
-			}
-			await _episodeRepository.SaveChangesAsync();
-		}
+		//private async Task SeedEpisodesAsync()
+		//{
+		//	var mediaItems = _mediaItemRepository.GetAll().ToList();
+		//	var seasons = _seasonRepository.GetAll().ToList();
+		//	var episodes = EpisodeDataGenerator.GenerateEpisodes(30, mediaItems, seasons);
+		//	foreach (var episode in episodes)
+		//	{
+		//		await _episodeRepository.CreateAsync(episode);
+		//	}
+		//	await _episodeRepository.SaveChangesAsync();
+		//}
 
-		private async Task SeedCommentsAsync()
-		{
-			var episodes = _episodeRepository.GetAll().ToList();
-			var mediaItems = _mediaItemRepository.GetAll().ToList();
-			var userIds = _userRepository.GetAll().Select(u => u.Id).ToList();
-			var comments = CommentDataGenerator.GenerateComments(20, episodes, mediaItems, userIds, null);
+		//private async Task SeedCommentsAsync()
+		//{
+		//	var episodes = _episodeRepository.GetAll().ToList();
+		//	var mediaItems = _mediaItemRepository.GetAll().ToList();
+		//	var userIds = _userRepository.GetAll().Select(u => u.Id).ToList();
+		//	var comments = CommentDataGenerator.GenerateComments(20, episodes, mediaItems, userIds, null);
 
-			foreach (var comment in comments)
-			{
-				await _commentRepository.CreateAsync(comment);
-			}
+		//	foreach (var comment in comments)
+		//	{
+		//		await _commentRepository.CreateAsync(comment);
+		//	}
 
-			await _commentRepository.SaveChangesAsync();
-		}
+		//	await _commentRepository.SaveChangesAsync();
+		//}
 
-		private async Task SeedNotificationsAsync()
-		{
-			var users = _userRepository.GetAll().ToList();
-			var mediaItems = _mediaItemRepository.GetAll().ToList();
-			var episodes = _episodeRepository.GetAll().ToList();
-			var notifications = NotificationDataGenerator.GenerateNotifications(20, users, mediaItems, episodes);
+		//private async Task SeedNotificationsAsync()
+		//{
+		//	var users = _userRepository.GetAll().ToList();
+		//	var mediaItems = _mediaItemRepository.GetAll().ToList();
+		//	var episodes = _episodeRepository.GetAll().ToList();
+		//	var notifications = NotificationDataGenerator.GenerateNotifications(20, users, mediaItems, episodes);
 
-			foreach (var notification in notifications)
-			{
-				await _notificationRepository.CreateAsync(notification);
-			}
+		//	foreach (var notification in notifications)
+		//	{
+		//		await _notificationRepository.CreateAsync(notification);
+		//	}
 
-			await _notificationRepository.SaveChangesAsync();
-		}
+		//	await _notificationRepository.SaveChangesAsync();
+		//}
 
-		private async Task SeedReviewsAsync()
-		{
-			var mediaItems = _mediaItemRepository.GetAll().ToList();
-			var users = _userRepository.GetAll().ToList();
-			var reviews = ReviewDataGenerator.GenerateReviews(30, mediaItems, users);
+		//private async Task SeedReviewsAsync()
+		//{
+		//	var mediaItems = _mediaItemRepository.GetAll().ToList();
+		//	var users = _userRepository.GetAll().ToList();
+		//	var reviews = ReviewDataGenerator.GenerateReviews(30, mediaItems, users);
 
-			foreach (var review in reviews)
-			{
-				await _reviewRepository.CreateAsync(review);
-			}
+		//	foreach (var review in reviews)
+		//	{
+		//		await _reviewRepository.CreateAsync(review);
+		//	}
 
-			await _reviewRepository.SaveChangesAsync();
-		}
+		//	await _reviewRepository.SaveChangesAsync();
+		//}
 
-		private async Task SeedUserSubscriptionsAsync()
-		{
-			var users = _userRepository.GetAll().ToList();
-			var subscriptionPlans = _subscriptionPlanRepository.GetAll().ToList();
-			var userSubscriptions = UserSubscriptionDataGenerator.GenerateUserSubscriptions(10, users, subscriptionPlans);
+		//private async Task SeedUserSubscriptionsAsync()
+		//{
+		//	var users = _userRepository.GetAll().ToList();
+		//	var subscriptionPlans = _subscriptionPlanRepository.GetAll().ToList();
+		//	var userSubscriptions = UserSubscriptionDataGenerator.GenerateUserSubscriptions(10, users, subscriptionPlans);
 
-			foreach (var subscription in userSubscriptions)
-			{
-				await _userSubscriptionRepository.CreateAsync(subscription);
-			}
+		//	foreach (var subscription in userSubscriptions)
+		//	{
+		//		await _userSubscriptionRepository.CreateAsync(subscription);
+		//	}
 
-			await _userSubscriptionRepository.SaveChangesAsync();
-		}
+		//	await _userSubscriptionRepository.SaveChangesAsync();
+		//}
 
 		private async Task SeedCountriesAsync()
 		{
@@ -340,40 +340,40 @@ namespace MovieWave.DAL.Seeders
 			await _tagRepository.SaveChangesAsync();
 		}
 
-		private async Task SeedPeopleAsync()
-		{
-			var people = PersonDataGenerator.GeneratePeople(20);
-			foreach (var person in people)
-			{
-				await _personRepository.CreateAsync(person);
-			}
-			await _personRepository.SaveChangesAsync();
-		}
+		//private async Task SeedPeopleAsync()
+		//{
+		//	var people = PersonDataGenerator.GeneratePeople(20);
+		//	foreach (var person in people)
+		//	{
+		//		await _personRepository.CreateAsync(person);
+		//	}
+		//	await _personRepository.SaveChangesAsync();
+		//}
 
-		private async Task SeedEpisodeVoicesAsync()
-		{
-			var episodes = _episodeRepository.GetAll().ToList();
-			var voices = _voiceRepository.GetAll().ToList();
+		//private async Task SeedEpisodeVoicesAsync()
+		//{
+		//	var episodes = _episodeRepository.GetAll().ToList();
+		//	var voices = _voiceRepository.GetAll().ToList();
 
-			if (!episodes.Any() || !voices.Any())
-			{
-				throw new InvalidOperationException("Episodes or Voices are missing for EpisodeVoice generation.");
-			}
+		//	if (!episodes.Any() || !voices.Any())
+		//	{
+		//		throw new InvalidOperationException("Episodes or Voices are missing for EpisodeVoice generation.");
+		//	}
 
-			var episodeVoices = EpisodeVoiceDataGenerator.GenerateEpisodeVoices(episodes, voices);
+		//	var episodeVoices = EpisodeVoiceDataGenerator.GenerateEpisodeVoices(episodes, voices);
 
-			foreach (var episodeVoice in episodeVoices)
-			{
-				var exists = await _episodeVoiceRepository.GetAll()
-					.AnyAsync(ev => ev.EpisodeId == episodeVoice.EpisodeId && ev.VoiceId == episodeVoice.VoiceId);
+		//	foreach (var episodeVoice in episodeVoices)
+		//	{
+		//		var exists = await _episodeVoiceRepository.GetAll()
+		//			.AnyAsync(ev => ev.EpisodeId == episodeVoice.EpisodeId && ev.VoiceId == episodeVoice.VoiceId);
 
-				if (!exists)
-				{
-					await _episodeVoiceRepository.CreateAsync(episodeVoice);
-				}
-			}
+		//		if (!exists)
+		//		{
+		//			await _episodeVoiceRepository.CreateAsync(episodeVoice);
+		//		}
+		//	}
 
-			await _episodeVoiceRepository.SaveChangesAsync();
-		}
+		//	await _episodeVoiceRepository.SaveChangesAsync();
+		//}
 	}
 }

@@ -10,7 +10,13 @@ public interface IMediaItemService
 	
 	Task<BaseResult<MediaItemDto>> GetMediaItemByIdAsync(Guid id);
 
-	Task<CollectionResult<MediaItemByTagDto>> GetMediaItemsByTagAsync(Guid tagId, int pageNumber = 1, int pageSize = 10);
+	Task<CollectionResult<MediaItemDto>> GetAllMoviesAsync(int pageNumber = 1, int pageSize = 10);
+
+	Task<CollectionResult<MediaItemDto>> GetAllSeriesAsync(int pageNumber = 1, int pageSize = 10);
+
+	Task<CollectionResult<MediaItemByTagDto>> GetMoviesByTagAsync(long tagId, int pageNumber = 1, int pageSize = 10);
+
+	Task<CollectionResult<MediaItemByTagDto>> GetSeriesByTagAsync(long tagId, int pageNumber = 1, int pageSize = 10);
 
 	Task<BaseResult<MediaItemDto>> CreateMediaItemAsync(CreateMediaItemDto dto);
 
@@ -18,6 +24,10 @@ public interface IMediaItemService
 
 	Task<BaseResult<MediaItemDto>> UpdateMediaItemAsync(UpdateMediaItemDto dto);
 
-	Task<CollectionResult<MediaItemDto>> SearchMediaItemsAsync(MediaItemSearchDto searchDto);
+	Task<CollectionResult<MediaItemDto>> SearchMediaItemsAsync(MediaItemSearchDto searchDto, int pageNumber = 1, int pageSize = 10);
+
+	bool CheckSlugExists(string slug);
+
+	Task<bool> ExistsByNameAndYearAsync(string name, int? year);
 }
 

@@ -8,7 +8,7 @@ namespace MovieWave.DAL.Configurations
 	{
 		public void Configure(EntityTypeBuilder<MediaItemPerson> builder)
 		{
-			builder.HasKey(mip => new { mip.MediaItemId, mip.PersonId });
+			builder.HasKey(mip => new { mip.MediaItemId, mip.PersonId, mip.PersonRole });
 
 			builder.HasOne(mip => mip.MediaItem)
 				.WithMany(mi => mi.MediaItemPeople)

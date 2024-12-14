@@ -247,4 +247,17 @@ public class StudioService : IStudioService
 
 		return new BaseResult<StudioDto> { Data = _mapper.Map<StudioDto>(studio) };
 	}
+
+	public async Task<List<long>> GetStudioByNamesAsync(List<string> names)
+	{
+		if (names == null || !names.Any())
+			return new List<long>();
+
+		var found = await _studioRepository.GetAll()
+			.Where(s => names.Contains(s.Name))
+			.Select(s => s.Id)
+			.ToListAsync();
+
+		return found;
+	}
 }

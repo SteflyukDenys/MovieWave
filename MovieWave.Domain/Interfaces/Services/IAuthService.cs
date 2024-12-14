@@ -11,4 +11,6 @@ public interface IAuthService
 	Task<BaseResult<TokenDto>> LoginAsync(LoginUserDto dto);
 
 	Task<BaseResult<TokenDto>> ExternalLoginAsync(string email, string name);
+
+	Task<BaseResult<UserDto>> GetUserByIdAsync(Guid userId);
 }

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using MovieWave.Application.Resources;
 using MovieWave.Domain.AbstractEntity;
 using MovieWave.Domain.Dto.MediaItem;
+using MovieWave.Domain.Dto.Person;
 using MovieWave.Domain.Dto.S3Storage;
 using MovieWave.Domain.Dto.SeoAddition;
 using MovieWave.Domain.Dto.Tag;
@@ -52,6 +53,7 @@ public class MediaItemService : IMediaItemService
 			.Include(x => x.Status)
 			.Include(x => x.RestrictedRating)
 			.Include(x => x.Episodes)
+			.Include(x => x.Seasons)
 			.Include(x => x.Attachments)
 			.Include(x => x.Reviews)
 			.Include(x => x.Notifications)
@@ -59,7 +61,8 @@ public class MediaItemService : IMediaItemService
 			.Include(x => x.Countries)
 			.Include(x => x.Studios)
 			.Include(x => x.Tags)
-			.Include(x => x.People);
+			.Include(x => x.MediaItemPeople)
+			.ThenInclude(mp => mp.Person); ;
 
 		var (items, totalItems) = await PaginationHelper.PaginateAsync(query, pageNumber, pageSize);
 
@@ -91,6 +94,7 @@ public class MediaItemService : IMediaItemService
 			.Include(x => x.Status)
 			.Include(x => x.RestrictedRating)
 			.Include(x => x.Episodes)
+			.Include(x => x.Seasons)
 			.Include(x => x.Attachments)
 			.Include(x => x.Reviews)
 			.Include(x => x.Notifications)
@@ -98,9 +102,9 @@ public class MediaItemService : IMediaItemService
 			.Include(x => x.Countries)
 			.Include(x => x.Studios)
 			.Include(x => x.Tags)
-			.Include(x => x.People)
+			.Include(x => x.MediaItemPeople)
+			.ThenInclude(mp => mp.Person)
 			.FirstOrDefaultAsync(x => x.Id == id);
-
 		if (mediaItemEntity == null)
 		{
 			_logger.Warning($"MediaItem {id} not found", id);
@@ -116,20 +120,83 @@ public class MediaItemService : IMediaItemService
 		return new BaseResult<MediaItemDto>() { Data = mediaItem };
 	}
 
-	public async Task<CollectionResult<MediaItemByTagDto>> GetMediaItemsByTagAsync(Guid tagId, int pageNumber = 1, int pageSize = 10)
+	public async Task<CollectionResult<MediaItemDto>> GetAllMoviesAsync(int pageNumber = 1, int pageSize = 10)
+	{
+		return await GetMediaItemsByTypeAsync(MediaItemName.Film, pageNumber, pageSize);
+	}
+
+	public async Task<CollectionResult<MediaItemDto>> GetAllSeriesAsync(int pageNumber = 1, int pageSize = 10)
+	{
+		return await GetMediaItemsByTypeAsync(MediaItemName.Series, pageNumber, pageSize);
+	}
+
+	private async Task<CollectionResult<MediaItemDto>> GetMediaItemsByTypeAsync(MediaItemName mediaType, int pageNumber, int pageSize)
+	{
+		var query = _mediaItemRepository.GetAll()
+			.Include(x => x.MediaItemType)
+			.Include(x => x.Status)
+			.Include(x => x.RestrictedRating)
+			.Include(x => x.Episodes)
+			.Include(x => x.Seasons)
+			.Include(x => x.Attachments)
+			.Include(x => x.Reviews)
+			.Include(x => x.Notifications)
+			.Include(x => x.Comments)
+			.Include(x => x.Countries)
+			.Include(x => x.Studios)
+			.Include(x => x.Tags)
+			.Include(x => x.MediaItemPeople)
+			.ThenInclude(mp => mp.Person); ;
+
+		var (items, totalItems) = await PaginationHelper.PaginateAsync(query, pageNumber, pageSize);
+
+		if (!items.Any())
+		{
+			return new CollectionResult<MediaItemDto>
+			{
+				ErrorMessage = ErrorMessage.MediaItemsNotFound,
+				ErrorCode = (int)ErrorCodes.MediaItemsNotFound
+			};
+		}
+
+		var mediaItems = _mapper.Map<List<MediaItemDto>>(items);
+		return new CollectionResult<MediaItemDto> { Data = mediaItems, Count = totalItems };
+	}
+
+	public async Task<CollectionResult<MediaItemByTagDto>> GetMoviesByTagAsync(long tagId, int pageNumber = 1, int pageSize = 10)
+	{
+		return await GetMediaItemsByTagAndTypeAsync(tagId, mediaTypeId: 1, pageNumber, pageSize);
+	}
+
+	public async Task<CollectionResult<MediaItemByTagDto>> GetSeriesByTagAsync(long tagId, int pageNumber = 1, int pageSize = 10)
+	{
+		return await GetMediaItemsByTagAndTypeAsync(tagId, mediaTypeId: 2, pageNumber, pageSize);
+	}
+
+	private async Task<CollectionResult<MediaItemByTagDto>> GetMediaItemsByTagAndTypeAsync(long tagId, int mediaTypeId, int pageNumber, int pageSize)
 	{
 		var query = _mediaItemRepository.GetAll()
 			.Include(mi => mi.Tags)
 			.Include(mi => mi.Attachments)
 			.Include(mi => mi.SeoAddition)
-			.Where(mi => mi.Tags.Any(t => t.Id == tagId));
+			.Where(mi => mi.Tags.Any(t => t.Id == tagId) && mi.MediaItemTypeId == mediaTypeId);
 
 		var (items, totalItems) = await PaginationHelper.PaginateAsync(query, pageNumber, pageSize);
 
+		if (!items.Any())
+		{
+			_logger.Warning($"No media items found for TagId: {tagId} and MediaTypeId: {mediaTypeId}");
+			return new CollectionResult<MediaItemByTagDto>
+			{
+				ErrorMessage = ErrorMessage.MediaItemsNotFound,
+				ErrorCode = (int)ErrorCodes.MediaItemsNotFound
+			};
+		}
+
 		var mediaItems = items.Select(mi => new MediaItemByTagDto
 		{
-			Thumbnail = mi.Attachments
-				.FirstOrDefault(a => a.AttachmentType == AttachmentType.Thumbnail)?.AttachmentUrl,
+			MediaItemId = mi.Id,
+			Thumbnail = mi.Attachments.FirstOrDefault(a => a.AttachmentType == AttachmentType.Thumbnail)?.AttachmentUrl,
 			Name = mi.Name,
 			ReleaseYear = mi.FirstAirDate?.Year,
 			Tags = mi.Tags.Select(t => new TagNameDto
@@ -235,7 +302,10 @@ public class MediaItemService : IMediaItemService
 					};
 				}
 
-				mediaItem.MediaItemPeople = dto.PersonRoles.Select(pr => new MediaItemPerson
+				mediaItem.MediaItemPeople = dto.PersonRoles
+					.GroupBy(pr => new { pr.PersonId })
+					.Select(g => g.First())
+					.Select(pr => new MediaItemPerson
 				{
 					MediaItem = mediaItem,
 					PersonId = pr.PersonId,
@@ -393,17 +463,20 @@ public class MediaItemService : IMediaItemService
 		}
 	}
 
-	public async Task<CollectionResult<MediaItemDto>> SearchMediaItemsAsync(MediaItemSearchDto searchDto)
+	public async Task<CollectionResult<MediaItemDto>> SearchMediaItemsAsync(MediaItemSearchDto searchDto, int pageNumber = 1, int pageSize = 10)
 	{
 		var query = _mediaItemRepository.GetAll()
 			.Include(mi => mi.Tags)
 			.Include(mi => mi.Status)
 			.Include(mi => mi.MediaItemType)
+			.Include(mi => mi.Countries)    // Додаємо Include для країн
+			.Include(mi => mi.Studios)      // Додаємо Include для студій
 			.AsQueryable();
 
 		// Search by name and description
 		if (!string.IsNullOrEmpty(searchDto.Query))
 		{
+			// Якщо у вас постгрес і ви використовуєте full-text search, все ок. Якщо ні - замініть на простий Contains.
 			query = query.Where(mi => EF.Functions.ToTsVector("russian", mi.Name + " " + mi.Description)
 				.Matches(EF.Functions.PlainToTsQuery("russian", searchDto.Query)));
 		}
@@ -420,10 +493,29 @@ public class MediaItemService : IMediaItemService
 			query = query.Where(mi => mi.StatusId == searchDto.StatusId.Value);
 		}
 
-		// Filter by type of media element
+		// Filter by media type (film or series)
 		if (searchDto.MediaTypeId.HasValue)
 		{
 			query = query.Where(mi => mi.MediaItemTypeId == searchDto.MediaTypeId.Value);
+		}
+
+		// Filter by year
+		if (searchDto.Year.HasValue)
+		{
+			// Переконуємося, що FirstAirDate не null
+			query = query.Where(mi => mi.FirstAirDate.HasValue && mi.FirstAirDate.Value.Year == searchDto.Year.Value);
+		}
+
+		// Filter by countries
+		if (searchDto.CountryIds != null && searchDto.CountryIds.Any())
+		{
+			query = query.Where(mi => mi.Countries.Any(c => searchDto.CountryIds.Contains(c.Id)));
+		}
+
+		// Filter by studios
+		if (searchDto.StudioIds != null && searchDto.StudioIds.Any())
+		{
+			query = query.Where(mi => mi.Studios.Any(s => searchDto.StudioIds.Contains(s.Id)));
 		}
 
 		// Sorting
@@ -436,12 +528,12 @@ public class MediaItemService : IMediaItemService
 				query = searchDto.SortDescending ? query.OrderByDescending(mi => mi.Name) : query.OrderBy(mi => mi.Name);
 				break;
 			default:
-				// Default sorting by release date
+				// Default sorting by release date desc
 				query = query.OrderByDescending(mi => mi.FirstAirDate);
 				break;
 		}
 
-		var (items, totalItems) = await PaginationHelper.PaginateAsync(query, searchDto.PageNumber, searchDto.PageSize);
+		var (items, totalItems) = await PaginationHelper.PaginateAsync(query, pageNumber, pageSize);
 
 		var mediaItems = items.Select(mi => _mapper.Map<MediaItemDto>(mi)).ToList();
 
@@ -452,4 +544,17 @@ public class MediaItemService : IMediaItemService
 		};
 	}
 
+	public bool CheckSlugExists(string slug)
+	{
+		return _mediaItemRepository.GetAll().Any(m => m.SeoAddition.Slug == slug);
+	}
+
+	public async Task<bool> ExistsByNameAndYearAsync(string name, int? year)
+	{
+		var query = _mediaItemRepository.GetAll().Where(mi => mi.Name == name);
+		if (year.HasValue)
+			query = query.Where(mi => mi.FirstAirDate.HasValue && mi.FirstAirDate.Value.Year == year.Value);
+
+		return await query.AnyAsync();
+	}
 }

@@ -65,7 +65,7 @@ public class TagService : ITagService
 		};
 	}
 
-	public async Task<BaseResult<TagDto>> GetByIdAsync(Guid id)
+	public async Task<BaseResult<TagDto>> GetByIdAsync(long id)
 	{
 		var tag = await _tagRepository.GetAll()
 			.Include(t => t.SeoAddition)
@@ -91,7 +91,7 @@ public class TagService : ITagService
 		return new BaseResult<TagDto> { Data = tagDto };
 	}
 
-	public async Task<CollectionResult<Tag>> GetTagsByIdsAsync(List<Guid> tagIds)
+	public async Task<CollectionResult<Tag>> GetTagsByIdsAsync(List<long> tagIds)
 	{
 		var tags = await _tagRepository.GetAll()
 			.Include(t => t.SeoAddition)
@@ -243,7 +243,7 @@ public class TagService : ITagService
 		}
 	}
 
-	public async Task<BaseResult<TagDto>> DeleteAsync(Guid id)
+	public async Task<BaseResult<TagDto>> DeleteAsync(long id)
 	{
 		var tag = await _tagRepository.GetAll()
 			.FirstOrDefaultAsync(t => t.Id == id);
@@ -270,5 +270,17 @@ public class TagService : ITagService
 		await _tagRepository.SaveChangesAsync();
 
 		return new BaseResult<TagDto>();
+	}
+
+	public async Task<List<long>> GetTagsByNamesAsync(List<string> names)
+	{
+		if (names == null || !names.Any())
+			return new List<long>();
+
+		var found = await _tagRepository.GetAll()
+			.Where(t => names.Contains(t.Name))
+			.Select(t => t.Id)
+			.ToListAsync();
+		return found;
 	}
 }

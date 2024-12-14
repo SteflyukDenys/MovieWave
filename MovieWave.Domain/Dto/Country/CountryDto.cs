@@ -2,4 +2,11 @@
 
 namespace MovieWave.Domain.Dto.Country;
 
-public record CountryDto(long Id, string Name, SeoAdditionDto SeoAddition);
+public class CountryDto
+{
+	public long Id { get; set; }
+
+	public string Name { get; set; }
+
+	public SeoAdditionDto SeoAddition { get; set; }
+};

@@ -16,8 +16,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
 		builder.Property(u => u.AvatarPath)
 			.HasMaxLength(255);
-		builder.Property(u => u.BackdropPath)
-			.HasMaxLength(255);
 
 		builder.HasIndex(u => u.NormalizedEmail).IsUnique();
 		builder.HasIndex(u => u.Login).IsUnique();
@@ -47,7 +45,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
 		builder.HasOne(u => u.UserToken)
 			.WithOne(ut => ut.User)
-			.HasForeignKey<UserToken>(ut => ut.UserTokenId)
+			.HasForeignKey<UserToken>(ut => ut.UserId)
 			.OnDelete(DeleteBehavior.Cascade);
 
 		builder.HasMany(x => x.Roles)
@@ -56,5 +54,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 				l => l.HasOne<Role>().WithMany().HasForeignKey(x => x.RoleId),
 				l => l.HasOne<User>().WithMany().HasForeignKey(x => x.UserId)
 			);
+
 	}
 }

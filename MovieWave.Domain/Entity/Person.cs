@@ -18,8 +18,6 @@ public class Person : AuditableEntity<Guid>
 	public DateTime? BirthDate { get; set; }
 	public DateTime? DeathDate { get; set; }
 
-	public SeoAddition SeoAddition { get; set; } = new SeoAddition();
-
 	public ICollection<PersonImage> Images { get; set; } = new List<PersonImage>();
 
 	public ICollection<MediaItemPerson> MediaItemPeople { get; set; } = new List<MediaItemPerson>();

@@ -16,4 +16,6 @@ public interface IAttachmentService
 	Task<BaseResult<AttachmentDto>> UpdateAttachmentAsync(UpdateAttachmentDto dto, FileDto newAttachment);
 
 	Task<BaseResult> DeleteAttachmentAsync(Guid attachmentId);
+
+	Task<CollectionResult<AttachmentDto>> AddAttachmentsAsync(List<AttachmentDto> attachments);
 }

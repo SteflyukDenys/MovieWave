@@ -1,5 +1,6 @@
 using Amazon.S3;
 using MovieWave.API;
+using MovieWave.API.Extensions;
 using MovieWave.DAL.DependencyInjection;
 using MovieWave.Application.DependencyInjection;
 using MovieWave.Domain.Settings;
@@ -39,7 +40,7 @@ app.UseSwaggerUI(c =>
 	c.SwaggerEndpoint("/swagger/v2/swagger.json", "MovieWave Swagger v2.0");
 	c.RoutePrefix = string.Empty;
 });
-//app.ApplyMigrations();
+app.ApplyMigrations();
 
 app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 

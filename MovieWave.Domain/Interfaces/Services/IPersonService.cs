@@ -17,4 +17,6 @@ public interface IPersonService
 	Task<CollectionResult<PersonDto>> GetPersonsByIdsAsync(List<Guid> personIds);
 
 	Task<BaseResult> DeletePersonAsync(Guid personId);
+
+	Task<Dictionary<string, Guid>> GetOrCreatePersonsByNamesAsync(List<string> names);
 }

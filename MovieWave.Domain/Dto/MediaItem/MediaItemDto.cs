@@ -21,12 +21,10 @@ public class MediaItemDto{
 	public string? OriginalName { get; set; }
 	public string? Description { get; set; }
 	public int? Duration { get; set; }
-	public int? EpisodesCount { get; set; }
-	public decimal? ImdbScore { get; set; }
+	public double? ImdbScore { get; set; }
 
 	public string? FirstAirDate { get; set; }
 	public string? LastAirDate { get; set; }
-	public string? PublishedAt { get; set; }
 
 	public MediaItemTypeDto MediaItemType = new MediaItemTypeDto();
 	public StatusDto Status = new StatusDto();
@@ -34,15 +32,16 @@ public class MediaItemDto{
 
 	public SeoAdditionInputDto SeoAddition = new SeoAdditionInputDto();
 
-	List<SeasonDto> Seasons { get; set; }
-	List<EpisodeDto> Episodes { get; set; }
-	List<AttachmentDto> Attachments { get; set; }
-	List<ReviewDto> Reviews { get; set; }
-	List<NotificationDto> Notifications { get; set; }
-	List<CommentDto> Comments { get; set; }
+	public List<SeasonDto> Seasons { get; set; }
+	public List<EpisodeDto> Episodes { get; set; }
+	public List<AttachmentDto> Attachments { get; set; }
+	public List<ReviewDto> Reviews { get; set; }
+	public List<NotificationDto> Notifications { get; set; }
+	public List<CommentDto> Comments { get; set; }
 	// Many-to-Many
-	List<CountryDto> Countries { get; set; }
-	List<StudioDto> Studios { get; set; }
-	List<TagDto> Tags { get; set; }
-	List<PersonDto> People { get; set; }
+	public List<CountryDto> Countries { get; set; }
+	public List<StudioDto> Studios { get; set; }
+	public List<TagDto> Tags { get; set; }
+	public List<PersonDto> People { get; set; }
+	public List<PersonRolesDto> Roles { get; set; }
 }

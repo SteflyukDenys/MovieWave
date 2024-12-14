@@ -12,6 +12,6 @@ public class UserToken : BaseEntity<Guid>
 
 	public DateTime RefreshTokenExpireTime { get; set; }
 
-	public Guid UserTokenId { get; set; }
+	public Guid UserId { get; set; } // Foreign Key
 	public User User { get; set; }
 }

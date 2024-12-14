@@ -255,5 +255,53 @@ namespace MovieWave.Application.Services
 				};
 			}
 		}
+
+		public async Task<CollectionResult<AttachmentDto>> AddAttachmentsAsync(List<AttachmentDto> attachments)
+		{
+			if (attachments == null || attachments.Count == 0)
+			{
+				return new CollectionResult<AttachmentDto>
+				{
+					ErrorMessage = "No attachments to add.",
+					ErrorCode = 400
+				};
+			}
+
+			var entities = attachments.Select(dto => new Attachment
+			{
+				Id = dto.Id,
+				MediaItemId = dto.MediaItemId,
+				AttachmentUrl = dto.AttachmentUrl,
+				AttachmentType = dto.AttachmentType
+			}).ToList();
+
+			if (entities.Count == 0)
+			{
+				return new CollectionResult<AttachmentDto>
+				{
+					ErrorMessage = ErrorMessage.AttachmentNotFound,
+					ErrorCode = (int)ErrorCodes.AttachmentNotFound
+				};
+			}
+
+			foreach (var entity in entities)
+			{
+				await _attachmentRepository.CreateAsync(entity);
+			}
+
+			await _attachmentRepository.SaveChangesAsync();
+
+			var resultDtos = entities.Select(e => _mapper.Map<AttachmentDto>(e)).ToList();
+
+			return new CollectionResult<AttachmentDto>
+			{
+				Data = resultDtos,
+				Count = resultDtos.Count
+			};
+		}
+
+
+
+
 	}
 }

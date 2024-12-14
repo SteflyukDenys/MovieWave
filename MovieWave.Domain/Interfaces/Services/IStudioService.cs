@@ -18,4 +18,6 @@ public interface IStudioService
 	Task<BaseResult<StudioDto>> UpdateAsync(UpdateStudioDto dto, FileDto newLogoPath);
 
 	Task<BaseResult<StudioDto>> DeleteAsync(long id);
+
+	Task<List<long>> GetStudioByNamesAsync(List<string> names);
 }

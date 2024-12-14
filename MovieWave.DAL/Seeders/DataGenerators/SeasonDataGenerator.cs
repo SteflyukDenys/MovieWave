@@ -8,7 +8,7 @@ public static class SeasonDataGenerator
 	{
 		var mediaItemIds = mediaItems.Select(mi => mi.Id).ToList();
 		return new Faker<Season>()
-			.RuleFor(s => s.Id, f => f.Random.Guid()) // Унікальні ідентифікатори
+			.RuleFor(s => s.Id, f => f.Random.Guid())
 			.RuleFor(s => s.MediaItemId, f => f.PickRandom(mediaItemIds))
 			.RuleFor(s => s.Name, f => f.Lorem.Word())
 			.Generate(count);

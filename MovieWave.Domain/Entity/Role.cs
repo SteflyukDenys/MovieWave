@@ -5,4 +5,6 @@ namespace MovieWave.Domain.Entity;
 public class Role : NamedEntity<long>
 {
     public List<User> Users { get; set; }
+
+    public ICollection<UserRole> UserRoles { get; set; }
 }

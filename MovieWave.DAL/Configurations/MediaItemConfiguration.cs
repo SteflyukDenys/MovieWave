@@ -33,14 +33,10 @@ namespace MovieWave.DAL.Configurations
 				.WithMany(r => r.MediaItems)
 				.HasForeignKey(m => m.RestrictedRatingId);
 
-			builder.Property(m => m.ImdbScore)
-				.HasColumnType("decimal(3, 1)");
-
 			// Composition
 			builder.OwnsOne(m => m.SeoAddition, seo =>
 			{
 				seo.Property(s => s.Slug)
-				.HasMaxLength(30)
 				.IsRequired();
 
 				seo.HasIndex(s => s.Slug).IsUnique();

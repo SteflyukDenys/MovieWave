@@ -1,3 +1,12 @@
-﻿namespace MovieWave.Domain.Dto.User;
+﻿using System.ComponentModel.DataAnnotations;
 
-public record LoginUserDto(string Login, string Password);
+namespace MovieWave.Domain.Dto.User;
+
+public class LoginUserDto
+{
+	[Required]
+	public string EmailOrPhone { get; set; }
+
+	[Required]
+	public string Password { get; set; }
+}

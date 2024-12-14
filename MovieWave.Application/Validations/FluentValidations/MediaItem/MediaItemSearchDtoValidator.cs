@@ -13,8 +13,6 @@ public class MediaItemSearchDtoValidator : AbstractValidator<MediaItemSearchDto>
 {
     public MediaItemSearchDtoValidator()
     {
-        RuleFor(x => x.PageNumber).GreaterThan(0);
-        RuleFor(x => x.PageSize).GreaterThan(0).LessThanOrEqualTo(100);
         RuleFor(x => x.SortBy).Must(value =>
                 string.IsNullOrEmpty(value) ||
                 value == "ReleaseDate" ||

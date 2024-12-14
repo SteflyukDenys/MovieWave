@@ -12,6 +12,4 @@ public class CreatePersonDto
 	public DateTime? DeathDate { get; set; }
 
 	public string? Biography { get; set; }
-
-	public SeoAdditionInputDto SeoAddition { get; set; }
 }

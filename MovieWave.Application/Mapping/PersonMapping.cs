@@ -13,5 +13,9 @@ public class PersonMapping : Profile
 		CreateMap<CreatePersonDto, Person>().ReverseMap();
 
 		CreateMap<UpdatePersonDto, Person>().ReverseMap();
+
+		CreateMap<MediaItemPerson, PersonRolesDto>()
+			.ForMember(dest => dest.PersonName, opt => opt.MapFrom(src => src.Person.FirstName + " " + src.Person.LastName))
+			.ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.PersonRole.ToString()));
 	}
 }

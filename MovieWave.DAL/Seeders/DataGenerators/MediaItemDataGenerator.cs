@@ -23,9 +23,7 @@ public static class MediaItemDataGenerator
 			.RuleFor(m => m.Duration, f => f.Random.Int(60, 180))
 			.RuleFor(m => m.FirstAirDate, f => f.Date.Past().ToUniversalTime())
 			.RuleFor(m => m.LastAirDate, f => f.Date.Past().ToUniversalTime())
-			.RuleFor(m => m.EpisodesCount, f => f.Random.Int(1, 100))
-			.RuleFor(m => m.ImdbScore, f => f.Random.Decimal(1, 10))
-			.RuleFor(m => m.PublishedAt, f => f.Date.Past().ToUniversalTime())
+			.RuleFor(m => m.ImdbScore, f => f.Random.Double(1, 10))
 			.RuleFor(m => m.SeoAddition, _ => SeoAdditionDataGenerator.GenerateSeoAddition())
 			.Generate(count);
 	}

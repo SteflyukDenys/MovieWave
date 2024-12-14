@@ -10,8 +10,12 @@ public class EpisodeMapping : Profile
 	{
 		CreateMap<Episode, EpisodeDto>().ReverseMap();
 
-		//CreateMap<CreateEpisodeDto, Episode>()
-		//	.AfterMap((src, dest) => dest.Id = Guid.NewGuid())
-		//	.ReverseMap();
+		CreateMap<CreateEpisodeDto, Episode>()
+			.ForMember(dest => dest.AirDate, opt => opt.MapFrom(src => src.AirDate.HasValue ? DateTime.SpecifyKind(src.AirDate.Value, DateTimeKind.Utc) : (DateTime?)null))
+			.ReverseMap();
+
+		CreateMap<UpdateEpisodeDto, Episode>()
+			.ForMember(dest => dest.AirDate, opt => opt.MapFrom(src => src.AirDate.HasValue ? DateTime.SpecifyKind(src.AirDate.Value, DateTimeKind.Utc) : (DateTime?)null))
+			.ReverseMap();
 	}
 }

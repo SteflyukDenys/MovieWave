@@ -6,8 +6,6 @@ public enum AttachmentType
 	Thumbnail,
 	Scene,
 	Trailer,
-	VideoHD,
-	VideoFullHD,
-	VideoUHD,
+	Video,
 	Music
 }

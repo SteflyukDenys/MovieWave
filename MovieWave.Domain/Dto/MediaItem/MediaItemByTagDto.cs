@@ -10,6 +10,8 @@ namespace MovieWave.Domain.Dto.MediaItem;
 
 public class MediaItemByTagDto
 {
+	public Guid MediaItemId { get; set; }
+
 	public string? Thumbnail { get; set; }
 
 	public string Name { get; set; }

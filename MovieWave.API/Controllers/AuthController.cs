@@ -28,19 +28,8 @@ public class AuthController : ControllerBase
 	/// <summary>
 	/// Реєстрація нового користувача
 	/// </summary>
-	/// <remarks>
-	/// Sample request:
-	/// <code>
-	/// POST /api/v2.0/auth/register
-	/// {
-	///     "login": "user123",
-	///     "email": "user@example.com",
-	///     "password": "password123",
-	///     "passwordConfirm": "password123"
-	/// }
-	/// </code>
-	/// </remarks>
-	/// <response code="200">Якщо реєстрація пройшла успішно</response>
+	/// <param name="dto">Об'єкт реєстрації</param>
+	/// <response code="200">Якщо реєстрація успішна</response>
 	/// <response code="400">Якщо виникла помилка при реєстрації</response>
 	[HttpPost("register")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
@@ -56,20 +45,11 @@ public class AuthController : ControllerBase
 	}
 
 	/// <summary>
-	/// Вхід користувача
+	/// Логін користувача
 	/// </summary>
-	/// <remarks>
-	/// Sample request:
-	/// <code>
-	/// POST /api/v2.0/auth/login
-	/// {
-	///     "login": "user123",
-	///     "password": "password123"
-	/// }
-	/// </code>
-	/// </remarks>
-	/// <response code="200">Якщо вхід успішний</response>
-	/// <response code="400">Якщо логін або пароль некоректні</response>
+	/// <param name="dto">Об'єкт логіну</param>
+	/// <response code="200">Якщо логін успішний</response>
+	/// <response code="400">Якщо логін невдалий</response>
 	[HttpPost("login")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]

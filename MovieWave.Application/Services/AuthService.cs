@@ -21,13 +21,14 @@ public class AuthService : IAuthService
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IBaseRepository<User> _userRepository;
 	private readonly IBaseRepository<Role> _roleRepository;
+	private readonly IBaseRepository<UserRole> _userRoleRepository;
 	private readonly IBaseRepository<UserToken> _userTokenRepository;
 	private readonly ITokenGeneratorService _tokenGeneratorService;
 	private readonly ILogger _logger;
 	private readonly IMapper _mapper;
 
 	public AuthService(IBaseRepository<User> userRepository, ITokenGeneratorService tokenGeneratorService,
-		ILogger logger, IMapper mapper, IBaseRepository<UserToken> userTokenRepository, IBaseRepository<Role> roleRepository, IUnitOfWork unitOfWork)
+		ILogger logger, IMapper mapper, IBaseRepository<UserToken> userTokenRepository, IBaseRepository<Role> roleRepository, IUnitOfWork unitOfWork, IBaseRepository<UserRole> userRoleRepository)
 	{
 		_userRepository = userRepository;
 		_tokenGeneratorService = tokenGeneratorService;
@@ -36,24 +37,15 @@ public class AuthService : IAuthService
 		_userTokenRepository = userTokenRepository;
 		_roleRepository = roleRepository;
 		_unitOfWork = unitOfWork;
+		_userRoleRepository = userRoleRepository;
 	}
 
 	public async Task<BaseResult<UserDto>> RegisterAsync(RegisterUserDto dto)
 	{
-		if (dto.Password != dto.PasswordConfirm)
-		{
-			return new BaseResult<UserDto>
-			{
-				ErrorMessage = ErrorMessage.PasswordNotEqualsPasswordConfirm,
-				ErrorCode = (int)ErrorCodes.PasswordNotEqualsPasswordConfirm
-			};
-		}
+		var existingUser = await _userRepository.GetAll()
+			.FirstOrDefaultAsync(u => u.Login == dto.Username);
 
-		var user = await _userRepository.GetAll()
-			.FirstOrDefaultAsync(u => u.Login == dto.Login);
-		var userEmail = await _userRepository.GetAll()
-			.FirstOrDefaultAsync(u => u.Email == dto.Email);
-		if (user != null || userEmail != null)
+		if (existingUser != null)
 		{
 			return new BaseResult<UserDto>
 			{
@@ -62,28 +54,31 @@ public class AuthService : IAuthService
 			};
 		}
 
-		var hashUserPassword = HashPassword(dto.Password);
+		var hashedPassword = HashPassword(dto.Password);
 
 		var transaction = await _unitOfWork.BeginTransactionAsync();
+
 		using (transaction)
 		{
 			try
 			{
-				user = new User
+				var user = new User
 				{
-					UserName = dto.Email,
+					UserName = dto.Username,
 					Email = dto.Email,
-					Login = dto.Login ?? dto.Email,
-					PasswordHash = hashUserPassword
+					PhoneNumber = dto.PhoneNumber,
+					Login = dto.Username,
+					PasswordHash = hashedPassword,
+					CreatedAt = DateTime.UtcNow,
+					CreatedBy = 1 
 				};
-				await _unitOfWork.Users.CreateAsync(user);
-
+				await _userRepository.CreateAsync(user);
 				await _unitOfWork.SaveChangesAsync();
-
 
 				var role = await _roleRepository.GetAll().FirstOrDefaultAsync(x => x.Name == nameof(Roles.User));
 				if (role == null)
 				{
+					await transaction.RollbackAsync();
 					return new BaseResult<UserDto>()
 					{
 						ErrorMessage = ErrorMessage.RoleNotFound,
@@ -96,30 +91,63 @@ public class AuthService : IAuthService
 					UserId = user.Id,
 					RoleId = role.Id
 				};
-				await _unitOfWork.UserRoles.CreateAsync(userRole);
+				await _userRoleRepository.CreateAsync(userRole);
+				await _unitOfWork.SaveChangesAsync();
 
+				var claims = new List<Claim>
+					{
+						new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+						new Claim(ClaimTypes.Name, user.UserName)
+					};
+
+				foreach (var userRoleName in user.UserRoles.Select(ur => ur.Role.Name))
+				{
+					claims.Add(new Claim(ClaimTypes.Role, userRoleName));
+				}
+
+				var accessToken = _tokenGeneratorService.GenerateAccessToken(claims);
+				var refreshToken = _tokenGeneratorService.GenerateRefreshToken();
+
+				user.UserToken = new UserToken
+				{
+					RefreshToken = refreshToken,
+					RefreshTokenExpireTime = DateTime.UtcNow.AddDays(7),
+					UserId = user.Id
+				};
+
+				_userRepository.Update(user);
 				await _unitOfWork.SaveChangesAsync();
 
 				await transaction.CommitAsync();
+
+				var userDto = _mapper.Map<UserDto>(user);
+				return new BaseResult<UserDto>()
+				{
+					Data = userDto
+				};
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
 				await transaction.RollbackAsync();
+				_logger.Error(ex, "Error registering user: {Message}", ex.Message);
+				return new BaseResult<UserDto>
+				{
+					ErrorMessage = ErrorMessage.InternalServerError,
+					ErrorCode = (int)ErrorCodes.InternalServerError
+				};
 			}
 		}
-
-		return new BaseResult<UserDto>()
-		{
-			Data = _mapper.Map<UserDto>(user)
-		};
 	}
 
 	public async Task<BaseResult<TokenDto>> LoginAsync(LoginUserDto dto)
 	{
 		var user = await _userRepository.GetAll()
-			.Include(x => x.Roles)
-			.FirstOrDefaultAsync(u => u.Login == dto.Login);
-		if (user == null)
+			.Include(u => u.UserRoles)
+			.ThenInclude(ur => ur.Role)
+			.Include(u => u.UserToken)
+			.FirstOrDefaultAsync(u => u.Email == dto.EmailOrPhone || u.PhoneNumber == dto.EmailOrPhone);
+
+		if (user == null || !IsVerifyPassword(user.PasswordHash, dto.Password))
 		{
 			return new BaseResult<TokenDto>
 			{
@@ -128,49 +156,72 @@ public class AuthService : IAuthService
 			};
 		}
 
-		var isVerifyPassword = IsVerifyPassword(user.PasswordHash, dto.Password);
-		if (!isVerifyPassword)
+		var roles = user.UserRoles.Select(ur => ur.Role.Name).ToList();
+		var claims = new List<Claim>
 		{
-			return new BaseResult<TokenDto>
-			{
-				ErrorMessage = ErrorMessage.InvalidPassword,
-				ErrorCode = (int)ErrorCodes.InvalidPassword
-			};
+			new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+			new Claim(ClaimTypes.Name, user.UserName)
+		};
+
+		foreach (var role in roles)
+		{
+			claims.Add(new Claim(ClaimTypes.Role, role));
 		}
-
-		var userToken = await _userTokenRepository.GetAll().FirstOrDefaultAsync(x => x.UserTokenId == user.Id);
-
-		var userRoles = user.Roles;
-		var claims = userRoles.Select(u => new Claim(ClaimTypes.Role, u.Name)).ToList();
-		claims.Add(new Claim(ClaimTypes.Name, user.Login));
 
 		var accessToken = _tokenGeneratorService.GenerateAccessToken(claims);
 		var refreshToken = _tokenGeneratorService.GenerateRefreshToken();
 
-		if (userToken == null)
+		if (user.UserToken == null)
 		{
-			userToken = new UserToken()
+			user.UserToken = new UserToken
 			{
-				UserTokenId = user.Id,
 				RefreshToken = refreshToken,
-				RefreshTokenExpireTime = DateTime.UtcNow.AddDays(7)
+				RefreshTokenExpireTime = DateTime.UtcNow.AddDays(7),
+				UserId = user.Id
 			};
-			await _userTokenRepository.CreateAsync(userToken);
 		}
 		else
 		{
-			userToken.RefreshToken = refreshToken;
-			userToken.RefreshTokenExpireTime = DateTime.UtcNow.AddDays(7);
-			_userTokenRepository.Update(userToken);
+			user.UserToken.RefreshToken = refreshToken;
+			user.UserToken.RefreshTokenExpireTime = DateTime.UtcNow.AddDays(7);
 		}
-		await _userTokenRepository.SaveChangesAsync();
-		return new BaseResult<TokenDto>()
+
+		_userRepository.Update(user);
+		await _unitOfWork.SaveChangesAsync();
+
+		var response = new TokenDto()
 		{
-			Data = new TokenDto()
+			AccessToken = accessToken,
+			RefreshToken = refreshToken
+		};
+
+		return new BaseResult<TokenDto>
+		{
+			Data = response
+		};
+	}
+
+
+	public async Task<BaseResult<UserDto>> GetUserByIdAsync(Guid userId)
+	{
+		var user = await _userRepository.GetAll()
+			.Include(u => u.UserRoles)
+				.ThenInclude(ur => ur.Role)
+			.FirstOrDefaultAsync(u => u.Id == userId);
+
+		if (user == null)
+		{
+			return new BaseResult<UserDto>
 			{
-				AccessToken = accessToken,
-				RefreshToken = refreshToken
-			}
+				ErrorMessage = ErrorMessage.UserNotFound,
+				ErrorCode = (int)ErrorCodes.UserNotFound
+			};
+		}
+
+		var userDto = _mapper.Map<UserDto>(user);
+		return new BaseResult<UserDto>
+		{
+			Data = userDto
 		};
 	}
 
@@ -200,12 +251,12 @@ public class AuthService : IAuthService
 		var accessToken = _tokenGeneratorService.GenerateAccessToken(claims);
 		var refreshToken = _tokenGeneratorService.GenerateRefreshToken();
 
-		var userToken = await _userTokenRepository.GetAll().FirstOrDefaultAsync(x => x.UserTokenId == user.Id);
+		var userToken = await _userTokenRepository.GetAll().FirstOrDefaultAsync(x => x.UserId == user.Id);
 		if (userToken == null)
 		{
 			userToken = new UserToken
 			{
-				UserTokenId = user.Id,
+				UserId = user.Id,
 				RefreshToken = refreshToken,
 				RefreshTokenExpireTime = DateTime.UtcNow.AddDays(7)
 			};

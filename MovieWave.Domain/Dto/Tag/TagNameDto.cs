@@ -8,7 +8,7 @@ namespace MovieWave.Domain.Dto.Tag;
 
 public class TagNameDto
 {
-	public Guid Id { get; set; }
+	public long Id { get; set; }
 
 	public string Name { get; set; }
 };

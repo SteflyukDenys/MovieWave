@@ -4,7 +4,7 @@ namespace MovieWave.Domain.Dto.Tag;
 
 public class TagDto
 {
-	public Guid Id { get; set; }
+	public long Id { get; set; }
 
 	public string Name { get; set; }
 
@@ -12,7 +12,7 @@ public class TagDto
 
 	public bool IsGenre { get; set; }
 
-	public Guid? ParentId { get; set; }
+	public long? ParentId { get; set; }
 
 	public SeoAdditionDto SeoAddition { get; set; } = new SeoAdditionDto();
 

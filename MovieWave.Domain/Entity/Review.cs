@@ -5,6 +5,11 @@ namespace MovieWave.Domain.Entity;
 
 public class Review : AuditableEntity<Guid>
 {
+	public Review()
+	{
+		Id = Guid.NewGuid();
+	}
+
 	public Guid MediaItemId { get; set; }
 	public MediaItem MediaItem { get; set; }
 

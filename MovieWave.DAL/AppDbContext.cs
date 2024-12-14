@@ -23,6 +23,10 @@ public class AppDbContext : DbContext
 		modelBuilder.HasPostgresExtension("pg_trgm");
 		modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 	}
+	public DbSet<User> Users { get; set; }
+	public DbSet<Role> Roles { get; set; }
+	public DbSet<UserRole> UserRoles { get; set; }
+	public DbSet<UserToken> UserTokens { get; set; }
 
 	public DbSet<Attachment> Attachments { get; set; }
 	public DbSet<Comment> Comments { get; set; }
@@ -43,8 +47,6 @@ public class AppDbContext : DbContext
 	public DbSet<Studio> Studios { get; set; }
 	public DbSet<SubscriptionPlan> SubscriptionPlans { get; set; }
 	public DbSet<Tag> Tags { get; set; }
-	public DbSet<Role> Roles { get; set; }
-	public DbSet<UserToken> UserToken { get; set; }
 	public DbSet<UserMediaItemList> UserMediaItemLists { get; set; }
 	public DbSet<UserSubscription> UserSubscriptions { get; set; }
 	public DbSet<Voice> Voices { get; set; }

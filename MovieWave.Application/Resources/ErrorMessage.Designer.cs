@@ -88,6 +88,15 @@ namespace MovieWave.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Comment not found.
+        /// </summary>
+        internal static string CommentNotFound {
+            get {
+                return ResourceManager.GetString("CommentNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Countries not found.
         /// </summary>
         internal static string CountriesNotFound {
@@ -115,6 +124,42 @@ namespace MovieWave.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Email is already in use.
+        /// </summary>
+        internal static string EmailAlreadyUse {
+            get {
+                return ResourceManager.GetString("EmailAlreadyUse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Either Email or PhoneNumber must be provided.
+        /// </summary>
+        internal static string EmailOrPhoneInvalid {
+            get {
+                return ResourceManager.GetString("EmailOrPhoneInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Episode not found.
+        /// </summary>
+        internal static string EpisodeNotFound {
+            get {
+                return ResourceManager.GetString("EpisodeNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Episode voice not found.
+        /// </summary>
+        internal static string EpisodeVoiceNotFound {
+            get {
+                return ResourceManager.GetString("EpisodeVoiceNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error occurred while seeding database.
         /// </summary>
         internal static string ErrorSeedingDB {
@@ -129,6 +174,15 @@ namespace MovieWave.Application.Resources {
         internal static string FailedToCreateUser {
             get {
                 return ResourceManager.GetString("FailedToCreateUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No favorites found..
+        /// </summary>
+        internal static string FavoritesNotFound {
+            get {
+                return ResourceManager.GetString("FavoritesNotFound", resourceCulture);
             }
         }
         
@@ -232,6 +286,15 @@ namespace MovieWave.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Parent comment not found.
+        /// </summary>
+        internal static string ParentCommentNotFound {
+            get {
+                return ResourceManager.GetString("ParentCommentNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Password not equals password confirm.
         /// </summary>
         internal static string PasswordNotEqualsPasswordConfirm {
@@ -264,6 +327,15 @@ namespace MovieWave.Application.Resources {
         internal static string PersonsNotFound {
             get {
                 return ResourceManager.GetString("PersonsNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Phone number is already in use.
+        /// </summary>
+        internal static string PhoneAalreadyUse {
+            get {
+                return ResourceManager.GetString("PhoneAalreadyUse", resourceCulture);
             }
         }
         
@@ -309,6 +381,15 @@ namespace MovieWave.Application.Resources {
         internal static string RolesNotFound {
             get {
                 return ResourceManager.GetString("RolesNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Season not found.
+        /// </summary>
+        internal static string SeasonNotFound {
+            get {
+                return ResourceManager.GetString("SeasonNotFound", resourceCulture);
             }
         }
         
@@ -385,6 +466,15 @@ namespace MovieWave.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You are not authorized to delete this comment.
+        /// </summary>
+        internal static string Unauthorized {
+            get {
+                return ResourceManager.GetString("Unauthorized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User already exists.
         /// </summary>
         internal static string UserAlreadyExists {
@@ -417,6 +507,33 @@ namespace MovieWave.Application.Resources {
         internal static string UserNotFound {
             get {
                 return ResourceManager.GetString("UserNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Voice not found.
+        /// </summary>
+        internal static string VoiceNotFound {
+            get {
+                return ResourceManager.GetString("VoiceNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No &apos;Want to Watch&apos; items found.
+        /// </summary>
+        internal static string WantToWatchNotFound {
+            get {
+                return ResourceManager.GetString("WantToWatchNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No watch history found.
+        /// </summary>
+        internal static string WatchHistoryNotFound {
+            get {
+                return ResourceManager.GetString("WatchHistoryNotFound", resourceCulture);
             }
         }
     }

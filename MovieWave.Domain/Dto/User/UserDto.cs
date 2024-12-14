@@ -2,15 +2,23 @@
 
 public record UserDto
 {
-	public Guid Id { get; init; }
-	public string Login { get; init; }
-	public string Email { get; init; }
-	public string PasswordHash { get; init; }
-	public string UserRole { get; init; }
-	public string? AvatarPath { get; init; }
-	public string? BackdropPath { get; init; }
-	public string? Gender { get; init; }
-	public string? Description { get; init; }
-	public DateTime? Birthday { get; init; }
-	public DateTime? LastSeenAt { get; init; }
+	public Guid Id { get; set; }
+
+	public string Login { get; set; }
+
+	public string Email { get; set; }
+
+	public string PasswordHash { get; set; }
+
+	public List<string> UserRoles { get; set; }
+
+	public string? AvatarPath { get; set; }
+
+	public string? Gender { get; set; }
+
+	public string? Description { get; set; }
+
+	public DateTime? Birthday { get; set; }
+
+	public DateTime? LastSeenAt { get; set; }
 }

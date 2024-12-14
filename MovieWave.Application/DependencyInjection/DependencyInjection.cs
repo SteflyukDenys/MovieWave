@@ -27,11 +27,14 @@ public static class DependencyInjection
 		services.AddAutoMapper(typeof(AttachmentMapping));
 		services.AddAutoMapper(typeof(CommentMapping));
 		services.AddAutoMapper(typeof(EpisodeMapping));
+		services.AddAutoMapper(typeof(EpisodeVoiceMapping));
+		services.AddAutoMapper(typeof(SeasonMapping));
 		services.AddAutoMapper(typeof(PersonMapping));
 		services.AddAutoMapper(typeof(StudioMapping));
 		services.AddAutoMapper(typeof(RoleMapping));
 		services.AddAutoMapper(typeof(BannerMapping));
 		services.AddAutoMapper(typeof(PersonImageMapping));
+		services.AddAutoMapper(typeof(VoiceMapping));
 
 		InitService(services);
 	}
@@ -43,10 +46,16 @@ public static class DependencyInjection
 		services.AddScoped<IValidator<UpdateMediaItemDto>, UpdateMediaItemValidator>();
 
 		services.AddScoped<IDataSeederService, DataSeederService>();
+		services.AddScoped<ITmdbMovieImportService, TmdbMovieImportService>();
+
+		services.AddScoped<IMediaItemService, MediaItemService>();
+		services.AddScoped<ISeasonService, SeasonService>();
+		services.AddScoped<IEpisodeService, EpisodeService>();
+		services.AddScoped<IVoiceService, VoiceService>();
+		services.AddScoped<IEpisodeVoiceService, EpisodeVoiceService>();
 
 		services.AddScoped<IBannerService, BannerService>();
 		services.AddScoped<IAttachmentService, AttachmentService>();
-		services.AddScoped<IMediaItemService, MediaItemService>();
 		services.AddScoped<IMediaItemTypeService, MediaItemTypeService>();
 		services.AddScoped<ICountryService, CountryService>();
 		services.AddScoped<IStatusService, StatusService>();
@@ -63,6 +72,9 @@ public static class DependencyInjection
 		services.AddScoped<IAuthService, AuthService>();
 		services.AddScoped<ITokenGeneratorService, TokenGeneratorService>();
 		services.AddScoped<IRoleService, RoleService>();
-
+		services.AddScoped<IAccountService, AccountService>();
+		services.AddScoped<ISaveMediaItemUsers, SaveMediaItemUsers>();
+		services.AddScoped<ICommentService, CommentService>();
+		services.AddScoped<IRatingsService, RatingsService>();
 	}
 }

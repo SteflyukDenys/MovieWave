@@ -79,7 +79,7 @@ public class TagController : ControllerBase
 	[HttpGet("{id}")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
-	public async Task<ActionResult<BaseResult<TagDto>>> GetTagById(Guid id)
+	public async Task<ActionResult<BaseResult<TagDto>>> GetTagById(long id)
 	{
 		var result = await _tagService.GetByIdAsync(id);
 		return result.IsSuccess ? Ok(result) : NotFound(result);
@@ -88,7 +88,7 @@ public class TagController : ControllerBase
 	[HttpDelete("{id}")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
-	public async Task<ActionResult<BaseResult>> DeleteTag(Guid id)
+	public async Task<ActionResult<BaseResult>> DeleteTag(long id)
 	{
 		var result = await _tagService.DeleteAsync(id);
 		return result.IsSuccess ? Ok(result) : NotFound(result);
